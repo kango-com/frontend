@@ -11,7 +11,8 @@ export default defineNuxtConfig({
       useMock
     }
   },
-  modules: ['@nuxt/icon', '@nuxt/fonts'],
+  modules: ['@nuxt/icon', '@nuxt/fonts', '@pinia/nuxt'],
+  pinia: { storesDirs: ['./app/stores/**'] },
   css: ['~/assets/css/tokens.css', '~/assets/css/base.css'],
   components: [{ path: '~/components', pathPrefix: false }],
   fonts: {

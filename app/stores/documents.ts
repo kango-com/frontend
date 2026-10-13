@@ -1,0 +1,36 @@
+import { defineStore } from 'pinia'
+import { contentApi } from '~/api'
+import type { DocumentFull, DocumentInfo, LoadStatus } from '~/types'
+
+export const useDocumentsStore = defineStore('documents', () => {
+  const list = ref<DocumentInfo[]>([])
+  const current = ref<DocumentFull | null>(null)
+  const status = ref<LoadStatus>('idle')
+
+  const documents = computed(() => list.value.filter(d => d.group === 'documents'))
+  const details = computed(() => list.value.filter(d => d.group === 'details'))
+
+  async function load() {
+    if (list.value.length) return
+    status.value = 'loading'
+    try {
+      list.value = await contentApi.documents()
+      status.value = 'success'
+    } catch {
+      status.value = 'error'
+    }
+  }
+
+  async function open(slug: string) {
+    status.value = 'loading'
+    try {
+      current.value = await contentApi.document(slug)
+      status.value = 'success'
+    } catch {
+      current.value = null
+      status.value = 'error'
+    }
+  }
+
+  return { list, documents, details, current, status, load, open }
+})

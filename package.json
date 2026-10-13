@@ -9,6 +9,7 @@
     "preview": "nuxt preview",
     "typecheck": "nuxt typecheck",
     "check:atomic": "node scripts/check-atomic.mjs",
+    "test": "vitest run",
     "postinstall": "nuxt prepare"
   },
   "dependencies": {
