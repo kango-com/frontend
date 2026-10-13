@@ -94,7 +94,8 @@ const weeks = computed<(Cell | null)[][]>(() => {
     const iso = toIso(new Date(viewYear.value, viewMonth.value, day))
     cells.push({ iso, day, label: new Intl.DateTimeFormat(props.locale, { day: 'numeric', month: 'long', year: 'numeric' }).format(new Date(viewYear.value, viewMonth.value, day)), disabled: (!!props.min && iso < props.min) || (!!props.max && iso > props.max) })
   }
-  while (cells.length % 7) cells.push(null)
+  // всегда 6 строк, чтобы высота календаря не менялась при смене месяца
+  while (cells.length < 42) cells.push(null)
   return Array.from({ length: cells.length / 7 }, (_, w) => cells.slice(w * 7, w * 7 + 7))
 })
 
@@ -234,7 +235,8 @@ const nextLabel = computed(() => (props.locale === 'he' ? 'החודש הבא' : 
 .kcal__day--selected .kcal__num { background: var(--color-fill-primary); color: var(--color-label-white); }
 .kcal__day:disabled { color: var(--color-label-gray); cursor: not-allowed; }
 .kcal__day:focus-visible { outline: var(--border-width-strong) solid var(--color-stroke-primary); outline-offset: -2px; border-radius: var(--radius-md); }
+/* Hover/Selected в макете один вариант: оранжевая заливка и белая цифра */
 @media (hover: hover) {
-  .kcal__day:not(:disabled):not(.kcal__day--selected):hover .kcal__num { background: var(--color-fill-gray-10); }
+  .kcal__day:not(:disabled):hover .kcal__num { background: var(--color-fill-primary); color: var(--color-label-white); }
 }
 </style>
