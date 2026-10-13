@@ -50,5 +50,5 @@ defineEmits<{ 'update:modelValue': [value: boolean] }>()
 .ksw__input:checked + .ksw__track { background: var(--color-fill-primary); }
 .ksw__input:checked + .ksw__track .ksw__thumb { transform: translateX(24px); }
 .ksw__input:focus-visible + .ksw__track { outline: var(--border-width-strong) solid var(--color-stroke-primary); outline-offset: 2px; }
-.ksw__label { font-size: var(--text-15-16); line-height: var(--leading-15-16); }
+.ksw__label { color: var(--color-label-primary); font-size: var(--text-15-16); line-height: var(--leading-15-16); }
 </style>

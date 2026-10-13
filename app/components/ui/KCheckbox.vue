@@ -55,5 +55,5 @@ function onChange(e: Event) {
 .kcb__input:checked + .kcb__box { background: var(--color-fill-primary); border-color: var(--color-stroke-primary); }
 .kcb__input:checked + .kcb__box .kcb__tick { opacity: 1; }
 .kcb__input:focus-visible + .kcb__box { outline: var(--border-width-strong) solid var(--color-stroke-primary); outline-offset: 2px; }
-.kcb__label { font-size: var(--text-15-16); line-height: var(--leading-15-16); }
+.kcb__label { color: var(--color-label-primary); font-size: var(--text-15-16); line-height: var(--leading-15-16); }
 </style>

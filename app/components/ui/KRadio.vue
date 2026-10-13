@@ -51,5 +51,5 @@ defineEmits<{ 'update:modelValue': [value: string] }>()
 .krd__input:checked + .krd__box { border-color: var(--color-stroke-primary); }
 .krd__input:checked + .krd__box::after { transform: scale(1); }
 .krd__input:focus-visible + .krd__box { outline: var(--border-width-strong) solid var(--color-stroke-primary); outline-offset: 2px; }
-.krd__label { font-size: var(--text-15-16); line-height: var(--leading-15-16); }
+.krd__label { color: var(--color-label-primary); font-size: var(--text-15-16); line-height: var(--leading-15-16); }
 </style>
