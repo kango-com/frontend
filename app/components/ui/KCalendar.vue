@@ -26,6 +26,8 @@ const fromIso = (s: string) => {
   const [y, m, d] = s.split('-').map(Number)
   return new Date(y!, m! - 1, d!)
 }
+// Формат и существование даты: 2026-02-31 не проходит
+const validIso = (s?: string): s is string => !!s && ISO.test(s) && toIso(fromIso(s)) === s
 const addDays = (d: Date, n: number) => new Date(d.getFullYear(), d.getMonth(), d.getDate() + n)
 // Сдвиг на месяцы с ограничением дня последним днём месяца (31 янв + 1 месяц = 28/29 фев)
 const addMonths = (d: Date, n: number) => {
@@ -53,7 +55,7 @@ const viewYear = ref(2000)
 const viewMonth = ref(0)
 const focusIso = ref('')
 // Есть ли от чего считать месяц сразу (значение или заданное «сегодня»); иначе ждём клиента
-const anchorIso = () => (props.modelValue && ISO.test(props.modelValue) ? props.modelValue : props.today && ISO.test(props.today) ? props.today : '')
+const anchorIso = () => (validIso(props.modelValue) ? props.modelValue : validIso(props.today) ? props.today : '')
 const anchored = !!anchorIso()
 const ready = ref(anchored)
 
@@ -67,7 +69,12 @@ function initView(iso: string) {
 if (anchored) initView(anchorIso())
 
 watch(() => props.modelValue, (v) => {
-  if (v && ISO.test(v)) initView(v)
+  if (validIso(v)) initView(v)
+})
+
+// Диапазон изменился снаружи: фокус и месяц возвращаем в доступную область
+watch(() => [props.min, props.max], () => {
+  if (ready.value && focusIso.value) initView(focusIso.value)
 })
 
 const monthLabel = computed(() => {
