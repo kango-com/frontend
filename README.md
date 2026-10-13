@@ -6,6 +6,7 @@
 bun install
 bun run dev      # http://localhost:3000
 bun run build
+bun run typecheck   # vue-tsc через nuxt typecheck
 ```
 
 ## Иконки
