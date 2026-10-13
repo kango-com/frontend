@@ -29,17 +29,40 @@ SVG лежат в `app/assets/icons/`, подключены через `@nuxt/ic
 базовые стили - в `base.css`, брейкпоинты - в `app/utils/breakpoints.ts`.
 Шрифт Inter подключает `@nuxt/fonts`. Превью токенов: `/tokens`, иконок: `/icons`.
 
+## Атомарная структура
+
+Интерфейс строится по атомарному дизайну: сначала атомы, затем молекулы, затем организмы,
+затем шаблоны и страницы. Страница только компонует организмы и своей вёрстки не содержит.
+
+```
+app/components/
+  atoms/       неделимые элементы: KButton, KIconButton, KTextField, KCheckbox, KTab, KBadge, KLogo ...
+  molecules/   несколько атомов вместе: KSearchField, KTableRow, KAccordion, KAdCard, KCategoryCard ...
+  organisms/   самостоятельные части интерфейса: KHeader, KFooter, KTabBar, KNavBar, KModalSheet, KCalendar ...
+  templates/   layout-обёртки страниц (задача 0024)
+  showcase/    компоненты витрины /components, в продукте не используются
+app/pages/     страницы, собираются из организмов
+```
+
+Правила зависимостей (проверяет `bun run check:atomic`, скрипт `scripts/check-atomic.mjs`):
+- атом не использует молекулы и организмы, молекула не использует организмы, организм не использует шаблоны;
+- компонент, который нужен на нескольких уровнях, живёт на самом низком из них;
+- новый компонент сразу показывается в витрине `/components` на своём уровне.
+
+Имена: компоненты дизайн-системы с префиксом `K` (`KButton`), продуктовые организмы без префикса (`HomeHero`, `AdsFeed`).
+Автоимпорт включён без префикса папки (`components: [{ path: '~/components', pathPrefix: false }]`), поэтому имя
+файла и есть имя компонента, перенос между уровнями не требует правки импортов.
+
 ## Компоненты
 
-Витрина компонентов: `/components` (`app/pages/components/index.vue`). Каждая группа
-компонентов показана на своей странице `app/pages/components/<группа>.vue`, ссылка на неё
+Витрина компонентов: `/components` (`app/pages/components/index.vue`), сгруппирована по уровням атомарной структуры.
+Каждая группа показана на своей странице `app/pages/components/<группа>.vue`, ссылка на неё
 в списке появляется автоматически, как только файл создан.
 
 Соглашения:
-- компоненты дизайн-системы лежат в `app/components/ui/`, префикс `K` (`KButton`, `KTextField`);
-  автоимпорт без префикса папки (`components: [{ path: '~/components', pathPrefix: false }]`);
-- компоненты витрины (`ShowPage`, `ShowSection`, `ShowItem`) - в `app/components/showcase/`, в продукте не используются;
 - варианты через props (`variant`, `size`, `disabled`), hover и focus через CSS, `selected` принудительно включает Hover/Selected для витрины;
 - стили только на токенах из `tokens.css`, иконки через `<Icon name="kango:...">`;
 - брейкпоинты из `app/utils/breakpoints.ts`, mobile-first (в media query значения 768px и 1380px пишутся числом);
 - если родитель переопределяет стиль корневого элемента дочернего компонента, селектор должен быть специфичнее (`.parent .parent__child`), иначе порядок загрузки CSS ломает результат.
+
+Проверки: `bun run typecheck`, `bun run check:atomic`, `bun run build`.

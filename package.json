@@ -8,6 +8,7 @@
     "generate": "nuxt generate",
     "preview": "nuxt preview",
     "typecheck": "nuxt typecheck",
+    "check:atomic": "node scripts/check-atomic.mjs",
     "postinstall": "nuxt prepare"
   },
   "dependencies": {
