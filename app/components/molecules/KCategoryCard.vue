@@ -55,7 +55,7 @@ const attrs = computed(() => (props.to ? { to: props.to } : {}))
 .kcat--real-estate { background-color: var(--color-fill-tint); }
 .kcat--goods { background-color: #e7f1f0; }
 .kcat--services { background-color: #eeecf7; }
-.kcat__text { display: flex; flex-direction: column; gap: 4px; min-width: 0; padding: 4px; }
+.kcat__text { display: flex; flex-direction: column; gap: 4px; min-width: 0; padding: 4px 0 0 4px; }
 .kcat__title {
   font-size: var(--text-16-16);
   line-height: var(--leading-16-16);

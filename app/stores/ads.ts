@@ -22,7 +22,11 @@ export const useAdsStore = defineStore('ads', () => {
   const detailError = ref<ApiError | null>(null)
   const controllers = new Map<string, AbortController>()
 
-  const feed = (key: string): Feed => (feeds[key] ??= emptyFeed())
+  // Возвращаем реактивный объект из `feeds`, а не только что созданный сырой (иначе подписчики не обновятся)
+const feed = (key: string): Feed => {
+    if (!feeds[key]) feeds[key] = emptyFeed()
+    return feeds[key]!
+  }
 
   async function fetchPage(key: string, request: (page: number, signal: AbortSignal) => Promise<{ items: AdCard[], total: number, hasMore: boolean, page: number }>, reset: boolean) {
     const f = feed(key)

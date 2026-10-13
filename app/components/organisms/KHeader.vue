@@ -95,12 +95,16 @@ const query = computed({
     display: flex;
     align-items: center;
     justify-content: space-between;
+    max-width: 1380px;
     height: 32px;
+    margin-inline: auto;
     padding: 12px 50px 0;
   }
   .khd__links { display: flex; align-items: center; gap: 24px; }
   .khd__main,
   .khd.khd--search .khd__main {
+    max-width: 1380px;
+    margin-inline: auto;
     grid-template-columns: auto auto minmax(0, 1fr) auto;
     gap: 12px;
     padding: 20px 50px 0;

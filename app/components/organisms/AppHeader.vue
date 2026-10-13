@@ -42,9 +42,4 @@ function submit(q: string) {
   transition: background-color 0.2s ease-out, box-shadow 0.2s ease-out;
 }
 .app-header--solid { background: var(--color-background); }
-
-/* На desktop шапка всегда залита */
-@media (min-width: 1380px) {
-  .app-header { background: var(--color-background); }
-}
 </style>

@@ -12,7 +12,7 @@
 </template>
 
 <style scoped>
-.shell { display: flex; flex-direction: column; min-height: 100vh; min-height: 100dvh; }
+.shell { --header-h: 50px; display: flex; flex-direction: column; min-height: 100vh; min-height: 100dvh; }
 .shell__main { flex: 1; outline: 0; }
 /* Место под нижний таббар на 375 и 768 */
 .shell { padding-bottom: calc(56px + env(safe-area-inset-bottom)); }
@@ -29,6 +29,6 @@
 }
 .shell__skip:focus { transform: none; }
 @media (min-width: 1380px) {
-  .shell { padding-bottom: 0; }
+  .shell { --header-h: 104px; padding-bottom: 0; }
 }
 </style>

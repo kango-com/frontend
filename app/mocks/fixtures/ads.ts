@@ -5,6 +5,11 @@ import workImage from '~/assets/img/categories/work.webp'
 import realtyImage from '~/assets/img/categories/real-estate.webp'
 import goodsImage from '~/assets/img/categories/goods.webp'
 import servicesImage from '~/assets/img/categories/services.webp'
+import apartment1 from '~/assets/img/mock/apartment-1.webp'
+import apartment2 from '~/assets/img/mock/apartment-2.webp'
+import phone1 from '~/assets/img/mock/phone-1.webp'
+import phone2 from '~/assets/img/mock/phone-2.webp'
+import sofa from '~/assets/img/mock/sofa.webp'
 
 export type AdRecord = Ad & {
   cityId: string
@@ -115,7 +120,8 @@ function makeWork(): AdRecord {
 const features = ['Балкон', 'Лифт', 'Парковка', 'Кондиционер', 'Мебель', 'Кладовка', 'После ремонта', 'Мамад']
 
 function makeRealty(): AdRecord {
-  const b = base('realty', realtyImage)
+  const photo = pick([apartment1, apartment2, realtyImage])
+  const b = base('realty', photo)
   const deal: 'rent' | 'sale' = rnd() < 0.62 ? 'rent' : 'sale'
   const house = rnd() < 0.2
   const rooms = int(1, 5)
@@ -172,7 +178,8 @@ const goodsTemplates: { title: string, cat: string, sub: string, brand?: string,
 
 function makeGoods(): AdRecord {
   const t = pick(goodsTemplates)
-  const b = base('goods', goodsImage)
+  const photo = t.sub === 'phones' ? pick([phone1, phone2]) : ['sofas', 'beds', 'tables', 'chairs', 'wardrobes'].includes(t.sub) ? sofa : goodsImage
+  const b = base('goods', photo)
   const price = Math.round(t.price * (0.8 + rnd() * 0.4) / 10) * 10
   const condition: 'used' | 'new' = rnd() < 0.7 ? 'used' : 'new'
   return {
