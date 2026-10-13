@@ -1,8 +1,12 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
   compatibilityDate: '2025-07-15',
-  modules: ['@nuxt/icon'],
+  modules: ['@nuxt/icon', '@nuxt/fonts'],
+  css: ['~/assets/css/tokens.css', '~/assets/css/base.css'],
   components: [{ path: '~/components', pathPrefix: false }],
+  fonts: {
+    families: [{ name: 'Inter', weights: [400, 500, 600], styles: ['normal'], subsets: ['latin', 'cyrillic'] }]
+  },
   icon: {
     customCollections: [{ prefix: 'kango', dir: './app/assets/icons' }]
   },
