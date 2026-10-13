@@ -25,6 +25,12 @@
   --color-fill-white: #ffffff;
   --color-fill-disabled: #ffc9b3;
   --color-fill-error: #ff2a2a;
+  --color-label-disabled: #ff966c;
+  --color-fill-color-disabled: #d7e6f5;
+  --color-label-color-disabled: #8ac4ff;
+  --color-fill-gray-4: #f9f9f9;
+  --color-label-gray-2: #ababac;
+  --color-fill-tint: #ebf4fb;
   --color-fill-gray: #6c6c6c;
   --color-fill-gray-2: #d2d2d2;
   --color-fill-gray-3: #f2f2f2;

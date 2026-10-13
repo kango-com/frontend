@@ -2,6 +2,7 @@
 export default defineNuxtConfig({
   compatibilityDate: '2025-07-15',
   modules: ['@nuxt/icon'],
+  components: [{ path: '~/components', pathPrefix: false }],
   icon: {
     customCollections: [{ prefix: 'kango', dir: './app/assets/icons' }]
   },

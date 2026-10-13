@@ -17,6 +17,12 @@ colors:
   fill-white: "#FFFFFF"
   fill-disabled: "#FFC9B3"
   fill-error: "#FF2A2A"
+  label-disabled: "#FF966C"
+  fill-color-disabled: "#D7E6F5"
+  label-color-disabled: "#8AC4FF"
+  fill-gray-4: "#F9F9F9"
+  label-gray-2: "#ABABAC"
+  fill-tint: "#EBF4FB"
   fill-gray: "#6C6C6C"
   fill-gray-2: "#D2D2D2"
   fill-gray-3: "#F2F2F2"
@@ -116,7 +122,9 @@ Kango - веб-платформа объявлений (работа, жильё
 
 Фирменный и единственный акцентный цвет - оранжевый `fill-primary` (он же `stroke-primary` для активной обводки). Остальная палитра нейтральная: текст `label-primary`, второстепенный текст `label-secondary`, неактивный и подсказки `label-gray`, фон страниц `background`, подложки полей и блоков `fill-gray-3`, обводки и разделители серые (`stroke-gray`, `separator-gray`).
 
-`fill-disabled` - светлый оранжевый для отключённых элементов (Primary button, Switch, трек Slider). `fill-error` - красный, в макетах используется в иконках и состояниях ошибки, роль предположительная (в Figma имя переменной не подтверждено).
+`fill-disabled` - светлый оранжевый для отключённых элементов (Primary button, Switch, трек Slider). `label-disabled` - текст на отключённой Primary button. `fill-color-disabled` и `label-color-disabled` - отключённые Secondary и Outline (заливка/обводка и текст/иконка). `fill-gray-4` и `label-gray-2` - отключённая Neutral button. `fill-tint` - светлая подложка слота картинки в Filter Tab.
+
+`fill-error` - красный, в макетах используется в иконках и состояниях ошибки, роль предположительная (в Figma имя переменной не подтверждено).
 
 `fill-color-4` - более тёмный оранжевый, используется для акцентного текста и активного состояния вкладок. Синие `fill-color`, `fill-color-3` и `stroke-color` - вторичные, не заменяют оранжевый как акцент.
 
