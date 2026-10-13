@@ -1,6 +1,16 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
+// Пока нет бэкенда, API отвечает мок (MSW в браузере). В этом режиме приложение собирается как SPA.
+const useMock = process.env.NUXT_PUBLIC_USE_MOCK !== 'false'
+
 export default defineNuxtConfig({
   compatibilityDate: '2025-07-15',
+  ssr: !useMock,
+  runtimeConfig: {
+    public: {
+      apiBase: '/api',
+      useMock
+    }
+  },
   modules: ['@nuxt/icon', '@nuxt/fonts'],
   css: ['~/assets/css/tokens.css', '~/assets/css/base.css'],
   components: [{ path: '~/components', pathPrefix: false }],
