@@ -19,7 +19,7 @@ defineProps<{
   height: 28px;
   padding: 0 8px;
   border: var(--border-width) solid var(--color-stroke-gray);
-  border-radius: 9999px;
+  border-radius: var(--radius-pill);
   background: var(--color-background);
   color: var(--color-label-primary);
   font-family: inherit;

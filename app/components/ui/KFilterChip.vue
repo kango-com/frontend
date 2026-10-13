@@ -1,16 +1,20 @@
 <script setup lang="ts">
 defineProps<{
-  /** Подпись для кнопки удаления (aria-label) */
+  /** Подпись для кнопки удаления (aria-label), по умолчанию «Убрать фильтр: текст» */
   removeLabel?: string
 }>()
 
 defineEmits<{ remove: [] }>()
+
+const text = ref<HTMLElement>()
+const label = ref('')
+onMounted(() => { label.value = text.value?.textContent?.trim() ?? '' })
 </script>
 
 <template>
   <span class="kfc">
-    <span class="kfc__label"><slot /></span>
-    <button type="button" class="kfc__remove" :aria-label="removeLabel ?? 'Убрать фильтр'" @click="$emit('remove')">
+    <span ref="text" class="kfc__label"><slot /></span>
+    <button type="button" class="kfc__remove" :aria-label="removeLabel ?? `Убрать фильтр: ${label}`" @click="$emit('remove')">
       <Icon name="kango:close-16" size="16" />
     </button>
   </span>
@@ -31,6 +35,7 @@ defineEmits<{ remove: [] }>()
   white-space: nowrap;
 }
 .kfc__remove {
+  position: relative;
   display: inline-flex;
   flex: none;
   padding: 0;
@@ -39,5 +44,6 @@ defineEmits<{ remove: [] }>()
   color: var(--color-label-primary);
   cursor: pointer;
 }
+.kfc__remove::after { content: ''; position: absolute; inset: -4px; }
 .kfc__remove:focus-visible { outline: var(--border-width-strong) solid var(--color-stroke-primary); border-radius: var(--radius-sm); }
 </style>

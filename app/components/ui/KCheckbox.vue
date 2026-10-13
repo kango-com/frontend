@@ -16,7 +16,8 @@ const checked = computed(() => {
 
 function onChange(e: Event) {
   const on = (e.target as HTMLInputElement).checked
-  if (Array.isArray(props.modelValue) && props.value !== undefined) {
+  if (Array.isArray(props.modelValue)) {
+    if (props.value === undefined) return // режим массива требует value
     emit('update:modelValue', on ? [...props.modelValue, props.value] : props.modelValue.filter(v => v !== props.value))
   } else {
     emit('update:modelValue', on)
@@ -35,7 +36,7 @@ function onChange(e: Event) {
 </template>
 
 <style scoped>
-.kcb { display: inline-flex; align-items: center; gap: 10px; cursor: pointer; }
+.kcb { position: relative; display: inline-flex; align-items: center; gap: 10px; cursor: pointer; }
 .kcb--disabled { cursor: not-allowed; opacity: 0.5; }
 .kcb__input { position: absolute; width: 1px; height: 1px; opacity: 0; }
 .kcb__box {

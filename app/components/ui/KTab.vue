@@ -9,7 +9,14 @@ const attrs = computed(() => (props.to ? { to: props.to } : { type: 'button' }))
 </script>
 
 <template>
-  <component :is="tag" v-bind="attrs" class="ktab" :class="{ 'ktab--selected': selected }" :aria-current="selected ? 'page' : undefined">
+  <component
+    :is="tag"
+    v-bind="attrs"
+    class="ktab"
+    :class="{ 'ktab--selected': selected }"
+    :aria-current="to && selected ? 'page' : undefined"
+    :aria-pressed="!to ? !!selected : undefined"
+  >
     <span class="ktab__icon"><slot name="icon" /></span>
     <span class="ktab__label"><slot /></span>
   </component>
@@ -20,9 +27,11 @@ const attrs = computed(() => (props.to ? { to: props.to } : { type: 'button' }))
   display: inline-flex;
   flex-direction: column;
   align-items: center;
+  justify-content: center;
   gap: 2px;
   min-width: 63px;
-  padding: 0 14px;
+  min-height: 44px;
+  padding: 3px 14px;
   border: 0;
   border-radius: var(--radius-tab);
   background: transparent;

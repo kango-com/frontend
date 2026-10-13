@@ -26,7 +26,7 @@ defineEmits<{ 'update:modelValue': [value: string] }>()
 </template>
 
 <style scoped>
-.krd { display: inline-flex; align-items: center; gap: 10px; cursor: pointer; }
+.krd { position: relative; display: inline-flex; align-items: center; gap: 10px; cursor: pointer; }
 .krd--disabled { cursor: not-allowed; opacity: 0.5; }
 .krd__input { position: absolute; width: 1px; height: 1px; opacity: 0; }
 .krd__box {
@@ -42,7 +42,7 @@ defineEmits<{ 'update:modelValue': [value: string] }>()
 .krd__box::after {
   content: '';
   position: absolute;
-  inset: 3px;
+  inset: 3.5px;
   border-radius: 50%;
   background: var(--color-fill-primary);
   transform: scale(0);

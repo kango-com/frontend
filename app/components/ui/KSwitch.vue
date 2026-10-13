@@ -25,7 +25,7 @@ defineEmits<{ 'update:modelValue': [value: boolean] }>()
 </template>
 
 <style scoped>
-.ksw { display: inline-flex; align-items: center; gap: 10px; cursor: pointer; }
+.ksw { position: relative; display: inline-flex; align-items: center; gap: 10px; cursor: pointer; }
 .ksw--disabled { cursor: not-allowed; opacity: 0.5; }
 .ksw__input { position: absolute; width: 1px; height: 1px; opacity: 0; }
 .ksw__track {
@@ -33,7 +33,7 @@ defineEmits<{ 'update:modelValue': [value: boolean] }>()
   flex: none;
   width: 48px;
   height: 24px;
-  border-radius: 12px;
+  border-radius: var(--radius-md);
   background: var(--color-fill-disabled);
   transition: background-color 0.2s ease-out;
 }

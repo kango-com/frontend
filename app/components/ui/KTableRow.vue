@@ -20,8 +20,14 @@ const emit = defineEmits<{
   'click': []
 }>()
 
-const interactiveTag = computed(() => (props.to ? resolveComponent('NuxtLink') : 'button'))
-const interactiveAttrs = computed(() => (props.to ? { to: props.to } : { type: 'button' }))
+const interactive = computed(() => !!props.to || props.type === 'select' || props.type === 'chevron')
+// статичная строка (type none без ссылки) - не кнопка, чтобы не попадать в Tab без действия
+const interactiveTag = computed(() => (props.to ? resolveComponent('NuxtLink') : interactive.value ? 'button' : 'div'))
+const interactiveAttrs = computed(() => {
+  if (props.to) return { to: props.to }
+  if (!interactive.value) return {}
+  return { type: 'button', ...(props.type === 'select' ? { 'aria-pressed': !!props.selected } : {}) }
+})
 </script>
 
 <template>
@@ -63,7 +69,9 @@ const interactiveAttrs = computed(() => (props.to ? { to: props.to } : { type: '
 </template>
 
 <style scoped>
-.ktr { display: flex; align-items: center; width: 100%; min-height: 44px; gap: 10px; }
+.ktr,
+.kcb.ktr,
+.krd.ktr { display: flex; align-items: center; width: 100%; min-height: 44px; gap: 8px; }
 .ktr--row {
   padding: 0;
   border: 0;
@@ -72,8 +80,8 @@ const interactiveAttrs = computed(() => (props.to ? { to: props.to } : { type: '
   font-family: inherit;
   text-align: left;
   text-decoration: none;
-  cursor: pointer;
 }
+.ktr--row:is(button, a) { cursor: pointer; }
 .ktr--row:focus-visible { outline: var(--border-width-strong) solid var(--color-stroke-primary); outline-offset: 2px; border-radius: var(--radius-sm); }
 .ktr__icon { display: inline-flex; flex: none; color: var(--color-fill-gray); }
 .ktr__text { display: flex; flex: 1; flex-direction: column; gap: 2px; min-width: 0; }

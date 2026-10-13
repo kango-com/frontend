@@ -14,13 +14,14 @@ const id = useId()
       type="button"
       class="kacc__head"
       :aria-expanded="open"
+      :id="`${id}-head`"
       :aria-controls="`${id}-panel`"
       @click="open = !open"
     >
       <span class="kacc__title">{{ title }}</span>
       <Icon name="kango:plus-24" size="24" class="kacc__icon" />
     </button>
-    <div v-show="open" :id="`${id}-panel`" class="kacc__panel" role="region">
+    <div v-show="open" :id="`${id}-panel`" class="kacc__panel" role="region" :aria-labelledby="`${id}-head`">
       <slot />
     </div>
   </div>

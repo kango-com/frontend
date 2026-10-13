@@ -10,13 +10,11 @@ const segment3 = ref('all')
 <template>
   <ShowPage title="Слайдер и сегмент-контроль" hint="Слайдер: дорожка 2px, бегунок 14px. Сегмент-контроль: контейнер 12px, сегмент 44px.">
     <ShowSection title="Slider Value" note="Одно значение. Управление: мышь, касание, стрелки, Home/End, PageUp/PageDown.">
-      <ShowItem label="Value" width="343px"><KSlider v-model="value" label="Цена" /></ShowItem>
-      <ShowItem label="Значение" width="343px"><span class="dump">{{ value }}</span></ShowItem>
+      <ShowItem label="Value" width="343px"><KSlider v-model="value" label="Цена" show-value /></ShowItem>
     </ShowSection>
 
     <ShowSection title="Slider Range" note="Диапазон: два бегунка, залитая часть между ними.">
-      <ShowItem label="Range" width="343px"><KSlider v-model="range" label="Цена" /></ShowItem>
-      <ShowItem label="Значение" width="343px"><span class="dump">{{ range }}</span></ShowItem>
+      <ShowItem label="Range" width="343px"><KSlider v-model="range" label="Цена" show-value /></ShowItem>
       <ShowItem label="Disabled" width="343px"><KSlider :model-value="[10, 40]" disabled /></ShowItem>
     </ShowSection>
 

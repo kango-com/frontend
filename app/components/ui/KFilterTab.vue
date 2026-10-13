@@ -43,6 +43,8 @@ defineProps<{
 .kft__img :deep(img) { width: 100%; height: 100%; object-fit: cover; }
 .kft--active { border-color: var(--color-stroke-primary); background: color-mix(in srgb, var(--color-fill-primary) 5%, transparent); }
 .kft:focus-visible { outline: var(--border-width-strong) solid var(--color-stroke-primary); outline-offset: 2px; }
-@media (hover: hover) { .kft:not(.kft--active):hover { border-color: var(--color-fill-gray); } }
+@media (hover: hover) {
+  .kft:not(.kft--active):hover { border-color: var(--color-stroke-primary); background: color-mix(in srgb, var(--color-fill-primary) 5%, transparent); }
+}
 .kft__label { padding-right: 6px; }
 </style>
