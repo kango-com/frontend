@@ -1,4 +1,5 @@
 <script setup lang="ts">
+definePageMeta({ layout: false })
 useHead({ title: 'Календарь - Kango' })
 
 const ru = ref('2026-10-15')

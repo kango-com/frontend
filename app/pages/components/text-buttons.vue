@@ -1,4 +1,5 @@
 <script setup lang="ts">
+definePageMeta({ layout: false })
 useHead({ title: 'Текстовые кнопки и ссылки - Kango' })
 
 // Заглушки превью для витрины (серые квадраты)

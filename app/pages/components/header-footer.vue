@@ -1,4 +1,5 @@
 <script setup lang="ts">
+definePageMeta({ layout: false })
 useHead({ title: 'Шапка, подвал, логотип - Kango' })
 
 const query = ref('')

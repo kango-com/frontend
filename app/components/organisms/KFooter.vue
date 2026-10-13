@@ -82,4 +82,8 @@ withDefaults(defineProps<{
   .kft-footer__links { grid-column: 2; }
   .kft-footer__copy { grid-column: 2; }
 }
+
+@media (min-width: 1380px) {
+  .kft-footer__inner { padding-inline: 50px; }
+}
 </style>

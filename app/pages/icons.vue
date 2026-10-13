@@ -1,4 +1,5 @@
 <script setup lang="ts">
+definePageMeta({ layout: false })
 useHead({ title: 'Иконки - Kango' })
 
 const files = Object.keys(import.meta.glob('../assets/icons/*.svg', { query: '?raw', import: 'default' }))

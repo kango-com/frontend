@@ -1,4 +1,5 @@
 <script setup lang="ts">
+definePageMeta({ layout: false })
 useHead({ title: 'Поля ввода - Kango' })
 
 const empty = ref('')

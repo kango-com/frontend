@@ -1,4 +1,5 @@
 <script setup lang="ts">
+definePageMeta({ layout: false })
 useHead({ title: 'Слайдер и сегмент-контроль - Kango' })
 
 const value = ref(25)

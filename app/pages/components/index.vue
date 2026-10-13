@@ -1,4 +1,5 @@
 <script setup lang="ts">
+definePageMeta({ layout: false })
 useHead({ title: 'Компоненты - Kango' })
 
 type Level = 'atom' | 'molecule' | 'organism'

@@ -1,4 +1,5 @@
 <script setup lang="ts">
+definePageMeta({ layout: false })
 useHead({ title: 'Чипы и вкладки - Kango' })
 
 const city = ref('haifa')

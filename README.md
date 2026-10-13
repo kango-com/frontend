@@ -39,8 +39,9 @@ app/components/
   atoms/       неделимые элементы: KButton, KIconButton, KTextField, KCheckbox, KTab, KBadge, KLogo ...
   molecules/   несколько атомов вместе: KSearchField, KTableRow, KAccordion, KAdCard, KCategoryCard ...
   organisms/   самостоятельные части интерфейса: KHeader, KFooter, KTabBar, KNavBar, KModalSheet, KCalendar ...
-  templates/   layout-обёртки страниц (задача 0024)
+  templates/   резерв под составные шаблоны (пока пусто)
   showcase/    компоненты витрины /components, в продукте не используются
+app/layouts/   шаблоны страниц (Nuxt layouts): default (шапка, футер, таббар), auth, minimal
 app/pages/     страницы, собираются из организмов
 ```
 

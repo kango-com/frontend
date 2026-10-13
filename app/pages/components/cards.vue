@@ -1,4 +1,5 @@
 <script setup lang="ts">
+definePageMeta({ layout: false })
 import work from '~/assets/img/categories/work.webp'
 import realEstate from '~/assets/img/categories/real-estate.webp'
 

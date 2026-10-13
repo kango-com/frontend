@@ -1,4 +1,5 @@
 <script setup lang="ts">
+definePageMeta({ layout: false })
 useHead({ title: 'Строки списка и аккордеон - Kango' })
 
 const open1 = ref(false)
