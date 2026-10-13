@@ -26,7 +26,7 @@ const attrs = computed(() => (props.to ? { to: props.to } : {}))
       <span class="kcat__title">{{ title }}</span>
       <span v-if="caption" class="kcat__caption">{{ caption }}</span>
     </span>
-    <span class="kcat__arrow" aria-hidden="true">
+    <span v-if="to" class="kcat__arrow" aria-hidden="true">
       <Icon name="kango:chevron-right-sm-24" size="24" />
     </span>
   </component>
@@ -38,10 +38,10 @@ const attrs = computed(() => (props.to ? { to: props.to } : {}))
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
-  gap: 8px;
+  gap: 2px;
   width: 100%;
   aspect-ratio: 168 / 150;
-  padding: 12px;
+  padding: 8px;
   overflow: hidden;
   border-radius: var(--radius-md);
   background-color: #f7ebdf;
@@ -52,10 +52,10 @@ const attrs = computed(() => (props.to ? { to: props.to } : {}))
   text-decoration: none;
 }
 /* Подложки совпадают с фоном иллюстраций */
-.kcat--real-estate { background-color: #ecf3fb; }
-.kcat--goods { background-color: #e7f1f2; }
-.kcat--services { background-color: #efeff9; }
-.kcat__text { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
+.kcat--real-estate { background-color: var(--color-fill-tint); }
+.kcat--goods { background-color: #e7f1f0; }
+.kcat--services { background-color: #eeecf7; }
+.kcat__text { display: flex; flex-direction: column; gap: 4px; min-width: 0; padding: 4px; }
 .kcat__title {
   font-size: var(--text-16-16);
   line-height: var(--leading-16-16);

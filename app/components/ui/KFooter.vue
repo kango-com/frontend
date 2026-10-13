@@ -42,7 +42,7 @@ withDefaults(defineProps<{
 .kft-footer__inner {
   display: flex;
   flex-direction: column;
-  gap: 24px;
+  gap: 32px;
   max-width: 1380px;
   margin: 0 auto;
   padding: 32px 16px;
@@ -59,8 +59,7 @@ withDefaults(defineProps<{
   line-height: var(--leading-16-16);
   text-decoration: none;
 }
-.kft-footer__link :deep(.iconify),
-.kft-footer__link svg { color: var(--color-fill-gray); }
+.kft-footer__link :deep(.iconify) { color: var(--color-fill-gray); }
 .kft-footer__link:focus-visible { outline: var(--border-width-strong) solid var(--color-stroke-primary); outline-offset: 2px; }
 @media (hover: hover) { .kft-footer__link:hover { color: var(--color-fill-color-4); } }
 .kft-footer__copy {

@@ -40,7 +40,8 @@ const list = computed(() => props.items ?? defaults.value)
   align-items: center;
   justify-content: space-around;
   gap: 4px;
-  padding: 12px 8px;
+  /* Индикатор жеста iOS из макета (24px) не рисуем, отступ только под системную safe-area */
+  padding: 4px 8px calc(4px + env(safe-area-inset-bottom));
   border-radius: var(--radius-md) var(--radius-md) 0 0;
   background: var(--color-background);
   box-shadow: 0 -2px 12px color-mix(in srgb, var(--color-label-primary) 8%, transparent);

@@ -1,10 +1,12 @@
 <script setup lang="ts">
 const open = defineModel<boolean>({ default: false })
 
-const props = defineProps<{
+defineProps<{
   title?: string
   /** Текст кнопки справа в шапке (например «Сбросить») */
   action?: string
+  /** Доступное имя окна, если нет заголовка */
+  label?: string
 }>()
 
 const emit = defineEmits<{ action: [] }>()
@@ -14,6 +16,7 @@ const sheet = ref<HTMLElement>()
 const dragY = ref(0)
 let startY = 0
 let dragging = false
+const isDragging = ref(false)
 let lastFocus: HTMLElement | null = null
 
 function close() { open.value = false }
@@ -21,38 +24,48 @@ function close() { open.value = false }
 function onKey(e: KeyboardEvent) {
   if (e.key === 'Escape') close()
   if (e.key === 'Tab' && sheet.value) {
-    const items = sheet.value.querySelectorAll<HTMLElement>('button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])')
+    const items = sheet.value.querySelectorAll<HTMLElement>('button:not([disabled]), [href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])')
     if (!items.length) return
     const first = items[0]!
     const last = items[items.length - 1]!
-    if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus() }
+    const inside = sheet.value.contains(document.activeElement)
+    if (!inside) { e.preventDefault(); first.focus() }
+    else if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus() }
     else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus() }
   }
 }
 
-watch(open, async (v) => {
-  if (!import.meta.client) return
-  if (v) {
-    lastFocus = document.activeElement as HTMLElement | null
-    document.addEventListener('keydown', onKey)
-    document.body.style.overflow = 'hidden'
-    await nextTick()
-    sheet.value?.querySelector<HTMLElement>('button, [href], input, select, textarea')?.focus()
-  } else {
-    document.removeEventListener('keydown', onKey)
-    document.body.style.overflow = ''
-    lastFocus?.focus()
-  }
-})
+let active = false
 
-onBeforeUnmount(() => {
-  if (!import.meta.client) return
+async function activate() {
+  if (active || !import.meta.client) return
+  active = true
+  lastFocus = document.activeElement as HTMLElement | null
+  document.addEventListener('keydown', onKey)
+  document.body.style.overflow = 'hidden'
+  await nextTick()
+  sheet.value?.querySelector<HTMLElement>('button:not([disabled]), [href], input:not([disabled]), select:not([disabled]), textarea:not([disabled])')?.focus()
+}
+
+function deactivate() {
+  if (!active || !import.meta.client) return
+  active = false
   document.removeEventListener('keydown', onKey)
   document.body.style.overflow = ''
+  lastFocus?.focus()
+}
+
+watch(open, (v) => {
+  if (v) { dragY.value = 0; activate() } else deactivate()
 })
+
+// Шторка могла быть создана сразу открытой (SSR, v-model=true)
+onMounted(() => { if (open.value) activate() })
+onBeforeUnmount(deactivate)
 
 function dragStart(e: PointerEvent) {
   dragging = true
+  isDragging.value = true
   startY = e.clientY
   ;(e.currentTarget as HTMLElement).setPointerCapture(e.pointerId)
 }
@@ -62,8 +75,10 @@ function dragMove(e: PointerEvent) {
 function dragEnd() {
   if (!dragging) return
   dragging = false
+  isDragging.value = false
+  // при закрытии сдвиг остаётся: шторка уезжает вниз с текущего положения, при отмене возвращается плавно
   if (dragY.value > 80) close()
-  dragY.value = 0
+  else dragY.value = 0
 }
 </script>
 
@@ -77,7 +92,10 @@ function dragEnd() {
           role="dialog"
           aria-modal="true"
           :aria-labelledby="title ? `${id}-title` : undefined"
-          :style="dragY ? { transform: `translateY(${dragY}px)`, transition: 'none' } : undefined"
+          :aria-label="title ? undefined : (label ?? 'Окно')"
+          :class="{ 'ksheet__panel--dragging': isDragging }"
+          :style="{ '--drag': `${dragY}px` }"
+          tabindex="-1"
         >
           <div
             class="ksheet__grabber"
@@ -117,9 +135,14 @@ function dragEnd() {
   width: 100%;
   max-width: 768px;
   max-height: 90vh;
+  max-height: 90dvh;
   border-radius: var(--radius-md) var(--radius-md) 0 0;
   background: var(--color-background);
+  outline: 0;
+  transform: translateY(var(--drag, 0px));
+  transition: transform 0.3s ease-out;
 }
+.ksheet__panel--dragging { transition: none; }
 .ksheet__grabber {
   display: flex;
   align-items: center;
@@ -128,7 +151,7 @@ function dragEnd() {
   cursor: grab;
   touch-action: none;
 }
-.ksheet__grabber span { width: 36px; height: 5px; border-radius: 3px; background: var(--color-fill-gray-2); }
+.ksheet__grabber span { width: 36px; height: 5px; border-radius: var(--radius-sm); background: var(--color-fill-gray-2); }
 .ksheet__head { display: flex; align-items: center; justify-content: space-between; gap: 8px; padding: 0 16px; }
 .ksheet__title {
   flex: 1;
@@ -140,7 +163,7 @@ function dragEnd() {
   text-align: center;
 }
 .ksheet__spacer { width: 44px; }
-.ksheet__body { overflow-y: auto; padding: 8px 16px 24px; }
+.ksheet__body { overflow-y: auto; overscroll-behavior: contain; padding: 8px 16px 24px; }
 
 /* Slide in / out снизу, ease-out, 300ms. Закрытие в обратном направлении */
 .ksheet-enter-active,

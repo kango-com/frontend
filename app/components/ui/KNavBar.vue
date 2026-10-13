@@ -49,7 +49,7 @@ const emit = defineEmits<{
   align-items: center;
   gap: 8px;
   min-height: 50px;
-  padding: 4px 16px;
+  padding: 3px 16px;
   background: var(--color-background);
 }
 .knb__title {
@@ -58,7 +58,7 @@ const emit = defineEmits<{
   line-height: var(--leading-17-20);
   font-weight: var(--font-weight-medium);
 }
-.knb--page-title .knb__title { margin-left: 8px; }
+.knb--page-title .knb__title { margin-left: 4px; }
 .knb--modal { justify-content: space-between; }
 .knb--modal .knb__title { flex: 1; text-align: center; }
 .knb--modal .knb__spacer { width: 44px; }

@@ -30,7 +30,7 @@ const attrs = computed(() => (props.to ? { to: props.to } : { type: 'button' }))
   justify-content: center;
   gap: 2px;
   min-width: 63px;
-  min-height: 44px;
+  height: 44px;
   padding: 3px 14px;
   border: 0;
   border-radius: var(--radius-tab);

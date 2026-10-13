@@ -69,7 +69,7 @@ const query = computed({
   grid-template-columns: minmax(0, 1fr) auto;
   align-items: center;
   gap: 8px;
-  padding: 4px 16px;
+  padding: 3px 16px;
 }
 .khd .khd__logo { grid-column: 1; grid-row: 1; justify-self: start; }
 .khd .khd__city { grid-column: 2; grid-row: 1; }
@@ -79,7 +79,12 @@ const query = computed({
 .khd .khd__filter { display: none; }
 
 /* Мобильная и планшетная шапка со строкой поиска */
-.khd.khd--search .khd__main { grid-template-columns: minmax(0, 1fr) auto; padding-bottom: 12px; box-shadow: 0 4px 12px color-mix(in srgb, var(--color-label-primary) 8%, transparent); }
+.khd.khd--search .khd__main {
+  grid-template-columns: minmax(0, 1fr) auto;
+  padding-bottom: 11px;
+  border-radius: 0 0 var(--radius-md) var(--radius-md);
+  box-shadow: 0 1px 7px color-mix(in srgb, var(--color-label-primary) 10%, transparent);
+}
 .khd.khd--search .khd__search { display: block; grid-column: 1; grid-row: 2; }
 .khd.khd--search .khd__filter { display: inline-flex; grid-column: 2; grid-row: 2; }
 .khd.khd--search .khd__find { display: none; }
@@ -90,16 +95,19 @@ const query = computed({
     display: flex;
     align-items: center;
     justify-content: space-between;
+    height: 32px;
     padding: 12px 50px 0;
   }
   .khd__links { display: flex; align-items: center; gap: 24px; }
   .khd__main,
   .khd.khd--search .khd__main {
     grid-template-columns: auto auto minmax(0, 1fr) auto;
-    gap: 16px 20px;
-    padding: 12px 50px 20px;
+    gap: 12px;
+    padding: 20px 50px 0;
+    border-radius: 0;
     box-shadow: none;
   }
+  .khd .khd__logo :deep(img) { width: auto; height: 41px; }
   .khd .khd__logo { grid-column: 1; grid-row: 1; }
   .khd .khd__cats { display: inline-flex; grid-column: 2; grid-row: 1; width: 224px; }
   .khd .khd__search,

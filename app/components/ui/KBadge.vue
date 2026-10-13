@@ -11,7 +11,7 @@ const text = computed(() => (props.count > props.max ? `${props.max}+` : String(
 </script>
 
 <template>
-  <span class="kbadge" :class="{ 'kbadge--wide': text.length > 1 }" role="status">
+  <span class="kbadge">
     <span aria-hidden="true">{{ text }}</span>
     <span class="kbadge__sr">{{ count }} {{ label }}</span>
   </span>
@@ -19,6 +19,7 @@ const text = computed(() => (props.count > props.max ? `${props.max}+` : String(
 
 <style scoped>
 .kbadge {
+  position: relative;
   display: inline-flex;
   flex: none;
   align-items: center;
@@ -26,7 +27,7 @@ const text = computed(() => (props.count > props.max ? `${props.max}+` : String(
   min-width: 20px;
   height: 20px;
   padding: 0 4px;
-  border-radius: 10px;
+  border-radius: var(--radius-pill);
   background: var(--color-fill-primary);
   color: var(--color-label-white);
   font-size: var(--text-12-12);

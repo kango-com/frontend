@@ -3,7 +3,7 @@ import logo from '~/assets/img/kango-logo.svg'
 import logoWhite from '~/assets/img/kango-logo-white.svg'
 
 const props = withDefaults(defineProps<{
-  /** white - для оранжевого фона */
+  /** white - светлая надпись, для тёмного фона (оранжевая плитка остаётся) */
   variant?: 'color' | 'white'
   /** Высота в px, ширина считается по пропорциям 287:97 */
   height?: number
