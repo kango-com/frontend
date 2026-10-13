@@ -42,7 +42,6 @@ const small = computed(() => props.type === 'favorite' || props.type === 'cancel
       <g transform="translate(-125 -21.67)">
         <path
           d="M131.939 34.9785C130.058 33.5719 126.332 30.3565 126.332 27.463C126.332 25.5504 127.736 24 129.665 24C130.665 24 131.665 24.3333 132.999 25.6667C134.332 24.3333 135.332 24 136.332 24C138.262 24 139.665 25.5504 139.665 27.463C139.665 30.3565 135.939 33.5719 134.058 34.9785C133.425 35.4517 132.572 35.4517 131.939 34.9785Z"
-          :fill="selected ? 'currentColor' : 'none'"
           stroke="currentColor"
           stroke-linecap="round"
           stroke-linejoin="round"
@@ -92,6 +91,8 @@ const small = computed(() => props.type === 'favorite' || props.type === 'cancel
 }
 .kib--favorite { color: var(--color-fill-color); }
 .kib--favorite.kib--selected { color: var(--color-fill-primary); }
+.kib__heart path { fill: none; transition: fill 0.15s ease-out; }
+.kib--favorite.kib--selected .kib__heart path { fill: currentColor; }
 
 .kib__dot {
   position: absolute;
@@ -104,9 +105,10 @@ const small = computed(() => props.type === 'favorite' || props.type === 'cancel
 }
 
 @media (hover: hover) {
-  .kib:not(:disabled):not(.kib--small):hover { background: var(--color-fill-gray-10); }
+  .kib:not(:disabled):not(.kib--small):not(.kib--filter):hover { background: var(--color-fill-gray-10); }
   .kib--filter:not(:disabled):hover { background: linear-gradient(var(--color-fill-gray-10), var(--color-fill-gray-10)), var(--color-fill-white); }
   .kib--favorite:not(:disabled):hover { color: var(--color-fill-primary); }
+  .kib--favorite:not(:disabled):hover .kib__heart path { fill: currentColor; }
 }
 
 .kib:disabled { color: var(--color-stroke-gray); cursor: not-allowed; }

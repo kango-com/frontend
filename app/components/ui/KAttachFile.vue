@@ -35,7 +35,7 @@ function onChange(e: Event) {
     <ul class="kaf__list">
       <li v-for="f in props.files" :key="f.id" class="kaf__tile">
         <img class="kaf__img" :src="f.url" :alt="f.name ?? ''">
-        <KIconButton class="kaf__remove" type="cancel" :label="`Удалить ${f.name ?? 'фото'}`" @click="emit('remove', f.id)" />
+        <KIconButton class="kaf__remove" type="cancel" :disabled="disabled" :label="`Удалить ${f.name ?? 'фото'}`" @click="emit('remove', f.id)" />
       </li>
       <li>
         <button type="button" class="kaf__add" :disabled="disabled" :aria-label="label" @click="input?.click()">
@@ -49,6 +49,7 @@ function onChange(e: Event) {
 
 <style scoped>
 .kaf {
+  position: relative;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -60,6 +61,8 @@ function onChange(e: Event) {
   background: var(--color-background);
 }
 .kaf--filled { align-items: flex-start; padding: 16px; }
+/* В состоянии Attach плитки 72x72, в пустом - плитка добавления 44x44 */
+.kaf--filled .kaf__add { width: 72px; height: 72px; }
 .kaf__input { position: absolute; width: 1px; height: 1px; opacity: 0; pointer-events: none; }
 .kaf__list { display: flex; flex-wrap: wrap; gap: 8px; margin: 0; padding: 0; list-style: none; }
 .kaf__tile { position: relative; width: 72px; height: 72px; }
@@ -69,8 +72,8 @@ function onChange(e: Event) {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 72px;
-  height: 72px;
+  width: 44px;
+  height: 44px;
   padding: 0;
   border: var(--border-width) solid var(--color-stroke-primary);
   border-radius: var(--radius-md);

@@ -12,17 +12,32 @@ const props = withDefaults(defineProps<{
   disabled?: boolean
   /** Показывать крестик сброса, когда значение выбрано */
   clearable?: boolean
+  name?: string
+  /** Красная обводка (состояние ошибки) */
+  error?: boolean
 }>(), { modelValue: '', placeholder: 'Выберите', clearable: false })
 
 const emit = defineEmits<{ 'update:modelValue': [value: string] }>()
+
+
+// class и style остаются на корне, остальные атрибуты уходят на нативный select
+defineOptions({ inheritAttrs: false })
+const attrs = useAttrs()
+const nativeAttrs = computed(() => {
+  const { class: _class, style: _style, ...rest } = attrs
+  return rest
+})
 
 const showClear = computed(() => props.clearable && !!props.modelValue && !props.disabled)
 </script>
 
 <template>
-  <div class="ksel" :class="{ 'ksel--empty': !modelValue, 'ksel--disabled': disabled }">
+  <div class="ksel" :class="[attrs.class, { 'ksel--empty': !modelValue, 'ksel--disabled': disabled, 'ksel--error': error }]" :style="attrs.style as any">
     <select
+      v-bind="nativeAttrs"
       class="ksel__select"
+      :name="name"
+      :aria-invalid="error ? true : undefined"
       :value="modelValue"
       :disabled="disabled"
       :aria-label="label ?? placeholder"
@@ -54,6 +69,7 @@ const showClear = computed(() => props.clearable && !!props.modelValue && !props
   appearance: none;
   cursor: pointer;
 }
+.ksel--error .ksel__select { border-color: var(--color-fill-error); }
 .ksel--empty .ksel__select { color: var(--color-label-secondary); }
 .ksel__select:focus-visible { outline: var(--border-width-strong) solid var(--color-stroke-primary); outline-offset: 2px; }
 .ksel--disabled .ksel__select { background: var(--color-fill-gray-3); color: var(--color-label-gray); cursor: not-allowed; }

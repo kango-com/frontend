@@ -19,15 +19,17 @@ const props = withDefaults(defineProps<{
 })
 
 const tag = computed(() => {
-  if (props.to) return resolveComponent('NuxtLink')
-  if (props.href) return 'a'
+  if (props.to && !props.disabled) return resolveComponent('NuxtLink')
+  if (props.href || props.to) return 'a'
   return 'button'
 })
 
 const attrs = computed(() => {
   if (props.to || props.href) {
+    // отключённая ссылка остаётся без адреса, чтобы по ней нельзя было перейти
     return {
-      ...(props.to ? { to: props.to } : { href: props.href }),
+      ...(props.disabled ? {} : props.to ? { to: props.to } : { href: props.href }),
+      role: props.disabled ? 'link' : undefined,
       'aria-disabled': props.disabled || undefined,
       tabindex: props.disabled ? -1 : undefined
     }
@@ -57,7 +59,7 @@ const attrs = computed(() => {
   gap: 4px;
   height: 44px;
   padding: 0 16px;
-  border: var(--border-width) solid transparent;
+  border: 0;
   border-radius: var(--radius-md);
   background: transparent;
   color: var(--color-label-primary);
@@ -85,8 +87,8 @@ const attrs = computed(() => {
 
 /* Secondary */
 .kbtn--secondary {
+  border: var(--border-width) solid var(--color-stroke-color);
   background: var(--color-fill-color-3);
-  border-color: var(--color-stroke-color);
   color: var(--color-label-white);
 }
 .kbtn--secondary.kbtn--disabled {
@@ -96,7 +98,7 @@ const attrs = computed(() => {
 }
 
 /* Outline */
-.kbtn--outline { border-color: var(--color-stroke-color); }
+.kbtn--outline { border: var(--border-width) solid var(--color-stroke-color); }
 .kbtn--outline.kbtn--selected { background: var(--color-fill-color-3); color: var(--color-label-white); }
 .kbtn--outline.kbtn--disabled { border-color: var(--color-label-color-disabled); color: var(--color-label-color-disabled); }
 

@@ -12,13 +12,17 @@ const props = withDefaults(defineProps<{
 }>(), { size: 'sm', type: 'button' })
 
 const tag = computed(() => {
-  if (props.to) return resolveComponent('NuxtLink')
-  if (props.href) return 'a'
+  if (props.to && !props.disabled) return resolveComponent('NuxtLink')
+  if (props.href || props.to) return 'a'
   return 'button'
 })
 const attrs = computed(() => {
   if (props.to || props.href) {
-    return { ...(props.to ? { to: props.to } : { href: props.href }), 'aria-disabled': props.disabled || undefined, tabindex: props.disabled ? -1 : undefined }
+    return {
+      ...(props.disabled ? {} : props.to ? { to: props.to } : { href: props.href }),
+      'aria-disabled': props.disabled || undefined,
+      tabindex: props.disabled ? -1 : undefined
+    }
   }
   return { type: props.type, disabled: props.disabled }
 })

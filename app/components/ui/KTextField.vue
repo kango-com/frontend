@@ -18,6 +18,13 @@ const props = withDefaults(defineProps<{
 const emit = defineEmits<{ 'update:modelValue': [value: string] }>()
 
 const id = useId()
+// class и style остаются на корне, остальные атрибуты (required, maxlength, @blur и т.д.) уходят на нативный элемент
+defineOptions({ inheritAttrs: false })
+const attrs = useAttrs()
+const nativeAttrs = computed(() => {
+  const { class: _class, style: _style, ...rest } = attrs
+  return rest
+})
 const input = ref<HTMLInputElement>()
 const revealed = ref(false)
 
@@ -32,9 +39,10 @@ function clear() {
 </script>
 
 <template>
-  <div class="ktf" :class="{ 'ktf--error': error, 'ktf--disabled': disabled }">
+  <div class="ktf" :class="[attrs.class, { 'ktf--error': error, 'ktf--disabled': disabled }]" :style="attrs.style as any">
     <div class="ktf__field">
       <input
+        v-bind="nativeAttrs"
         :id="id"
         ref="input"
         class="ktf__input"
@@ -44,7 +52,7 @@ function clear() {
         :name="name"
         :autocomplete="autocomplete"
         :disabled="disabled"
-        :aria-label="label"
+        :aria-label="label ?? placeholder"
         :aria-invalid="error ? true : undefined"
         :aria-describedby="note ? `${id}-note` : undefined"
         @input="emit('update:modelValue', ($event.target as HTMLInputElement).value)"
@@ -70,7 +78,7 @@ function clear() {
         <Icon name="kango:close-24" size="24" />
       </button>
     </div>
-    <p v-if="note" :id="`${id}-note`" class="ktf__note">{{ note }}</p>
+    <p v-if="note" :id="`${id}-note`" class="ktf__note" :role="error ? 'alert' : undefined">{{ note }}</p>
   </div>
 </template>
 

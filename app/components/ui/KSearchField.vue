@@ -12,6 +12,13 @@ const emit = defineEmits<{
 }>()
 
 const input = ref<HTMLInputElement>()
+// class и style остаются на корне, остальные атрибуты (required, maxlength, @blur и т.д.) уходят на нативный элемент
+defineOptions({ inheritAttrs: false })
+const attrs = useAttrs()
+const nativeAttrs = computed(() => {
+  const { class: _class, style: _style, ...rest } = attrs
+  return rest
+})
 
 function clear() {
   emit('update:modelValue', '')
@@ -20,9 +27,10 @@ function clear() {
 </script>
 
 <template>
-  <form class="ksf" role="search" @submit.prevent="emit('submit', modelValue)">
+  <form class="ksf" :class="[attrs.class, { 'ksf--disabled': disabled }]" :style="attrs.style as any" role="search" @submit.prevent="emit('submit', modelValue)">
     <Icon name="kango:search-24" size="24" class="ksf__icon" />
     <input
+      v-bind="nativeAttrs"
       ref="input"
       class="ksf__input"
       type="search"
@@ -51,6 +59,8 @@ function clear() {
   border-radius: var(--radius-md);
   background: var(--color-fill-white);
 }
+.ksf--disabled { background: var(--color-fill-gray-3); }
+.ksf--disabled .ksf__input { color: var(--color-label-gray); cursor: not-allowed; }
 .ksf:focus-within { outline: var(--border-width-strong) solid var(--color-stroke-primary); outline-offset: 2px; }
 .ksf__icon { flex: none; color: var(--color-fill-primary); }
 .ksf__input {

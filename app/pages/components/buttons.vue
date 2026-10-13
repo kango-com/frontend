@@ -11,7 +11,7 @@ const solid = ['primary', 'secondary', 'outline', 'neutral'] as const
   >
     <ShowSection v-for="v in solid" :key="v" :title="v[0]!.toUpperCase() + v.slice(1)">
       <ShowItem label="Default" width="341px"><KButton :variant="v" block>Продолжить</KButton></ShowItem>
-      <ShowItem label="Hover / Selected" width="341px"><KButton :variant="v" block selected>Продолжить</KButton></ShowItem>
+      <ShowItem v-if="v === 'primary' || v === 'outline'" label="Hover / Selected" width="341px"><KButton :variant="v" block selected>Продолжить</KButton></ShowItem>
       <ShowItem label="Disabled" width="341px"><KButton :variant="v" block disabled>Продолжить</KButton></ShowItem>
       <ShowItem v-if="v === 'secondary' || v === 'outline'" label="С иконкой (1380)" width="341px">
         <KButton :variant="v" block>

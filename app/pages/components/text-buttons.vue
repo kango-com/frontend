@@ -37,9 +37,8 @@ function add(picked: File[]) {
       </ShowItem>
     </ShowSection>
 
-    <ShowSection title="Link + icon" note="Строка 44px: текст 16/16 и шеврон справа.">
+    <ShowSection title="Link + icon" note="Строка 44px: текст 16/16 и шеврон справа. Hover/Selected в макете не отличается от Default.">
       <ShowItem label="Default" width="343px"><KLinkRow to="/components">Мои объявления</KLinkRow></ShowItem>
-      <ShowItem label="Hover / Selected" width="343px"><KLinkRow to="/components" selected>Мои объявления</KLinkRow></ShowItem>
     </ShowSection>
 
     <ShowSection title="Attach file" note="Пустое состояние и состояние с фото (удаление, добавление).">

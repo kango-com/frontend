@@ -2,7 +2,6 @@
 const props = defineProps<{
   to?: string
   href?: string
-  selected?: boolean
 }>()
 
 const tag = computed(() => (props.to ? resolveComponent('NuxtLink') : props.href ? 'a' : 'button'))
@@ -10,7 +9,7 @@ const attrs = computed(() => (props.to ? { to: props.to } : props.href ? { href:
 </script>
 
 <template>
-  <component :is="tag" v-bind="attrs" class="klr" :class="{ 'klr--selected': selected }">
+  <component :is="tag" v-bind="attrs" class="klr">
     <span class="klr__label"><slot /></span>
     <Icon name="kango:chevron-right-24" size="24" class="klr__icon" />
   </component>
@@ -37,6 +36,4 @@ const attrs = computed(() => (props.to ? { to: props.to } : props.href ? { href:
 }
 .klr__icon { flex: none; color: var(--color-fill-gray); }
 .klr:focus-visible { outline: var(--border-width-strong) solid var(--color-stroke-primary); outline-offset: 2px; border-radius: var(--radius-sm); }
-.klr--selected .klr__label { color: var(--color-fill-color-4); }
-@media (hover: hover) { .klr:hover .klr__label { color: var(--color-fill-color-4); } }
 </style>
