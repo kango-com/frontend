@@ -50,11 +50,10 @@ async function copy(name: string) {
   max-width: 960px;
   margin: 0 auto;
   padding: 32px 16px;
-  font-family: system-ui, sans-serif;
-  color: #6c6c6c;
+  color: var(--color-fill-gray);
 }
-h1 { margin: 0 0 4px; color: #222; }
-h2 { margin: 32px 0 12px; color: #222; font-size: 18px; }
+h1 { margin: 0 0 4px; color: var(--color-label-primary); }
+h2 { margin: 32px 0 12px; color: var(--color-label-primary); font-size: 18px; }
 .hint { margin: 0; }
 .grid {
   display: grid;
@@ -71,13 +70,13 @@ h2 { margin: 32px 0 12px; color: #222; font-size: 18px; }
   gap: 8px;
   width: 100%;
   padding: 16px 8px;
-  border: 1px solid #e5e5e5;
-  border-radius: 8px;
-  background: #fff;
+  border: var(--border-width) solid var(--color-stroke-gray);
+  border-radius: var(--radius-md);
+  background: var(--color-background);
   color: inherit;
   cursor: pointer;
 }
-.cell:hover { border-color: #fd4a00; color: #fd4a00; }
+.cell:hover { border-color: var(--color-stroke-primary); color: var(--color-fill-primary); }
 .icon { flex: none; }
-.label { font-size: 12px; text-align: center; word-break: break-all; }
+.label { font-size: var(--text-12-12); line-height: var(--leading-12-12); text-align: center; word-break: break-all; }
 </style>

@@ -22,6 +22,13 @@ SVG лежат в `app/assets/icons/`, подключены через `@nuxt/ic
 Цвет линий и заливок иконок задаётся `currentColor` (наследуется от `color`),
 логотипы Facebook и Google остаются цветными.
 
+## Дизайн-токены
+
+Правила дизайн-системы - в `DESIGN.md`. Токены лежат в `app/assets/css/tokens.css`
+(CSS-переменные `--color-*`, `--text-*`, `--leading-*`, `--radius-*`, `--spacing-*`),
+базовые стили - в `base.css`, брейкпоинты - в `app/utils/breakpoints.ts`.
+Шрифт Inter подключает `@nuxt/fonts`. Превью токенов: `/tokens`, иконок: `/icons`.
+
 ## Компоненты
 
 Витрина компонентов: `/components` (`app/pages/components/index.vue`). Каждая группа
