@@ -4,11 +4,11 @@ export default defineNuxtConfig({
   devtools: { enabled: true },
   app: {
     head: {
-      title: 'Kango — работа, жильё и мастера в Израиле',
+      title: 'Kango - работа, жильё и мастера в Израиле',
       meta: [
         {
           name: 'description',
-          content: 'Kango — доска объявлений для русскоязычных жителей Израиля: находите работу, жильё и мастеров и общайтесь напрямую.'
+          content: 'Kango - доска объявлений для русскоязычных жителей Израиля: находите работу, жильё и мастеров и общайтесь напрямую.'
         }
       ],
       htmlAttrs: { lang: 'ru' },
