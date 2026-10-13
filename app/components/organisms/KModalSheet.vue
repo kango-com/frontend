@@ -7,6 +7,8 @@ defineProps<{
   action?: string
   /** Доступное имя окна, если нет заголовка */
   label?: string
+  /** От 768px показывать по центру как диалог (на мобильном остаётся шторкой снизу) */
+  dialog?: boolean
 }>()
 
 const emit = defineEmits<{ action: [] }>()
@@ -85,7 +87,7 @@ function dragEnd() {
 <template>
   <Teleport to="body">
     <Transition name="ksheet">
-      <div v-if="open" class="ksheet" @click.self="close">
+      <div v-if="open" class="ksheet" :class="{ 'ksheet--dialog': dialog }" @click.self="close">
         <div
           ref="sheet"
           class="ksheet__panel"
@@ -174,4 +176,22 @@ function dragEnd() {
 .ksheet-leave-to { background: transparent; }
 .ksheet-enter-from .ksheet__panel,
 .ksheet-leave-to .ksheet__panel { transform: translateY(100%); }
+
+/* Диалог от 768px: по центру, со скруглением со всех сторон, без grabber */
+@media (min-width: 768px) {
+  .ksheet--dialog { align-items: center; padding: 24px; }
+  .ksheet--dialog .ksheet__panel {
+    max-width: 480px;
+    max-height: min(640px, 90dvh);
+    border-radius: var(--radius-md);
+    transform: none;
+  }
+  .ksheet--dialog .ksheet__grabber { display: none; }
+  .ksheet--dialog .ksheet__head { padding-top: 12px; }
+  .ksheet--dialog.ksheet-enter-from .ksheet__panel,
+  .ksheet--dialog.ksheet-leave-to .ksheet__panel { transform: translateY(16px); opacity: 0; }
+  .ksheet--dialog .ksheet-enter-active .ksheet__panel,
+  .ksheet--dialog.ksheet-enter-active .ksheet__panel,
+  .ksheet--dialog.ksheet-leave-active .ksheet__panel { transition: transform 0.3s ease-out, opacity 0.3s ease-out; }
+}
 </style>

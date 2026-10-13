@@ -7,6 +7,7 @@
     </main>
     <KFooter />
     <AppTabBar />
+    <CitySelector />
   </div>
 </template>
 
