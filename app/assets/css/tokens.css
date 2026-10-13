@@ -1,0 +1,69 @@
+/*
+ * Дизайн-токены Kango. Источник правды - DESIGN.md, имена совпадают с его
+ * экспортом (`npx @google/design.md export --format css-tailwind DESIGN.md`).
+ * При изменении DESIGN.md обновляйте этот файл.
+ *
+ * Брейкпоинты (mobile-first, media-query не принимает переменные):
+ *   768px  - tablet:  @media (min-width: 768px)
+ *   1380px - desktop: @media (min-width: 1380px)
+ *   1920px - wide:    @media (min-width: 1920px)
+ * Базовая ширина макета 375px. Значения продублированы в app/utils/breakpoints.ts.
+ */
+:root {
+  /* Colors */
+  --color-fill-primary: #fd4a00;
+  --color-stroke-primary: #fd4a00;
+  --color-fill-color-4: #c73a00;
+  --color-fill-color: #3e8efa;
+  --color-fill-color-3: #005cfe;
+  --color-stroke-color: #005cfe;
+  --color-label-primary: #0e0f11;
+  --color-label-secondary: #686868;
+  --color-label-gray: #acacac;
+  --color-label-white: #ffffff;
+  --color-background: #ffffff;
+  --color-fill-white: #ffffff;
+  --color-fill-disabled: #ffc9b3;
+  --color-fill-error: #ff2a2a;
+  --color-fill-gray: #6c6c6c;
+  --color-fill-gray-2: #d2d2d2;
+  --color-fill-gray-3: #f2f2f2;
+  --color-fill-gray-10: #6c6c6c1a;
+  --color-stroke-gray: #d2d2d2;
+  --color-separator-gray: #d2d2d2;
+
+  /* Typography */
+  --font-sans: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --font-sans-tight: 'Inter Tight', 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --text-28-28: 28px;  --leading-28-28: 28px;
+  --text-22-24: 22px;  --leading-22-24: 24px;
+  --text-20-20: 20px;  --leading-20-20: 20px;
+  --text-17-20: 17px;  --leading-17-20: 20px;
+  --text-16-20: 16px;  --leading-16-20: 20px;
+  --text-16-16: 16px;  --leading-16-16: 16px;
+  --text-15-16: 15px;  --leading-15-16: 16px;
+  --text-14-16: 14px;  --leading-14-16: 16px;
+  --text-13-16: 13px;  --leading-13-16: 16px;
+  --text-12-16: 12px;  --leading-12-16: 16px;
+  --text-12-12: 12px;  --leading-12-12: 12px;
+  --text-10-12: 10px;  --leading-10-12: 12px;
+  --font-weight-regular: 400;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+
+  /* Shapes */
+  --radius-sm: 4px;
+  --radius-tab: 8px;
+  --radius-md: 12px;
+  --radius-pill: 9999px;
+  --border-width: 1px;
+  --border-width-strong: 1.5px;
+
+  /* Spacing: сетка 4px, отступ по краям контента 16px */
+  --spacing-unit: 4px;
+  --spacing-gutter: 16px;
+
+  /* Motion */
+  --duration-base: 300ms;
+  --ease-out: ease-out;
+}
