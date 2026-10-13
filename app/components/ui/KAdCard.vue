@@ -55,7 +55,7 @@ const attrs = computed(() => (props.to ? { to: props.to } : {}))
   background: var(--color-fill-gray-3);
 }
 .kad__img { display: block; width: 100%; height: 100%; object-fit: cover; }
-.kad__fav { position: absolute; top: 8px; right: 8px; }
+.kad .kad__fav { position: absolute; top: 8px; right: 8px; }
 .kad__body {
   display: flex;
   flex-direction: column;

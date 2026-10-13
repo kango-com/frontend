@@ -1,9 +1,9 @@
 <script setup lang="ts">
-defineProps<{ title: string; hint?: string }>()
+defineProps<{ title: string; hint?: string; wide?: boolean }>()
 </script>
 
 <template>
-  <main class="page">
+  <main class="page" :class="{ 'page--wide': wide }">
     <NuxtLink to="/components" class="back">Все компоненты</NuxtLink>
     <h1>{{ title }}</h1>
     <p v-if="hint" class="hint">{{ hint }}</p>
@@ -18,6 +18,7 @@ defineProps<{ title: string; hint?: string }>()
   padding: 32px 16px 64px;
   color: var(--color-fill-gray);
 }
+.page--wide { max-width: 1440px; }
 .back {
   display: inline-block;
   margin-bottom: 8px;

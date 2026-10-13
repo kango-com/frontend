@@ -64,7 +64,7 @@ function onChange(e: Event) {
 .kaf__list { display: flex; flex-wrap: wrap; gap: 8px; margin: 0; padding: 0; list-style: none; }
 .kaf__tile { position: relative; width: 72px; height: 72px; }
 .kaf__img { width: 100%; height: 100%; border-radius: var(--radius-md); object-fit: cover; }
-.kaf__remove { position: absolute; top: 4px; right: 4px; }
+.kaf .kaf__remove { position: absolute; top: 4px; right: 4px; }
 .kaf__add {
   display: inline-flex;
   align-items: center;
