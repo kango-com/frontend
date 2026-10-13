@@ -27,8 +27,11 @@ SVG лежат в `app/assets/icons/`, подключены через `@nuxt/ic
 компонентов показана на своей странице `app/pages/components/<группа>.vue`, ссылка на неё
 в списке появляется автоматически, как только файл создан.
 
-Соглашения (задача 0006, предварительные, подтверждаются при реализации первых компонентов):
-- компоненты в `app/components/ui/`, префикс `K` (`KButton`, `KTextField`);
-- варианты через props (`variant`, `size`, `disabled`), hover и focus через CSS;
+Соглашения:
+- компоненты дизайн-системы лежат в `app/components/ui/`, префикс `K` (`KButton`, `KTextField`);
+  автоимпорт без префикса папки (`components: [{ path: '~/components', pathPrefix: false }]`);
+- компоненты витрины (`ShowPage`, `ShowSection`, `ShowItem`) - в `app/components/showcase/`, в продукте не используются;
+- варианты через props (`variant`, `size`, `disabled`), hover и focus через CSS, `selected` принудительно включает Hover/Selected для витрины;
 - стили только на токенах из `tokens.css`, иконки через `<Icon name="kango:...">`;
-- брейкпоинты из `app/utils/breakpoints.ts`, mobile-first.
+- брейкпоинты из `app/utils/breakpoints.ts`, mobile-first (в media query значения 768px и 1380px пишутся числом);
+- если родитель переопределяет стиль корневого элемента дочернего компонента, селектор должен быть специфичнее (`.parent .parent__child`), иначе порядок загрузки CSS ломает результат.
