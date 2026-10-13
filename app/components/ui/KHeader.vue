@@ -108,7 +108,8 @@ const query = computed({
     box-shadow: none;
   }
   .khd .khd__logo :deep(img) { width: auto; height: 41px; }
-  .khd .khd__logo { grid-column: 1; grid-row: 1; }
+  .khd .khd__logo { grid-column: 1; grid-row: 1; margin-right: 36px; }
+  .khd__links :deep(.ktb--sm) { color: var(--color-label-secondary); }
   .khd .khd__cats { display: inline-flex; grid-column: 2; grid-row: 1; width: 224px; }
   .khd .khd__search,
   .khd.khd--search .khd__search { display: flex; align-items: center; gap: 12px; grid-column: 3; grid-row: 1; }

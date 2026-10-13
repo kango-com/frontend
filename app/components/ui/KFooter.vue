@@ -2,7 +2,7 @@
 export interface FooterLink {
   label: string
   to: string
-  /** arrow - переход на страницу (стрелка), plus - раскрывающийся раздел */
+  /** arrow - переход на страницу (стрелка), plus - раскрывающийся раздел (пока не используется) */
   icon?: 'arrow' | 'plus'
 }
 
@@ -13,8 +13,8 @@ withDefaults(defineProps<{
   links: () => [
     { label: 'О нас', to: '/about', icon: 'arrow' },
     { label: 'Поддержка', to: '/support', icon: 'arrow' },
-    { label: 'Документы', to: '/documents', icon: 'plus' },
-    { label: 'Реквизиты', to: '/details', icon: 'plus' }
+    { label: 'Документы', to: '/documents', icon: 'arrow' },
+    { label: 'Реквизиты', to: '/details', icon: 'arrow' }
   ],
   copyright: '© 2026 kango. Все права защищены'
 })
@@ -23,7 +23,7 @@ withDefaults(defineProps<{
 <template>
   <footer class="kft-footer">
     <div class="kft-footer__inner">
-      <KLogo class="kft-footer__logo" to="/" :height="50" />
+      <KLogo class="kft-footer__logo" to="/" :height="42" />
       <ul class="kft-footer__links">
         <li v-for="l in links" :key="l.to">
           <NuxtLink :to="l.to" class="kft-footer__link">
@@ -73,7 +73,7 @@ withDefaults(defineProps<{
 @media (min-width: 768px) {
   .kft-footer__inner {
     display: grid;
-    grid-template-columns: 148px 1fr;
+    grid-template-columns: 124px 1fr;
     column-gap: 40px;
     row-gap: 24px;
     padding: 32px 16px 40px;
