@@ -60,7 +60,7 @@ const attrs = computed(() => (props.to ? { to: props.to } : {}))
   display: flex;
   flex-direction: column;
   gap: 8px;
-  padding: 16px 8px;
+  padding: 15px 8px;
   color: inherit;
   text-decoration: none;
 }
@@ -80,9 +80,9 @@ const attrs = computed(() => (props.to ? { to: props.to } : {}))
 
 /* Брейкпоинт desktop 1380px */
 @media (min-width: 1380px) {
-  .kad { border-color: transparent; }
+  .kad { border: 0; }
   .kad__media { height: auto; aspect-ratio: 246 / 244; }
-  .kad__body { gap: 12px; }
+  .kad__body { gap: 12px; padding: 21px 8px; }
   .kad__title,
   .kad__price { font-size: var(--text-15-16); line-height: var(--leading-15-16); }
   .kad__location { font-size: var(--text-12-12); line-height: var(--leading-12-12); }
