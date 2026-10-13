@@ -5,10 +5,13 @@ const colors = [
   'fill-primary', 'stroke-primary', 'fill-color-4', 'fill-color', 'fill-color-3', 'stroke-color',
   'label-primary', 'label-secondary', 'label-gray', 'label-white',
   'background', 'fill-white', 'fill-gray', 'fill-gray-2', 'fill-gray-3', 'fill-gray-10',
-  'stroke-gray', 'separator-gray'
+  'stroke-gray', 'separator-gray',
+  'fill-disabled', 'label-disabled', 'fill-color-disabled', 'label-color-disabled',
+  'fill-gray-4', 'label-gray-2', 'label-hint', 'fill-tint', 'fill-error'
 ]
-const texts = ['28-28', '22-24', '20-20', '17-20', '16-16', '15-16', '14-16', '13-16', '12-12', '10-12']
-const radii = ['sm', 'md']
+const texts = ['28-28', '22-24', '20-20', '17-20', '16-20', '16-16', '15-16', '14-16', '13-16', '12-16', '12-12', '10-12']
+const tightTexts = ['16-16', '12-12']
+const radii = ['sm', 'tab', 'md', 'pill']
 </script>
 
 <template>
@@ -27,6 +30,15 @@ const radii = ['sm', 'md']
     <h2>Типографика, Inter</h2>
     <ul class="list">
       <li v-for="t in texts" :key="t" :style="{ fontSize: `var(--text-${t})`, lineHeight: `var(--leading-${t})` }">
+        <span class="mono">{{ t }}</span>
+        Объявления для русскоязычных в Израиле
+      </li>
+    </ul>
+
+    <h2>Типографика, Inter Tight</h2>
+    <p class="hint">Вторичный шрифт для диапазона 375-768px и подписей под полями.</p>
+    <ul class="list">
+      <li v-for="t in tightTexts" :key="t" :style="{ fontFamily: 'var(--font-sans-tight)', fontSize: `var(--text-${t})`, lineHeight: `var(--leading-${t})` }">
         <span class="mono">{{ t }}</span>
         Объявления для русскоязычных в Израиле
       </li>
