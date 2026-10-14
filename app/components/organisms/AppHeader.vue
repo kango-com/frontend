@@ -41,5 +41,7 @@ function submit(q: string) {
   background: transparent;
   transition: background-color 0.2s ease-out, box-shadow 0.2s ease-out;
 }
-.app-header--solid { background: var(--color-background); }
+.app-header :deep(.khd) { background: transparent; transition: background-color 0.2s ease-out; }
+.app-header--solid,
+.app-header--solid :deep(.khd) { background: var(--color-background); }
 </style>

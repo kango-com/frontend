@@ -8,13 +8,31 @@ defineProps<{
 }>()
 
 defineEmits<{ select: [city: City] }>()
+
+const root = ref<HTMLElement>()
+const rows = () => Array.from(root.value?.querySelectorAll<HTMLElement>('button') ?? [])
+
+/** Фокус на первый город (например, стрелкой вниз из поля поиска) */
+function focusFirst() { rows()[0]?.focus() }
+defineExpose({ focusFirst })
+
+/** Стрелки вверх и вниз переносят фокус по городам, Enter и пробел выбирают (нативная кнопка) */
+function onKey(e: KeyboardEvent) {
+  if (e.key !== 'ArrowDown' && e.key !== 'ArrowUp' && e.key !== 'Home' && e.key !== 'End') return
+  const items = rows()
+  if (!items.length) return
+  e.preventDefault()
+  const i = items.indexOf(document.activeElement as HTMLElement)
+  const next = e.key === 'Home' ? 0 : e.key === 'End' ? items.length - 1 : e.key === 'ArrowDown' ? Math.min(i + 1, items.length - 1) : Math.max(i - 1, 0)
+  items[next]?.focus()
+}
 </script>
 
 <template>
-  <div class="city-list">
+  <div ref="root" class="city-list" @keydown="onKey">
     <p v-if="!cities.length && !loading" class="empty">Ничего не найдено. Проверьте название города.</p>
-    <ul v-else class="list" role="listbox" aria-label="Города">
-      <li v-for="c in cities" :key="c.id" role="option" :aria-selected="c.id === selectedId">
+    <ul v-else class="list" aria-label="Города">
+      <li v-for="c in cities" :key="c.id">
         <KTableRow type="select" :label="c.name" :selected="c.id === selectedId" @click="$emit('select', c)" />
       </li>
     </ul>

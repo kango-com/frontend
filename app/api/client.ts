@@ -35,13 +35,14 @@ interface FetchErrorLike {
   data?: Partial<ApiError>
   message?: string
   name?: string
+  cause?: { name?: string }
 }
 
 /** Приводит любую ошибку запроса к единому формату */
 export function toApiError(e: unknown): ApiError {
   const err = (e ?? {}) as FetchErrorLike
   const status = err.statusCode ?? err.status ?? 0
-  if (err.name === 'AbortError') return { status: 0, code: 'aborted', message: 'Запрос отменён' }
+  if (err.name === 'AbortError' || err.cause?.name === 'AbortError') return { status: 0, code: 'aborted', message: 'Запрос отменён' }
   if (!status) return { status: 0, code: 'network', message: 'Нет соединения с сервером' }
   return {
     status,

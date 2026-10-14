@@ -10,6 +10,7 @@ const open = computed({
 })
 
 const query = ref('')
+const cityList = ref<{ focusFirst: () => void }>()
 /** Выбранный в списке город применяется кнопкой «Выбрать» */
 const pending = ref<City>(city.current)
 let timer: ReturnType<typeof setTimeout> | undefined
@@ -48,9 +49,9 @@ function first() {
 <template>
   <KModalSheet v-model="open" title="Какой город?" action="Отмена" dialog @action="open = false">
     <div class="city-selector">
-      <KSearchField v-model="query" placeholder="Поиск города" label="Поиск города" @submit="first" />
+      <KSearchField v-model="query" placeholder="Поиск города" label="Поиск города" @submit="first" @keydown.down.prevent="cityList?.focusFirst()" />
       <div class="scroll">
-        <CityList :cities="list" :selected-id="pending.id" :loading="city.searching" @select="pending = $event" />
+        <CityList ref="cityList" :cities="list" :selected-id="pending.id" :loading="city.searching" @select="pending = $event" />
       </div>
       <KButton block @click="confirm">Выбрать</KButton>
     </div>
