@@ -30,10 +30,13 @@ onMounted(async () => {
   }
   // оплата не прошла: возвращаем на шаг продвижения с сообщением
   if (state.value === 'failed') {
-    await router.replace({ path: '/new/promote', query: { status: String(route.query.status ?? 'failed') } })
+    const query: Record<string, string> = { status: String(route.query.status ?? 'failed') }
+    if (route.query.existing && adId.value) query.ad = adId.value
+    await router.replace({ path: '/new/promote', query })
     return
   }
-  draft.reset()
+  // продвижение из профиля не должно стирать незавершённый черновик подачи
+  if (!route.query.existing) draft.reset()
 })
 </script>
 

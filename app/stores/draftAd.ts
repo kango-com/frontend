@@ -106,11 +106,11 @@ export const useDraftAdStore = defineStore('draftAd', () => {
   }
 
   /** Создаёт платёж и возвращает адрес страницы оплаты */
-  async function pay(returnUrl: string): Promise<string | null> {
-    if (!createdId.value || !selectedPackage.value) return null
+  async function pay(returnUrl: string, adId: string | null = createdId.value): Promise<string | null> {
+    if (!adId || !selectedPackage.value) return null
     status.value = 'loading'
     try {
-      const session = await paymentsApi.create(createdId.value, selectedPackage.value, returnUrl)
+      const session = await paymentsApi.create(adId, selectedPackage.value, returnUrl)
       status.value = 'success'
       return session.redirectUrl
     } catch (e) {

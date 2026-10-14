@@ -3,20 +3,32 @@ import type { PromoPackageId } from '~/types'
 import { formatPriceLong } from '~/utils/ad-view'
 
 /** Продвижение опубликованного объявления: выбор пакета, оплата или пропуск */
+const props = defineProps<{
+  /** Продвигается уже опубликованное объявление (из профиля), а не только что поданное */
+  adId: string
+  existing?: boolean
+}>()
 const emit = defineEmits<{ skip: [] }>()
 
 const store = useDraftAdStore()
 const router = useRouter()
 const route = useRoute()
+const ads = useAdsStore()
 
-onMounted(() => store.loadPackages())
+onMounted(() => {
+  store.loadPackages()
+  if (props.existing) ads.loadDetails(props.adId)
+})
+
+// краткая информация об объявлении: из черновика после подачи или из загруженной карточки
+const summary = computed(() => (props.existing ? ads.details[props.adId] : store.draft))
 
 const busy = computed(() => store.status === 'loading')
 const failed = computed(() => route.query.status === 'failed' || route.query.status === 'cancelled')
 const BADGES: Partial<Record<PromoPackageId, string>> = { max: 'Экономия 20%' }
 
 async function pay() {
-  const url = await store.pay('/new/success')
+  const url = await store.pay(props.existing ? '/new/success?existing=1' : '/new/success', props.adId)
   if (url) await router.push(url)
 }
 </script>
@@ -25,9 +37,9 @@ async function pay() {
   <section class="prom" aria-labelledby="prom-title">
     <h1 id="prom-title" class="prom__title">Продвинуть объявление</h1>
 
-    <div v-if="store.draft.title" class="prom__ad">
-      <span class="prom__ad-title">{{ store.draft.title }}</span>
-      <span v-if="store.draft.price" class="prom__ad-price">{{ formatPriceLong(store.draft.price) }}</span>
+    <div v-if="summary?.title" class="prom__ad">
+      <span class="prom__ad-title">{{ summary.title }}</span>
+      <span v-if="summary.price" class="prom__ad-price">{{ formatPriceLong(summary.price) }}</span>
     </div>
 
     <p v-if="failed" class="prom__alert" role="alert">Оплата не прошла. Попробуйте ещё раз или опубликуйте без продвижения.</p>
@@ -48,7 +60,7 @@ async function pay() {
     </div>
 
     <KButton block :disabled="!store.selectedPackage || busy" @click="pay">{{ busy ? 'Переходим к оплате...' : 'Оплатить' }}</KButton>
-    <KButton block variant="neutral" :disabled="busy" @click="emit('skip')">Опубликовать без продвижения</KButton>
+    <KButton block variant="neutral" :disabled="busy" @click="emit('skip')">{{ existing ? 'Не сейчас' : 'Продвинуть позже' }}</KButton>
   </section>
 </template>
 

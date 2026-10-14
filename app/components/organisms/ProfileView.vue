@@ -5,7 +5,6 @@ import { formatSince } from '~/utils/ad-view'
 /** Профиль: данные пользователя, быстрые ссылки, «Мои объявления» (продвинуть, удалить), выход */
 const auth = useAuthStore()
 const mine = useMyAdsStore()
-const draft = useDraftAdStore()
 const favorites = useFavoritesStore()
 const router = useRouter()
 
@@ -17,14 +16,12 @@ const failed = ref('')
 async function confirmRemove() {
   const id = toDelete.value
   toDelete.value = null
+  failed.value = ''
   if (id && !(await mine.remove(id))) failed.value = 'Не удалось удалить объявление. Попробуйте ещё раз.'
 }
 
-function promote(id: string) {
-  draft.createdId = id
-  draft.selectedPackage = null
-  router.push('/new/promote')
-}
+// продвижение существующего объявления не трогает черновик подачи: id уходит в адрес страницы
+const promote = (id: string) => router.push({ path: '/new/promote', query: { ad: id } })
 
 async function logout() {
   await auth.logout()
@@ -86,7 +83,7 @@ const initial = computed(() => auth.user?.name?.trim().charAt(0).toUpperCase() ?
 
     <KButton variant="neutral" class="prof__logout" @click="logout">Выйти</KButton>
 
-    <KModalSheet :model-value="!!toDelete" title="Удалить объявление?" dialog @update:model-value="v => { if (!v) toDelete = null }">
+    <KModalSheet :model-value="!!toDelete" title="Удалить объявление?" dialog @update:model-value="v => { if (!v) { toDelete = null; failed = '' } }">
       <div class="prof__confirm">
         <p>Объявление исчезнет из поиска и ленты. Это действие нельзя отменить.</p>
         <KButton block @click="confirmRemove">Удалить</KButton>

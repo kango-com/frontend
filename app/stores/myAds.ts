@@ -33,7 +33,7 @@ export const useMyAdsStore = defineStore('myAds', () => {
     }
   }
 
-  const reset = () => { items.value = []; status.value = 'idle' }
+  const reset = () => { items.value = []; status.value = 'idle'; error.value = null }
 
   return { items, status, error, load, remove, reset }
 })
