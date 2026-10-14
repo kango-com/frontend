@@ -25,26 +25,9 @@ const query = computed({
 
 <template>
   <header class="khd" :class="{ 'khd--search': withSearch }">
-    <nav class="khd__top" aria-label="Служебная">
-      <div class="khd__links">
-        <KTextButton to="/about" size="sm">О нас</KTextButton>
-        <KTextButton to="/support" size="sm">Поддержка</KTextButton>
-      </div>
-      <div class="khd__links">
-        <KTextButton :to="loggedIn ? '/profile' : '/login'" size="md">
-          <template #icon-left><Icon name="kango:user-24" size="24" /></template>
-          {{ loggedIn ? 'Профиль' : 'Вход и регистрация' }}
-        </KTextButton>
-        <KTextButton to="/new" size="md">
-          <template #icon-left><Icon name="kango:plus-square-24" size="24" /></template>
-          Разместить объявление
-        </KTextButton>
-      </div>
-    </nav>
-
     <div class="khd__main">
       <KLogo class="khd__logo" to="/" :height="32" />
-      <KButton class="khd__cats" variant="outline" @click="emit('categories')">
+      <KButton class="khd__cats" variant="secondary" @click="emit('categories')">
         <template #icon-left><Icon name="kango:menu-24" size="24" /></template>
         Все категории
       </KButton>
@@ -57,6 +40,16 @@ const query = computed({
         <template #icon-left><Icon name="kango:map-pin-16" size="16" /></template>
         {{ city }}
       </KButton>
+      <nav class="khd__links" aria-label="Служебная">
+        <KTextButton :to="loggedIn ? '/profile' : '/login'" size="sm">
+          <template #icon-left><Icon name="kango:user-16" size="16" /></template>
+          {{ loggedIn ? 'Профиль' : 'Вход и регистрация' }}
+        </KTextButton>
+        <KTextButton to="/new" size="sm">
+          <template #icon-left><Icon name="kango:plus-square-16" size="16" /></template>
+          Разместить объявление
+        </KTextButton>
+      </nav>
     </div>
   </header>
 </template>
@@ -89,38 +82,47 @@ const query = computed({
 .khd.khd--search .khd__filter { display: inline-flex; grid-column: 2; grid-row: 2; }
 .khd.khd--search .khd__find { display: none; }
 
-/* Брейкпоинт desktop 1380px (media query не принимает переменные) */
+/* Брейкпоинт desktop 1380px (media query не принимает переменные).
+   Одна строка: логотип, белая плашка (категории, поиск, город, «Найти»), справа служебные ссылки.
+   Над баннером главной шапка прозрачная, плашка остаётся белой. */
+.khd__links { display: none; }
 @media (min-width: 1380px) {
-  .khd__top {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    max-width: 1380px;
-    height: 32px;
-    margin-inline: auto;
-    padding: 12px 50px 0;
-  }
-  .khd__links { display: flex; align-items: center; gap: 24px; }
+  .khd__top { display: none; }
   .khd__main,
   .khd.khd--search .khd__main {
+    position: relative;
     max-width: 1380px;
     margin-inline: auto;
-    grid-template-columns: auto auto minmax(0, 1fr) auto auto;
-    gap: 12px;
-    padding: 20px 50px 0;
+    grid-template-columns: auto auto minmax(0, 1fr) auto auto auto;
+    gap: 8px;
+    padding: 32px 50px 18px;
     border-radius: 0;
     box-shadow: none;
   }
+  /* белая плашка за колонками 2-6 (категории ... «Найти») */
+  .khd__main::before,
+  .khd.khd--search .khd__main::before {
+    content: '';
+    grid-column: 2 / 6;
+    grid-row: 1;
+    align-self: stretch;
+    margin: -6px -9px;
+    border-radius: 16px;
+    background: var(--color-background);
+  }
+  .khd .khd__logo { grid-column: 1; grid-row: 1; margin-right: 30px; }
   .khd .khd__logo :deep(img) { width: auto; height: 41px; }
-  .khd .khd__logo { grid-column: 1; grid-row: 1; margin-right: 36px; }
-  .khd__links :deep(.ktb--sm) { color: var(--color-label-secondary); }
-  .khd .khd__cats { display: inline-flex; grid-column: 2; grid-row: 1; width: 224px; }
+  .khd .khd__cats { display: inline-flex; grid-column: 2; grid-row: 1; min-width: 155px; height: 44px; white-space: nowrap; z-index: 1; }
   .khd .khd__search,
-  .khd.khd--search .khd__search { display: flex; align-items: center; gap: 12px; grid-column: 3; grid-row: 1; }
-  .khd .khd__find,
-  .khd.khd--search .khd__find { display: inline-flex; flex: none; min-width: 112px; }
+  .khd.khd--search .khd__search { display: contents; }
+  .khd .khd__search > :first-child { grid-column: 3; grid-row: 1; z-index: 1; }
+  /* на desktop фильтры открываются со страниц списков (как в макете главной), кнопки в шапке нет */
   .khd .khd__filter,
-  .khd.khd--search .khd__filter { display: inline-flex; grid-column: 4; grid-row: 1; }
-  .khd .khd__city { grid-column: 5; grid-row: 1; }
+  .khd.khd--search .khd__filter { display: none; }
+  .khd .khd__city { grid-column: 4; grid-row: 1; margin-inline: 8px; height: 44px; z-index: 1; }
+  .khd .khd__find,
+  .khd.khd--search .khd__find { display: inline-flex; grid-column: 5; grid-row: 1; min-width: 112px; height: 44px; z-index: 1; }
+  .khd .khd__links { display: flex; grid-column: 6; grid-row: 1; align-items: center; gap: 24px; margin-left: 11px; white-space: nowrap; }
+  .khd__links :deep(.ktb) { color: var(--color-label-primary); }
 }
 </style>

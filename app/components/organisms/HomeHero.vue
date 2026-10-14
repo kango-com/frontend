@@ -10,7 +10,7 @@ const submit = (q: string) => router.push({ path: '/search', query: q ? { q } : 
 <template>
   <div class="hero">
     <div class="hero__text">
-      <h1 class="hero__title">Всё, что нужно, здесь</h1>
+      <h1 class="hero__title">Всё, что нужно, <span class="hero__accent">здесь</span></h1>
       <p class="hero__subtitle">Работа, жильё, товары, услуги</p>
     </div>
     <div class="hero__bar">
@@ -46,10 +46,12 @@ const submit = (q: string) => router.push({ path: '/search', query: q ? { q } : 
   .hero__bar { margin-top: auto; }
 }
 
-/* Desktop: поиск уже в шапке, в обложке остаются заголовок и подпись */
+/* Desktop: поиск уже в шапке, в обложке крупный заголовок слева (слово «здесь» оранжевое) и подпись */
 @media (min-width: 1380px) {
   .hero { min-height: 0; }
-  .hero__title { max-width: 254px; }
+  .hero__title { max-width: 500px; font-family: var(--font-sans); font-size: 68px; line-height: 72px; letter-spacing: -0.01em; }
+  .hero__accent { color: var(--color-fill-primary); }
+  .hero__subtitle { margin-top: 12px; color: var(--color-fill-gray); font-size: 28px; line-height: 32px; }
   .hero__bar { display: none; }
 }
 </style>

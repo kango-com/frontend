@@ -31,7 +31,12 @@ const items: AdCard[] = [
       <ShowItem label="Выбран Тель-Авив" width="343px"><CityChips :cities="cities" :active-id="active" @select="active = $event.id" /></ShowItem>
     </ShowSection>
 
-    <ShowSection title="SectionsGrid (организм)" note="Четыре раздела с количеством объявлений: 2x2 на 375, 4 в ряд на 768 и выше.">
+    <ShowSection title="AccountCard (молекула)" note="Карточка «Что доступно после входа» для гостя и «Ваш аккаунт» после входа, показывается на 1380 и выше.">
+      <div style="width: 246px; height: 200px"><AccountCard /></div>
+      <div style="width: 246px; height: 200px"><AccountCard logged-in /></div>
+    </ShowSection>
+
+    <ShowSection title="SectionsGrid (организм)" note="Разделы с количеством объявлений: 2x2 на 375, 4 в ряд на 768, 5 в ряд на 1380 и выше (пятая карточка про аккаунт).">
       <div class="full"><SectionsGrid /></div>
     </ShowSection>
 

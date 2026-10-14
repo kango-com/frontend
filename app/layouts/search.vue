@@ -31,7 +31,7 @@
 }
 .shell__skip:focus { transform: none; }
 @media (min-width: 1380px) {
-  .shell { --header-h: 104px; }
+  .shell { --header-h: 96px; }
   .shell__header { display: block; }
   .shell__footer { display: block; }
 }

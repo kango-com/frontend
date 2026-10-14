@@ -30,6 +30,6 @@
 }
 .shell__skip:focus { transform: none; }
 @media (min-width: 1380px) {
-  .shell { --header-h: 104px; padding-bottom: 0; }
+  .shell { --header-h: 96px; padding-bottom: 0; }
 }
 </style>
