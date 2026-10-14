@@ -13,7 +13,8 @@ export const geoHandlers = (base: string) => [
     const url = new URL(request.url)
     const q = (url.searchParams.get('q') ?? '').trim().toLowerCase()
     const limit = Number(url.searchParams.get('limit') ?? 50)
-    const found = cities.filter(c => c.name.toLowerCase().includes(q))
+    // как в макете: совпадение с начала названия или любой его части («Ав» находит «Тель-Авив»)
+    const found = cities.filter(c => c.name.toLowerCase().split(/[\s-]+/).some(w => w.startsWith(q)) || c.name.toLowerCase().startsWith(q))
     // совпадения с начала названия выше
     found.sort((a, b) => Number(b.name.toLowerCase().startsWith(q)) - Number(a.name.toLowerCase().startsWith(q)) || a.name.localeCompare(b.name, 'ru'))
     return json(found.slice(0, limit))

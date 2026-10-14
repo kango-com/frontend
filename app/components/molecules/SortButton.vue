@@ -16,22 +16,23 @@ defineEmits<{ click: [] }>()
 </template>
 
 <style scoped>
+/* как в макете: текстовая кнопка с иконкой, без рамки */
 .sbtn {
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  height: 44px;
-  padding: 0 12px;
-  border: var(--border-width) solid var(--color-stroke-gray);
+  height: 32px;
+  padding: 0 4px;
+  border: 0;
   border-radius: var(--radius-md);
-  background: var(--color-background);
+  background: none;
   color: var(--color-label-primary);
+  font-family: inherit;
   font-size: var(--text-15-16);
   line-height: var(--leading-15-16);
-  font-weight: var(--font-weight-medium);
   cursor: pointer;
 }
-.sbtn--active { border-color: var(--color-stroke-primary); }
+.sbtn--active { color: var(--color-fill-color-4); }
 .sbtn:focus-visible { outline: var(--border-width-strong) solid var(--color-stroke-primary); outline-offset: 2px; }
-@media (hover: hover) { .sbtn:hover { border-color: var(--color-stroke-primary); } }
+@media (hover: hover) { .sbtn:hover { color: var(--color-fill-color-4); } }
 </style>

@@ -11,6 +11,8 @@ defineProps<{
   dialog?: boolean
   /** На 375px на весь экран, от 768px боковая панель справа (фильтры) */
   fullscreen?: boolean
+  /** На 375px на весь экран без шапки и ручки (поиск города), от 768px диалог (нужен вместе с dialog) */
+  fullMobile?: boolean
   /** Вместо крестика кнопка «Назад» (вложенный экран внутри окна) */
   back?: boolean
 }>()
@@ -91,7 +93,7 @@ function dragEnd() {
 <template>
   <Teleport to="body">
     <Transition name="ksheet">
-      <div v-if="open" class="ksheet" :class="{ 'ksheet--dialog': dialog, 'ksheet--full': fullscreen }" @click.self="close">
+      <div v-if="open" class="ksheet" :class="{ 'ksheet--dialog': dialog, 'ksheet--full': fullscreen, 'ksheet--fullm': fullMobile }" @click.self="close">
         <div
           ref="sheet"
           class="ksheet__panel"
@@ -183,6 +185,13 @@ function dragEnd() {
 .ksheet-leave-to { background: transparent; }
 .ksheet-enter-from .ksheet__panel,
 .ksheet-leave-to .ksheet__panel { transform: translateY(100%); }
+
+/* Полный экран только на мобильном */
+@media (max-width: 767px) {
+  .ksheet--fullm .ksheet__panel { width: 100%; max-width: none; height: 100vh; height: 100dvh; max-height: none; border-radius: 0; }
+  .ksheet--fullm .ksheet__grabber { display: none; }
+  .ksheet--fullm .ksheet__body { display: flex; flex-direction: column; padding: 12px 16px 0; overflow: hidden; }
+}
 
 /* Во весь экран на 375px, боковая панель справа от 768px */
 .ksheet--full .ksheet__panel { max-width: none; height: 100vh; height: 100dvh; max-height: none; border-radius: 0; }

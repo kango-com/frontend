@@ -16,7 +16,8 @@ async function go(text: string, categoryTitle?: string) {
   const value = text.trim()
   if (!value) return
   await search.submit(value, categoryTitle)
-  await router.push({ path: '/search', query: { q: value } })
+  // replace: пустой экран поиска не остаётся в истории, «назад» с результатов ведёт туда, откуда пришли
+  await router.replace({ path: '/search', query: { q: value } })
 }
 
 function cancel() {

@@ -23,7 +23,7 @@ onBeforeUnmount(() => { clearTimeout(timer); search.reset() })
 const trimmed = computed(() => props.query.trim())
 const showHistory = computed(() => !trimmed.value)
 
-const rows = () => Array.from(root.value?.querySelectorAll<HTMLElement>('.srow, .hrow__main, .hrow__remove') ?? [])
+const rows = () => Array.from(root.value?.querySelectorAll<HTMLElement>('.srow, .hrow') ?? [])
 function focusFirst() { rows()[0]?.focus() }
 defineExpose({ focusFirst })
 
@@ -40,23 +40,15 @@ function onKey(e: KeyboardEvent) {
 <template>
   <div ref="root" class="ssug" @keydown="onKey">
     <template v-if="showHistory">
+      <!-- без истории экран пустой (как в макете) -->
       <template v-if="search.history.length">
-        <div class="ssug__head">
-          <h2 class="ssug__title">Недавние запросы</h2>
-          <KTextButton size="sm" @click="search.clearHistory()">Очистить</KTextButton>
-        </div>
         <ul class="ssug__list" aria-label="Недавние запросы">
           <li v-for="h in search.history" :key="h.id">
-            <HistoryRow
-              :text="h.text"
-              :category-title="h.categoryTitle"
-              @select="emit('pick', h.text, h.categoryTitle)"
-              @remove="search.removeHistory(h.id)"
-            />
+            <HistoryRow :text="h.text" :category-title="h.categoryTitle" @select="emit('pick', h.text, h.categoryTitle)" />
           </li>
         </ul>
+        <KTextButton class="ssug__clear" size="sm" @click="search.clearHistory()">Очистить историю</KTextButton>
       </template>
-      <p v-else class="ssug__note">Здесь появятся ваши запросы. Введите, что ищете, например «Телевизор».</p>
     </template>
 
     <template v-else>
@@ -80,8 +72,7 @@ function onKey(e: KeyboardEvent) {
 </template>
 
 <style scoped>
-.ssug__head { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 4px; }
-.ssug__title { margin: 0; color: var(--color-label-primary); font-size: var(--text-17-20); line-height: var(--leading-17-20); font-weight: var(--font-weight-medium); }
+.ssug .ssug__clear { margin-top: 12px; }
 .ssug__list { margin: 0; padding: 0; list-style: none; }
 .ssug__note { margin: 0; padding: 24px 0; color: var(--color-label-secondary); font-size: var(--text-16-20); line-height: var(--leading-16-20); text-align: center; }
 .ssug__skeleton { display: flex; flex-direction: column; gap: 12px; padding: 8px 0; }

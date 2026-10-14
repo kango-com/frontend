@@ -41,5 +41,6 @@ function onKey(e: KeyboardEvent) {
 
 <style scoped>
 .list { margin: 0; padding: 0; list-style: none; }
+.list li { border-bottom: var(--border-width) solid var(--color-separator-gray); }
 .empty { margin: 0; padding: 24px 0; color: var(--color-label-secondary); font-size: var(--text-16-20); line-height: var(--leading-16-20); text-align: center; }
 </style>

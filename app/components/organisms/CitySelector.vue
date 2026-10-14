@@ -47,21 +47,30 @@ function first() {
 </script>
 
 <template>
-  <KModalSheet v-model="open" title="Какой город?" action="Отмена" dialog @action="open = false">
+  <KModalSheet v-model="open" label="Какой город?" dialog full-mobile>
     <div class="city-selector">
-      <KSearchField v-model="query" placeholder="Поиск города" label="Поиск города" @submit="first" @keydown.down.prevent="cityList?.focusFirst()" />
+      <div class="city-selector__top">
+        <KSearchField v-model="query" placeholder="Какой город?" label="Поиск города" @submit="first" @keydown.down.prevent="cityList?.focusFirst()" />
+        <KTextButton size="md" @click="open = false">Отмена</KTextButton>
+      </div>
       <div class="scroll">
         <CityList ref="cityList" :cities="list" :selected-id="pending.id" :loading="city.searching" @select="pending = $event" />
       </div>
-      <KButton block @click="confirm">Выбрать</KButton>
+      <!-- кнопка появляется, когда выбран другой город (как в макете) -->
+      <div v-if="pending.id !== city.current.id" class="city-selector__foot">
+        <KButton block variant="outline" @click="confirm">Выбрать</KButton>
+      </div>
     </div>
   </KModalSheet>
 </template>
 
 <style scoped>
-.city-selector { display: flex; flex-direction: column; gap: 12px; }
-.scroll { max-height: 45dvh; overflow-y: auto; overscroll-behavior: contain; }
+.city-selector { display: flex; flex-direction: column; gap: 12px; min-height: 0; flex: 1; }
+.city-selector__top { display: flex; align-items: center; gap: 12px; }
+.city-selector__top :deep(.ksf) { flex: 1; min-width: 0; }
+.city-selector__foot { padding: 8px 0 calc(8px + env(safe-area-inset-bottom)); }
+.scroll { flex: 1; min-height: 0; overflow-y: auto; overscroll-behavior: contain; }
 @media (min-width: 768px) {
-  .scroll { max-height: 320px; }
+  .scroll { flex: none; max-height: 320px; }
 }
 </style>

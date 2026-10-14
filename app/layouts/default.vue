@@ -1,7 +1,11 @@
+<script setup lang="ts">
+const route = useRoute()
+</script>
+
 <template>
   <div class="shell">
     <a class="shell__skip" href="#main">К содержимому</a>
-    <AppHeader />
+    <AppHeader :class="{ 'shell__header--no-mobile': !!route.meta.hideHeaderMobile }" />
     <main id="main" class="shell__main" tabindex="-1">
       <slot />
     </main>
@@ -35,5 +39,8 @@
 }
 @media (min-width: 1920px) {
   .shell { --header-h: 104px; }
+}
+@media (max-width: 767px) {
+  .shell__header--no-mobile { display: none; }
 }
 </style>

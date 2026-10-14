@@ -63,6 +63,15 @@ const selectCity = (c: City) => {
   if (filter.value?.cityIds.length || route.query.anyCity) setQuery({ cityIds: undefined, anyCity: undefined })
 }
 
+function goBack() {
+  if (window.history.state?.back) router.back()
+  else router.push('/')
+}
+function newSearch(value: string) {
+  const text = value.trim()
+  router.push(text ? { path: '/search', query: { q: text } } : { path: '/search' })
+}
+
 const filterCount = computed(() => (filter.value ? activeFilterCount(filter.value) : 0))
 
 // Переключатели разделов. Работа: режим. Недвижимость: сделка и вид (assumption: «Комнаты» = type room).
@@ -88,7 +97,19 @@ const emptyText = computed(() => (filterCount.value || q.value ? 'Ничего �
 
 <template>
   <KContainer as="section" class="lp" :aria-labelledby="titleId">
-    <header class="lp__head">
+    <!-- результаты поиска на мобильном: назад, строка поиска, фильтр (как в макете) -->
+    <KNavBar
+      v-if="!section"
+      class="lp__nav"
+      type="search-filter"
+      v-model:search="search"
+      :filter-dot="filterCount > 0"
+      @back="goBack"
+      @submit="newSearch"
+      @filter="ui.open('filters')"
+    />
+
+    <header class="lp__head" :class="{ 'lp__head--search': !section }">
       <h1 :id="titleId" class="lp__title">{{ heading }}</h1>
       <p v-if="subtitle" class="lp__count" aria-live="polite">{{ subtitle }}</p>
     </header>
@@ -114,6 +135,7 @@ const emptyText = computed(() => (filterCount.value || q.value ? 'Ничего �
       :sort-label="sortStore.label"
       :sort-active="sort !== 'default'"
       :filters-count="filterCount"
+      :search="!section"
       @city="selectCity"
       @sort="ui.open('sort')"
       @filters="ui.open('filters')"
@@ -147,5 +169,13 @@ const emptyText = computed(() => (filterCount.value || q.value ? 'Ничего �
   .lp { gap: 20px; padding-block: 32px 64px; }
   .lp__title { font-size: 28px; line-height: 32px; }
   .lp__seg, .lp__search { max-width: 480px; }
+}
+/* поиск на мобильном: верхняя панель вместо заголовка, заголовок остаётся для скринридера */
+.lp__nav { margin-inline: -16px; }
+@media (max-width: 767px) {
+  .lp__head--search { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+}
+@media (min-width: 768px) {
+  .lp__nav { display: none; }
 }
 </style>

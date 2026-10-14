@@ -1,63 +1,43 @@
 <script setup lang="ts">
-const props = defineProps<{
+defineProps<{
   text: string
   categoryTitle?: string
 }>()
 
-defineEmits<{ select: [], remove: [] }>()
+defineEmits<{ select: [] }>()
 </script>
 
 <template>
-  <div class="hrow">
-    <button type="button" class="hrow__main" @click="$emit('select')">
-      <Icon name="kango:search-24" size="24" class="hrow__icon" />
-      <span class="hrow__text">
-        <span class="hrow__title">{{ text }}</span>
-        <span v-if="categoryTitle" class="hrow__cat">{{ categoryTitle }}</span>
-      </span>
-    </button>
-    <button type="button" class="hrow__remove" :aria-label="`Удалить запрос «${props.text}»`" @click="$emit('remove')">
-      <Icon name="kango:close-16" size="16" />
-    </button>
-  </div>
+  <button type="button" class="hrow" @click="$emit('select')">
+    <Icon name="kango:history-20" size="20" class="hrow__icon" />
+    <span class="hrow__text">
+      <span class="hrow__title">{{ text }}</span>
+      <span v-if="categoryTitle" class="hrow__cat">{{ categoryTitle }}</span>
+    </span>
+    <Icon name="kango:chevron-right-20" size="20" class="hrow__chevron" />
+  </button>
 </template>
 
 <style scoped>
-.hrow { display: flex; align-items: center; gap: 8px; min-height: 52px; }
-.hrow .hrow__main {
+.hrow {
   display: flex;
-  flex: 1;
   align-items: center;
   gap: 12px;
-  min-width: 0;
-  padding: 8px 0;
+  width: 100%;
+  min-height: 44px;
+  padding: 6px 0;
   border: 0;
+  border-bottom: var(--border-width) solid var(--color-separator-gray);
   background: none;
   color: var(--color-label-primary);
+  font-family: inherit;
   text-align: left;
   cursor: pointer;
 }
-.hrow .hrow__main:focus-visible,
-.hrow .hrow__remove:focus-visible { outline: var(--border-width-strong) solid var(--color-stroke-primary); outline-offset: 2px; border-radius: var(--radius-md); }
-.hrow__icon { flex: none; color: var(--color-fill-gray); }
-.hrow__text { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
-.hrow__title { font-size: var(--text-16-20); line-height: var(--leading-16-20); overflow-wrap: anywhere; }
-.hrow__cat { color: var(--color-label-secondary); font-size: var(--text-12-16); line-height: var(--leading-12-16); }
-.hrow .hrow__remove {
-  display: inline-flex;
-  flex: none;
-  align-items: center;
-  justify-content: center;
-  width: 32px;
-  height: 32px;
-  border: 0;
-  border-radius: var(--radius-md);
-  background: none;
-  color: var(--color-fill-gray);
-  cursor: pointer;
-}
-@media (hover: hover) {
-  .hrow .hrow__main:hover .hrow__title { color: var(--color-fill-color-4); }
-  .hrow .hrow__remove:hover { background: var(--color-fill-gray-3); }
-}
+.hrow:focus-visible { outline: var(--border-width-strong) solid var(--color-stroke-primary); outline-offset: -2px; border-radius: var(--radius-md); }
+.hrow__icon, .hrow__chevron { flex: none; color: var(--color-fill-gray); }
+.hrow__text { display: flex; flex: 1; flex-direction: column; gap: 1px; min-width: 0; }
+.hrow__title { font-size: var(--text-15-16); line-height: var(--leading-15-16); overflow-wrap: anywhere; }
+.hrow__cat { color: var(--color-label-gray); font-size: var(--text-10-12); line-height: var(--leading-10-12); }
+@media (hover: hover) { .hrow:hover .hrow__title { color: var(--color-fill-color-4); } }
 </style>

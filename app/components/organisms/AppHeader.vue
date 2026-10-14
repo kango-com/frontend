@@ -43,7 +43,7 @@ function onFocusIn(e: FocusEvent) {
 function onKeydown(e: KeyboardEvent) {
   if (e.key !== 'ArrowDown' || !suggestOpen.value) return
   if (!(e.target as HTMLElement).closest('.khd__search')) return
-  const first = root.value?.querySelector<HTMLElement>('.app-header__drop .srow, .app-header__drop .hrow__main')
+  const first = root.value?.querySelector<HTMLElement>('.app-header__drop .srow, .app-header__drop .hrow')
   if (first) { e.preventDefault(); first.focus() }
 }
 function onFocusOut(e: FocusEvent) {

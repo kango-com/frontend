@@ -1,5 +1,6 @@
 <script setup lang="ts">
-definePageMeta({ layout: false })
+// на мобильном у результатов своя верхняя панель, общая шапка скрыта
+definePageMeta({ layout: false, hideHeaderMobile: true })
 
 const route = useRoute()
 const q = computed(() => (typeof route.query.q === 'string' ? route.query.q.trim() : ''))

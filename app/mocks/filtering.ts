@@ -1,6 +1,15 @@
 import type { FilterState, GoodsFilter, RealtyFilter, ServicesFilter, SortKey, WorkFilter } from '~/types'
 import type { AdRecord } from './fixtures/ads'
 
+/** Запрос подходит, если каждое слово (с отбрасыванием окончания) встречается в тексте: «телевизоры» находит «телевизор» */
+function matchesQuery(text: string, q: string): boolean {
+  if (text.includes(q)) return true
+  return q.split(/\s+/).filter(Boolean).every((w) => {
+    const stem = w.length > 5 ? w.slice(0, w.length - 2) : w
+    return text.includes(stem)
+  })
+}
+
 const hasAll = (have: string[], need: string[]) => need.every(n => have.includes(n))
 const hasAny = (have: string[], need: string[]) => !need.length || need.some(n => have.includes(n))
 const inRange = (v: number | undefined, from?: number, to?: number) =>
@@ -80,7 +89,7 @@ export function filterAds(ads: AdRecord[], opts: FilterOptions): AdRecord[] {
   return ads.filter((ad) => {
     if (opts.section && ad.section !== opts.section) return false
     if (opts.cityIds.length && !opts.cityIds.includes(ad.cityId)) return false
-    if (q && !`${ad.title} ${ad.description} ${ad.employer ?? ''}`.toLowerCase().includes(q)) return false
+    if (q && !matchesQuery(`${ad.title} ${ad.description} ${ad.employer ?? ''}`.toLowerCase(), q)) return false
     if (!f) return true
     // общая цена: для работы диапазон относится к зарплате (см. work())
     if (ad.section !== 'work' && !inRange(ad.price.amount, f.priceFrom, f.priceTo)) return false
