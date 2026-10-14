@@ -53,7 +53,14 @@ import desktop from '~/assets/img/hero/hero-desktop.webp'
     height: 413px;
     background: var(--hero-desktop) center / cover no-repeat;
   }
-  .backdrop::after { background: linear-gradient(to bottom, transparent 81%, var(--color-background) 92%); }
-  .backdrop__glow { top: -61px; left: -447px; width: 928px; height: 486px; filter: blur(45px); }
+  /* Левый и нижний край баннера плавно растворяются в белом (без жёсткой границы) */
+  .backdrop {
+    -webkit-mask-image: linear-gradient(to right, transparent 0, #000 280px), linear-gradient(to bottom, #000 78%, transparent 94%);
+    -webkit-mask-composite: source-in;
+    mask-image: linear-gradient(to right, transparent 0, #000 280px), linear-gradient(to bottom, #000 78%, transparent 94%);
+    mask-composite: intersect;
+  }
+  .backdrop::after,
+  .backdrop__glow { display: none; }
 }
 </style>
