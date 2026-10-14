@@ -63,6 +63,7 @@ const sections: Section[] = [
       { slug: 'search-blocks', title: 'Блоки поиска', items: [m('SuggestionRow'), m('HistoryRow'), o('SearchSuggest'), o('SearchPanel')] },
       { slug: 'listing-blocks', title: 'Блоки списков', items: [m('AdRowCard'), m('SortButton'), o('SortSheet'), o('ListingToolbar'), o('ListingPage')] },
       { slug: 'filter-blocks', title: 'Блоки фильтров', items: [m('FilterRow'), m('ChipsSummary'), m('RangeFields'), m('ToggleGroup'), o('PickerView'), o('FilterPanel')] },
+      { slug: 'ad-blocks', title: 'Блоки объявления', items: [m('Gallery'), m('ParamChips'), m('ContactBar'), m('AuthorCard'), o('ReportDialog'), o('AdDetails')] },
       { slug: 'home-blocks', title: 'Блоки главной', items: [m('SearchBar'), m('CityChips'), o('SectionsGrid'), o('AdsFeed'), o('HomeHero'), o('HomeCover'), o('ViewedAds'), o('AppHeader'), o('AppTabBar'), a('KContainer'), a('HeroBackdrop')] }
     ]
   }
