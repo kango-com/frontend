@@ -6,10 +6,12 @@ import { isEmail } from '~/utils/password'
 /** Форма «Напишите нам»: имя, e-mail, сообщение, файл. Успех и ошибки показываются на месте. */
 const name = ref('')
 const email = ref('')
+const phone = ref('')
+const agree = ref(false)
 const message = ref('')
 const file = ref<File | null>(null)
 const preview = ref<AttachedFile[]>([])
-const errors = reactive<{ name?: string, email?: string, message?: string, form?: string }>({})
+const errors = reactive<{ name?: string, email?: string, message?: string, agree?: string, form?: string }>({})
 const status = ref<'idle' | 'sending' | 'sent'>('idle')
 const messageId = useId()
 
@@ -30,7 +32,8 @@ function validate() {
   errors.name = !name.value.trim() ? 'Заполните поля' : undefined
   errors.email = !email.value.trim() ? 'Заполните поля' : !isEmail(email.value) ? 'Введите корректный e-mail' : undefined
   errors.message = !message.value.trim() ? 'Заполните поля' : undefined
-  return !errors.name && !errors.email && !errors.message
+  errors.agree = agree.value ? undefined : 'Подтвердите согласие с политикой'
+  return !errors.name && !errors.email && !errors.message && !errors.agree
 }
 
 async function submit() {
@@ -38,9 +41,10 @@ async function submit() {
   if (!validate()) return
   status.value = 'sending'
   try {
-    await contentApi.feedback({ name: name.value.trim(), email: email.value.trim(), message: message.value.trim(), attachment: file.value })
+    await contentApi.feedback({ name: name.value.trim(), email: email.value.trim(), phone: phone.value.trim() || undefined, message: message.value.trim(), attachment: file.value })
     status.value = 'sent'
-    name.value = email.value = message.value = ''
+    name.value = email.value = phone.value = message.value = ''
+    agree.value = false
     detach()
   } catch (e) {
     status.value = 'idle'
@@ -64,19 +68,21 @@ async function submit() {
 
     <form v-else class="fbk__form" novalidate @submit.prevent="submit">
       <KTextField v-model="name" placeholder="Имя" autocomplete="name" :error="errors.name" />
-      <KTextField v-model="email" type="email" placeholder="Email" autocomplete="email" :error="errors.email" />
+      <KTextField v-model="email" type="email" placeholder="E-mail" autocomplete="email" :error="errors.email" />
+      <KTextField v-model="phone" type="tel" placeholder="Телефон" autocomplete="tel" />
       <div class="fbk__msg">
-        <label :for="messageId" class="fbk__label">Сообщение</label>
-        <textarea :id="messageId" v-model="message" class="fbk__text" :class="{ 'fbk__text--error': errors.message }" rows="5" :aria-invalid="!!errors.message" />
+        <textarea :id="messageId" v-model="message" class="fbk__text" :class="{ 'fbk__text--error': errors.message }" rows="3" placeholder="Какой вопрос?" aria-label="Какой вопрос?" :aria-invalid="!!errors.message" />
         <p v-if="errors.message" class="fbk__error" role="alert">{{ errors.message }}</p>
       </div>
       <KAttachFile :files="preview" label="Прикрепите файл" :multiple="false" @add="attach" @remove="detach" />
       <p v-if="errors.form" class="fbk__error" role="alert">{{ errors.form }}</p>
+      <div class="fbk__agree">
+        <KCheckbox v-model="agree">
+          Нажимая «Отправить», вы соглашаетесь с <NuxtLink to="/documents/privacy" class="fbk__link" @click.stop>политикой обработки данных</NuxtLink>
+        </KCheckbox>
+        <p v-if="errors.agree" class="fbk__error" role="alert">{{ errors.agree }}</p>
+      </div>
       <KButton block type="submit" :disabled="status === 'sending'">{{ status === 'sending' ? 'Отправка...' : 'Отправить' }}</KButton>
-      <p class="fbk__policy">
-        Нажимая «Отправить», вы соглашаетесь с
-        <KTextButton to="/documents/privacy" size="sm" underline>политикой обработки данных</KTextButton>
-      </p>
     </form>
   </section>
 </template>
@@ -91,6 +97,8 @@ async function submit() {
 .fbk__text:focus-visible { outline: var(--border-width-strong) solid var(--color-stroke-primary); outline-offset: 1px; }
 .fbk__text--error { border-color: var(--color-fill-error); }
 .fbk__error { margin: 0; color: var(--color-fill-error); font-size: var(--text-12-16); line-height: var(--leading-12-16); }
+.fbk__agree { display: flex; flex-direction: column; gap: 4px; font-size: var(--text-12-16); line-height: var(--leading-12-16); color: var(--color-label-secondary); }
+.fbk__link { color: var(--color-label-primary); text-decoration: underline; }
 .fbk__policy { margin: 0; color: var(--color-label-secondary); font-size: var(--text-12-16); line-height: var(--leading-12-16); text-align: center; }
 .fbk__done { display: flex; flex-direction: column; align-items: flex-start; gap: 12px; padding: 16px; border-radius: var(--radius-md); background: var(--color-fill-tint); }
 .fbk__done p { margin: 0; }

@@ -16,6 +16,7 @@ export interface DocumentFull extends DocumentInfo {
 export interface FeedbackPayload {
   name: string
   email: string
+  phone?: string
   message: string
   attachment?: File | null
 }

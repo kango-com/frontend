@@ -8,6 +8,7 @@ export const contentApi = {
     const body = new FormData()
     body.set('name', payload.name)
     body.set('email', payload.email)
+    if (payload.phone) body.set('phone', payload.phone)
     body.set('message', payload.message)
     if (payload.attachment) body.set('attachment', payload.attachment)
     return apiFetch<void>('/feedback', { method: 'POST', body })
