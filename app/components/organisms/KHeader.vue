@@ -94,8 +94,9 @@ const query = computed({
     max-width: 1380px;
     margin-inline: auto;
     grid-template-columns: auto auto minmax(0, 1fr) auto auto auto;
+    grid-template-rows: 44px;
     gap: 8px;
-    padding: 32px 50px 18px;
+    padding: 32px 50px 20px;
     border-radius: 0;
     box-shadow: none;
   }
