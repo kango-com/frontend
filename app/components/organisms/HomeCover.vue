@@ -28,8 +28,8 @@
   .cover__sections { margin-top: 120px; }
 }
 
-/* Wide от 1900: слева четыре раздела, справа заголовок на баннере */
-@media (min-width: 1900px) {
+/* Wide 1920: слева четыре раздела, справа заголовок на баннере */
+@media (min-width: 1920px) {
   .cover__inner {
     display: grid;
     grid-template-columns: 812px minmax(0, 1fr);

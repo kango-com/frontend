@@ -33,7 +33,7 @@
 @media (min-width: 1380px) {
   .shell { --header-h: 96px; padding-bottom: 0; }
 }
-@media (min-width: 1900px) {
+@media (min-width: 1920px) {
   .shell { --header-h: 104px; }
 }
 </style>

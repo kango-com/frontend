@@ -36,7 +36,7 @@
   .shell__header { display: block; }
   .shell__footer { display: block; }
 }
-@media (min-width: 1900px) {
+@media (min-width: 1920px) {
   .shell { --header-h: 104px; }
 }
 </style>

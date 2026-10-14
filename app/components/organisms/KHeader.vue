@@ -143,8 +143,8 @@ const query = computed({
   .khd__links :deep(.ktb) { color: var(--color-label-primary); }
 }
 
-/* Wide от 1900px: макет из двух строк (верхняя строка со ссылками, ниже категории, поиск, «Найти», город), без плашки */
-@media (min-width: 1900px) {
+/* Wide 1920px: макет из двух строк (верхняя строка со ссылками, ниже категории, поиск, «Найти», город), без плашки */
+@media (min-width: 1920px) {
   .khd__top {
     display: flex;
     align-items: center;

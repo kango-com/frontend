@@ -41,9 +41,9 @@ import wide from '~/assets/img/hero/hero-desktop-wide.webp'
   .backdrop::after { background: linear-gradient(to bottom, transparent 90%, var(--color-background) 100%); }
 }
 
-/* Wide от 1900: баннер справа до края окна (509px от левого края контента), белое размытое пятно слева, как в макете */
+/* Wide 1920: баннер справа до края окна (509px от левого края контента), белое размытое пятно слева, как в макете */
 .backdrop__glow { display: none; }
-@media (min-width: 1900px) {
+@media (min-width: 1920px) {
   .backdrop {
     inset: 0 0 auto auto;
     left: calc(50% - 640px + 509px);
