@@ -3,7 +3,7 @@ import { paymentsApi } from '~/api'
 
 // Страница «платёжного провайдера» мока: нужна, чтобы пройти весь сценарий оплаты без настоящей платёжной системы
 definePageMeta({ layout: 'minimal' })
-useHead({ title: 'Оплата (тест) - Kango' })
+useHead({ title: () => tr('Оплата (тест) - Kango') })
 
 
 const route = useRoute()
@@ -25,12 +25,12 @@ async function finish(result: 'paid' | 'failed' | 'cancelled') {
 
 <template>
   <KContainer as="section" class="pay">
-    <h1>Тестовая оплата</h1>
-    <p>Это страница-заглушка платёжной системы. Платёж <code>{{ id }}</code> не настоящий.</p>
+    <h1>{{ tr('Тестовая оплата') }}</h1>
+    <p>{{ tr('Это страница-заглушка платёжной системы. Платёж') }} <code>{{ id }}</code> {{ tr('не настоящий.') }}</p>
     <div class="actions">
-      <KButton :disabled="busy" @click="finish('paid')">Оплатить</KButton>
-      <KButton variant="outline" :disabled="busy" @click="finish('failed')">Имитировать ошибку</KButton>
-      <KButton variant="plain" :disabled="busy" @click="finish('cancelled')">Отмена</KButton>
+      <KButton :disabled="busy" @click="finish('paid')">{{ tr('Оплатить') }}</KButton>
+      <KButton variant="outline" :disabled="busy" @click="finish('failed')">{{ tr('Имитировать ошибку') }}</KButton>
+      <KButton variant="plain" :disabled="busy" @click="finish('cancelled')">{{ tr('Отмена') }}</KButton>
     </div>
   </KContainer>
 </template>

@@ -9,7 +9,7 @@ defineProps<{
 <template>
   <dl class="cinfo">
     <div v-if="phone" class="cinfo__row">
-      <dt>Телефон</dt>
+      <dt>{{ tr('Телефон') }}</dt>
       <dd><a :href="`tel:${phone.replace(/[^\d+]/g, '')}`">{{ phone }}</a></dd>
     </div>
     <div v-if="email" class="cinfo__row">
@@ -17,7 +17,7 @@ defineProps<{
       <dd><a :href="`mailto:${email}`">{{ email }}</a></dd>
     </div>
     <div v-if="address" class="cinfo__row">
-      <dt>Адрес</dt>
+      <dt>{{ tr('Адрес') }}</dt>
       <dd>{{ address }}</dd>
     </div>
   </dl>

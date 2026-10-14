@@ -13,28 +13,28 @@ const isAbout = computed(() => props.variant === 'about')
 
 <template>
   <KContainer as="article" class="about">
-    <h1 class="about__title" :class="{ 'about__title--hidden': !isAbout }">{{ isAbout ? 'О нас' : 'Поддержка' }}</h1>
+    <h1 class="about__title" :class="{ 'about__title--hidden': !isAbout }">{{ isAbout ? tr('О нас') : tr('Поддержка') }}</h1>
 
     <div class="about__layout">
       <div class="about__main">
         <section v-if="isAbout" class="about__block" aria-labelledby="why">
-          <h2 id="why" class="about__h2">Почему мы создали эту доску объявлений</h2>
-          <p>Мы - команда, которая знает, как сложно русскоязычному жителю Израиля быстро найти работу, жильё или мастера. Языковой барьер, незнание местных сервисов, разрозненные группы в соцсетях - всё это отнимает время и нервы. Наша доска объявлений создана для того, чтобы вы могли легко и безопасно публиковать объявления, находить нужное и общаться напрямую через удобные каналы: телефон, WhatsApp, Telegram. Мы не берём плату за размещение. Зарабатываем только на дополнительных опциях - поднятии и выделении объявлений.</p>
-          <p>Так мы остаёмся честными перед пользователями.</p>
+          <h2 id="why" class="about__h2">{{ tr('Почему мы создали эту доску объявлений') }}</h2>
+          <p>{{ tr('Мы - команда, которая знает, как сложно русскоязычному жителю Израиля быстро найти работу, жильё или мастера. Языковой барьер, незнание местных сервисов, разрозненные группы в соцсетях - всё это отнимает время и нервы. Наша доска объявлений создана для того, чтобы вы могли легко и безопасно публиковать объявления, находить нужное и общаться напрямую через удобные каналы: телефон, WhatsApp, Telegram. Мы не берём плату за размещение. Зарабатываем только на дополнительных опциях - поднятии и выделении объявлений.') }}</p>
+          <p>{{ tr('Так мы остаёмся честными перед пользователями.') }}</p>
         </section>
 
         <FeedbackForm v-if="!isAbout" />
       </div>
 
-      <aside v-if="isAbout" class="about__side" aria-label="Контакты и офис">
+      <aside v-if="isAbout" class="about__side" :aria-label="tr('Контакты и офис')">
         <section class="about__block" aria-labelledby="contacts">
-          <h2 id="contacts" class="about__h2">Контакты</h2>
+          <h2 id="contacts" class="about__h2">{{ tr('Контакты') }}</h2>
           <ContactInfo :phone="PHONE" :email="EMAIL" />
         </section>
         <section class="about__block" aria-labelledby="office">
-          <h2 id="office" class="about__h2">Наш офис</h2>
-          <ContactInfo :address="ADDRESS" />
-          <OfficeCard :address="ADDRESS" />
+          <h2 id="office" class="about__h2">{{ tr('Наш офис') }}</h2>
+          <ContactInfo :address="tr(ADDRESS)" />
+          <OfficeCard :address="tr(ADDRESS)" />
         </section>
       </aside>
 

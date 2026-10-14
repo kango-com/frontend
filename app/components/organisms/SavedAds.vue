@@ -9,10 +9,10 @@ const isFav = computed(() => props.kind === 'favorites')
 const store = computed(() => (isFav.value ? favorites : viewed))
 onMounted(() => store.value.load())
 
-const title = computed(() => (isFav.value ? 'Избранное' : 'Просмотренные'))
+const title = computed(() => (isFav.value ? tr('Избранное') : tr('Просмотренные')))
 const emptyText = computed(() => (isFav.value
-  ? 'Здесь будут объявления, которые вы отметили сердечком.'
-  : 'Вы пока ничего не просматривали.'))
+  ? tr('Здесь будут объявления, которые вы отметили сердечком.')
+  : tr('Вы пока ничего не просматривали.')))
 const status = computed(() => store.value.status)
 </script>
 
@@ -20,7 +20,7 @@ const status = computed(() => store.value.status)
   <KContainer as="section" class="saved" aria-labelledby="saved-title">
     <header class="saved__head">
       <h1 id="saved-title" class="saved__title">{{ title }}</h1>
-      <KTextButton v-if="!isFav && viewed.items.length" size="sm" @click="viewed.clear()">Очистить</KTextButton>
+      <KTextButton v-if="!isFav && viewed.items.length" size="sm" @click="viewed.clear()">{{ tr('Очистить') }}</KTextButton>
     </header>
 
     <AdsFeed
@@ -30,7 +30,7 @@ const status = computed(() => store.value.status)
       @retry="store.load()"
     >
       <template #empty>
-        <KButton to="/" variant="outline">Перейти к объявлениям</KButton>
+        <KButton to="/" variant="outline">{{ tr('Перейти к объявлениям') }}</KButton>
       </template>
     </AdsFeed>
   </KContainer>

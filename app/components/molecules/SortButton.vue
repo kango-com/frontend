@@ -11,7 +11,7 @@ defineEmits<{ click: [] }>()
 <template>
   <button type="button" class="sbtn" :class="{ 'sbtn--active': active }" aria-haspopup="dialog" @click="$emit('click')">
     <Icon name="kango:sort-16" size="16" />
-    <span>{{ label }}</span>
+    <span>{{ tr(label) }}</span>
   </button>
 </template>
 

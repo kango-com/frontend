@@ -1,6 +1,7 @@
 import { geoApi, referencesApi } from '~/api'
 import type { FilterState, RefItem, Section } from '~/types'
 import { defaultValue } from './filters'
+import { tr } from './tr'
 
 /** Откуда берутся варианты выбора: ключ кэша и загрузчик. null - зависимость ещё не выбрана, поле неактивно */
 export type RefSource = (filter: FilterState) => { key: string, load: () => Promise<RefItem[]> } | null
@@ -211,9 +212,9 @@ export const COUNT_CAP = 1000
 
 /** Текст кнопки применения: «Показать 954 объявления», «Показать более 1 тыс. объявлений» */
 export function applyLabel(count: number | null, plural: (n: number) => string): string {
-  if (count === null) return 'Показать объявления'
-  if (count >= COUNT_CAP) return 'Показать более 1 тыс. объявлений'
-  return `Показать ${plural(count)}`
+  if (count === null) return tr('Показать объявления')
+  if (count >= COUNT_CAP) return tr('Показать более 1 тыс. объявлений')
+  return tr('Показать {count}', { count: plural(count) })
 }
 
 /**

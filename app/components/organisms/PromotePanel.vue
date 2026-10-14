@@ -35,14 +35,14 @@ async function pay() {
 
 <template>
   <section class="prom" aria-labelledby="prom-title">
-    <h1 id="prom-title" class="prom__title">Продвинуть объявление</h1>
+    <h1 id="prom-title" class="prom__title">{{ tr('Продвинуть объявление') }}</h1>
 
     <div v-if="summary?.title" class="prom__ad">
       <span class="prom__ad-title">{{ summary.title }}</span>
       <span v-if="summary.price" class="prom__ad-price">{{ formatPriceLong(summary.price) }}</span>
     </div>
 
-    <p v-if="failed" class="prom__alert" role="alert">Оплата не прошла. Попробуйте ещё раз или опубликуйте без продвижения.</p>
+    <p v-if="failed" class="prom__alert" role="alert">{{ tr('Оплата не прошла. Попробуйте ещё раз или опубликуйте без продвижения.') }}</p>
     <p v-else-if="store.error" class="prom__alert" role="alert">{{ store.error.message }}</p>
 
     <div class="prom__list" role="radiogroup" aria-labelledby="prom-title">
@@ -56,11 +56,11 @@ async function pay() {
         :selected="store.selectedPackage === p.id"
         @select="store.selectedPackage = p.id"
       />
-      <p v-if="!store.packages.length" class="prom__note" aria-busy="true">Загрузка вариантов...</p>
+      <p v-if="!store.packages.length" class="prom__note" aria-busy="true">{{ tr('Загрузка вариантов...') }}</p>
     </div>
 
-    <KButton block :disabled="!store.selectedPackage || busy" @click="pay">{{ busy ? 'Переходим к оплате...' : 'Оплатить' }}</KButton>
-    <KButton block variant="neutral" :disabled="busy" @click="emit('skip')">{{ existing ? 'Не сейчас' : 'Продвинуть позже' }}</KButton>
+    <KButton block :disabled="!store.selectedPackage || busy" @click="pay">{{ busy ? tr('Переходим к оплате...') : tr('Оплатить') }}</KButton>
+    <KButton block variant="neutral" :disabled="busy" @click="emit('skip')">{{ existing ? tr('Не сейчас') : tr('Продвинуть позже') }}</KButton>
   </section>
 </template>
 

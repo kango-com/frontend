@@ -13,7 +13,7 @@ const props = defineProps<{
   action?: string
 }>()
 
-const tagsLine = computed(() => props.tags?.join(' • '))
+const tagsLine = computed(() => props.tags?.map(t => tr(t)).join(' • '))
 </script>
 
 <template>
@@ -22,8 +22,8 @@ const tagsLine = computed(() => props.tags?.join(' • '))
       <h3 class="arc__title"><NuxtLink :to="to" class="arc__link">{{ title }}</NuxtLink></h3>
       <p class="arc__price">{{ price }}</p>
       <p v-if="tagsLine" class="arc__tags">{{ tagsLine }}</p>
-      <p v-if="note" class="arc__note">{{ note }}</p>
-      <p class="arc__meta">{{ location }}<template v-if="published"> · {{ published }}</template></p>
+      <p v-if="note" class="arc__note">{{ tr(note) }}</p>
+      <p class="arc__meta">{{ trl(location) }}<template v-if="published"> · {{ published }}</template></p>
     </div>
     <KButton v-if="action" class="arc__action" variant="secondary" size="sm" :to="to">{{ action }}</KButton>
   </article>

@@ -9,10 +9,10 @@ defineProps<{
 
 <template>
   <KContainer as="section" class="placeholder">
-    <h1>{{ title }}</h1>
-    <p v-if="description">{{ description }}</p>
-    <p v-if="task" class="task">Страница в разработке, задача {{ task }}.</p>
-    <KButton to="/" variant="outline">На главную</KButton>
+    <h1>{{ tr(title) }}</h1>
+    <p v-if="description">{{ tr(description) }}</p>
+    <p v-if="task" class="task">{{ tr('Страница в разработке, задача') }} {{ task }}.</p>
+    <KButton to="/" variant="outline">{{ tr('На главную') }}</KButton>
   </KContainer>
 </template>
 

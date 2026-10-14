@@ -9,7 +9,7 @@ withDefaults(defineProps<{
   search?: string
   placeholder?: string
   filterDot?: boolean
-}>(), { type: 'page', search: '', placeholder: 'Что Вы ищете?' })
+}>(), { type: 'page', search: '' })
 
 const emit = defineEmits<{
   'update:search': [value: string]
@@ -23,8 +23,8 @@ const emit = defineEmits<{
 
 <template>
   <div class="knb" :class="`knb--${type}`">
-    <KIconButton v-if="type === 'modal'" type="close" label="Закрыть" @click="emit('close')" />
-    <KIconButton v-else type="arrow-left" label="Назад" @click="emit('back')" />
+    <KIconButton v-if="type === 'modal'" type="close" :label="tr('Закрыть')" @click="emit('close')" />
+    <KIconButton v-else type="arrow-left" :label="tr('Назад')" @click="emit('back')" />
 
     <span v-if="type === 'page-title' || type === 'modal'" class="knb__title">{{ title }}</span>
 
@@ -32,12 +32,12 @@ const emit = defineEmits<{
       v-if="type === 'search' || type === 'search-filter'"
       class="knb__search"
       :model-value="search"
-      :placeholder="placeholder"
+      :placeholder="tr(placeholder ?? 'Что Вы ищете?')"
       @update:model-value="emit('update:search', $event)"
       @submit="emit('submit', $event)"
     />
 
-    <KIconButton v-if="type === 'search-filter'" type="filter" label="Фильтры" :dot="filterDot" @click="emit('filter')" />
+    <KIconButton v-if="type === 'search-filter'" type="filter" :label="tr('Фильтры')" :dot="filterDot" @click="emit('filter')" />
     <KTextButton v-if="type === 'modal' && action" size="sm" @click="emit('action')">{{ action }}</KTextButton>
     <span v-else-if="type === 'modal'" class="knb__spacer" />
   </div>

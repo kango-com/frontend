@@ -1,4 +1,5 @@
 import type { Price } from '~/types'
+import { tr } from './tr'
 
 const nbsp = ' '
 
@@ -6,19 +7,19 @@ export function formatNumber(n: number): string {
   return Math.round(n).toString().replace(/\B(?=(\d{3})+(?!\d))/g, nbsp)
 }
 
-const periodSuffix: Record<NonNullable<Price['period']>, string> = {
-  hour: `${nbsp}/${nbsp}час`,
-  week: `${nbsp}/${nbsp}нед.`,
-  month: '/мес.',
-  day: `${nbsp}/${nbsp}сутки`,
-  shift: `${nbsp}/${nbsp}смена`,
+const periodSuffix = (period: NonNullable<Price['period']>): string => ({
+  hour: `${nbsp}/${nbsp}${tr('час')}`,
+  week: `${nbsp}/${nbsp}${tr('нед.')}`,
+  month: tr('/мес.'),
+  day: `${nbsp}/${nbsp}${tr('сутки')}`,
+  shift: `${nbsp}/${nbsp}${tr('смена')}`,
   total: ''
-}
+})[period]
 
 /** «3 800 ₪», «5 500 ₪/мес.», «45 ₪ / час», «от 50 ₪» */
 export function formatPrice(price: Price): string {
-  const suffix = price.period ? periodSuffix[price.period] : ''
-  return `${price.from ? 'от ' : ''}${formatNumber(price.amount)}${nbsp}₪${suffix}`
+  const suffix = price.period ? periodSuffix(price.period) : ''
+  return `${price.from ? `${tr('от')} ` : ''}${formatNumber(price.amount)}${nbsp}₪${suffix}`
 }
 
 const pad = (n: number) => String(n).padStart(2, '0')
@@ -30,9 +31,9 @@ export function formatPublished(iso: string, now: Date = new Date()): string {
   const d = new Date(iso)
   const startOf = (x: Date) => new Date(x.getFullYear(), x.getMonth(), x.getDate()).getTime()
   const days = Math.round((startOf(now) - startOf(d)) / 86_400_000)
-  if (days <= 0) return `Сегодня, ${time(d)}`
-  if (days === 1) return `Вчера, ${time(d)}`
-  return `${d.getDate()} ${MONTHS[d.getMonth()]}, ${time(d)}`
+  if (days <= 0) return tr('Сегодня, {time}', { time: time(d) })
+  if (days === 1) return tr('Вчера, {time}', { time: time(d) })
+  return `${d.getDate()} ${tr(MONTHS[d.getMonth()]!)}, ${time(d)}`
 }
 
 /** «1 345 объявлений», «1 объявление», «2 объявления»; для en и he свои формы */
@@ -48,5 +49,5 @@ export function formatAdsCount(n: number, locale: 'ru' | 'en' | 'he' = 'ru'): st
 /** «2026-10-15» → «15 окт 2026» */
 export function formatDateRu(iso: string): string {
   const [y, m, d] = iso.split('-').map(Number)
-  return y && m && d ? `${d} ${MONTHS[m - 1]} ${y}` : iso
+  return y && m && d ? `${d} ${tr(MONTHS[m - 1]!)} ${y}` : iso
 }

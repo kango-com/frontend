@@ -14,7 +14,7 @@ onMounted(() => { label.value = text.value?.textContent?.trim() ?? '' })
 <template>
   <span class="kfc">
     <span ref="text" class="kfc__label"><slot /></span>
-    <button type="button" class="kfc__remove" :aria-label="removeLabel ?? `Убрать фильтр: ${label}`" @click="$emit('remove')">
+    <button type="button" class="kfc__remove" :aria-label="removeLabel ?? tr('Убрать фильтр: {label}', { label })" @click="$emit('remove')">
       <Icon name="kango:close-16" size="16" />
     </button>
   </span>

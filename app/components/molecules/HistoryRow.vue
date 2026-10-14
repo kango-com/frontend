@@ -11,8 +11,8 @@ defineEmits<{ select: [] }>()
   <button type="button" class="hrow" @click="$emit('select')">
     <Icon name="kango:history-20" size="20" class="hrow__icon" />
     <span class="hrow__text">
-      <span class="hrow__title">{{ text }}</span>
-      <span v-if="categoryTitle" class="hrow__cat">{{ categoryTitle }}</span>
+      <span class="hrow__title">{{ tr(text) }}</span>
+      <span v-if="categoryTitle" class="hrow__cat">{{ tr(categoryTitle) }}</span>
     </span>
     <Icon name="kango:chevron-right-20" size="20" class="hrow__chevron" />
   </button>

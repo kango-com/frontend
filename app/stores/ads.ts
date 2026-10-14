@@ -48,7 +48,7 @@ const feed = (key: string): Feed => {
     } catch (e) {
       if (isApiError(e) && e.code === 'aborted') return
       f.status = 'error'
-      f.error = isApiError(e) ? e : { status: 0, code: 'unknown', message: 'Что-то пошло не так' }
+      f.error = isApiError(e) ? e : { status: 0, code: 'unknown', message: tr('Что-то пошло не так') }
     }
   }
 
@@ -74,7 +74,7 @@ const feed = (key: string): Feed => {
       return details[id]
     } catch (e) {
       detailStatus.value = 'error'
-      detailError.value = isApiError(e) ? e : { status: 0, code: 'unknown', message: 'Что-то пошло не так' }
+      detailError.value = isApiError(e) ? e : { status: 0, code: 'unknown', message: tr('Что-то пошло не так') }
       return undefined
     }
   }

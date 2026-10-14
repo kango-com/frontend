@@ -28,7 +28,7 @@ watch(query, q => { if (props.remote) emit('search', q.trim()) })
 
 const shown = computed(() => {
   const q = query.value.trim().toLowerCase()
-  return props.remote || !q ? props.items : props.items.filter(i => i.title.toLowerCase().includes(q))
+  return props.remote || !q ? props.items : props.items.filter(i => tr(i.title).toLowerCase().includes(q))
 })
 
 function toggle(id: string) {
@@ -54,9 +54,9 @@ const chooseAny = () => emit('update:modelValue', [])
         @update:model-value="toggle(i.id)"
         @click="toggle(i.id)"
       />
-      <p v-if="status === 'loading' && !items.length" class="pick__note">Загрузка...</p>
-      <p v-else-if="status === 'error'" class="pick__note" role="alert">Не удалось загрузить список.</p>
-      <p v-else-if="!shown.length" class="pick__note">Ничего не найдено. Проверьте запрос.</p>
+      <p v-if="status === 'loading' && !items.length" class="pick__note">{{ tr('Загрузка...') }}</p>
+      <p v-else-if="status === 'error'" class="pick__note" role="alert">{{ tr('Не удалось загрузить список.') }}</p>
+      <p v-else-if="!shown.length" class="pick__note">{{ tr('Ничего не найдено. Проверьте запрос.') }}</p>
     </div>
   </div>
 </template>

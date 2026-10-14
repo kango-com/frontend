@@ -18,10 +18,10 @@ const id = useId()
 
 <template>
   <fieldset class="rng" :aria-labelledby="id">
-    <legend :id="id" class="rng__label">{{ label }}<template v-if="unit">, {{ unit }}</template></legend>
+    <legend :id="id" class="rng__label">{{ tr(label) }}<template v-if="unit">, {{ tr(unit) }}</template></legend>
     <div class="rng__row">
-      <KTextField type="number" inputmode="numeric" placeholder="От" :label="`${label}: от`" :model-value="from === undefined ? '' : String(from)" @update:model-value="emit('update:from', parse($event))" />
-      <KTextField type="number" inputmode="numeric" placeholder="До" :label="`${label}: до`" :model-value="to === undefined ? '' : String(to)" @update:model-value="emit('update:to', parse($event))" />
+      <KTextField type="number" inputmode="numeric" :placeholder="tr('От')" :label="tr('{label}: от', { label: tr(label) })" :model-value="from === undefined ? '' : String(from)" @update:model-value="emit('update:from', parse($event))" />
+      <KTextField type="number" inputmode="numeric" :placeholder="tr('До')" :label="tr('{label}: до', { label: tr(label) })" :model-value="to === undefined ? '' : String(to)" @update:model-value="emit('update:to', parse($event))" />
     </div>
   </fieldset>
 </template>

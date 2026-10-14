@@ -14,8 +14,8 @@ const selected = ref<Section | ''>('')
 
 <template>
   <section class="spick" aria-labelledby="spick-title">
-    <h1 id="spick-title" class="spick__title">Подать объявление</h1>
-    <p class="spick__lead">Выберите раздел из доступных</p>
+    <h1 id="spick-title" class="spick__title">{{ tr('Подать объявление') }}</h1>
+    <p class="spick__lead">{{ tr('Выберите раздел из доступных') }}</p>
     <div class="spick__list" role="radiogroup" aria-labelledby="spick-title">
       <button
         v-for="s in SECTIONS"
@@ -27,11 +27,11 @@ const selected = ref<Section | ''>('')
         :aria-checked="selected === s.id"
         @click="selected = s.id"
       >
-        <span class="spick__name">{{ s.title }}</span>
-        <span class="spick__hint">{{ s.hint }}</span>
+        <span class="spick__name">{{ tr(s.title) }}</span>
+        <span class="spick__hint">{{ tr(s.hint) }}</span>
       </button>
     </div>
-    <KButton block :disabled="!selected" @click="selected && emit('pick', selected)">Классическая подача</KButton>
+    <KButton block :disabled="!selected" @click="selected && emit('pick', selected)">{{ tr('Классическая подача') }}</KButton>
   </section>
 </template>
 

@@ -30,7 +30,7 @@ function toggle(v: string) {
 
 <template>
   <div class="tgl" role="group" :aria-labelledby="id">
-    <span :id="id" class="tgl__label">{{ label }}</span>
+    <span :id="id" class="tgl__label">{{ tr(label) }}</span>
     <div class="tgl__items">
       <button
         v-for="o in options"
@@ -40,7 +40,7 @@ function toggle(v: string) {
         :class="{ 'tgl__item--on': isOn(o.value) }"
         :aria-pressed="isOn(o.value)"
         @click="toggle(o.value)"
-      >{{ o.label }}</button>
+      >{{ tr(o.label) }}</button>
     </div>
   </div>
 </template>

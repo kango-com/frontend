@@ -10,8 +10,8 @@ defineEmits<{ select: [city: City] }>()
 </script>
 
 <template>
-  <div class="chips" role="group" aria-label="Города">
-    <KCityChip v-for="c in cities" :key="c.id" :active="c.id === activeId" @click="$emit('select', c)">{{ c.name }}</KCityChip>
+  <div class="chips" role="group" :aria-label="tr('Города')">
+    <KCityChip v-for="c in cities" :key="c.id" :active="c.id === activeId" @click="$emit('select', c)">{{ tr(c.name) }}</KCityChip>
   </div>
 </template>
 

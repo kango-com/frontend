@@ -3,12 +3,14 @@ import mobile from '~/assets/img/hero/hero-mobile.webp'
 import desktop from '~/assets/img/hero/hero-desktop.webp'
 import wide from '~/assets/img/hero/hero-desktop-wide.webp'
 
+const { locale } = useI18n()
+
 // Фон обложки главной: баннер с пляжем и кенгуру (одна картинка 1380x566 на всех ширинах),
 // внизу плавно уходит в белое. На узких экранах кадрируется по кенгуру справа.
 </script>
 
 <template>
-  <div class="backdrop" :style="{ '--hero-mobile': `url(${mobile})`, '--hero-desktop': `url(${desktop})`, '--hero-wide': `url(${wide})` }" aria-hidden="true">
+  <div class="backdrop" :class="{ 'backdrop--flip': locale === 'he' }" :style="{ '--hero-mobile': `url(${mobile})`, '--hero-desktop': `url(${desktop})`, '--hero-wide': `url(${wide})` }" aria-hidden="true">
     <span class="backdrop__glow" />
   </div>
 </template>
@@ -66,6 +68,6 @@ import wide from '~/assets/img/hero/hero-desktop-wide.webp'
 
 /* Иврит: баннер зеркалится, чтобы кенгуру не закрывал текст (кроме 1920, где баннер привязан к левой границе контента) */
 @media (max-width: 1919px) {
-  :global([dir='rtl']) .backdrop { transform: scaleX(-1); }
+  .backdrop--flip { transform: scaleX(-1); }
 }
 </style>

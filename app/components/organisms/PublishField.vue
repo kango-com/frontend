@@ -35,38 +35,38 @@ const checks = computed(() => (Array.isArray(value.value) ? (value.value as stri
 <template>
   <div class="pf">
     <template v-if="field.kind === 'select'">
-      <label class="pf__label">{{ field.label }}</label>
-      <KSelect :model-value="asString" :options="selectOptions" :label="field.label" :disabled="!!field.ref && !source" :error="!!error" @update:model-value="set($event || undefined)" />
+      <label class="pf__label">{{ tr(field.label) }}</label>
+      <KSelect :model-value="asString" :options="selectOptions" :label="tr(field.label)" :disabled="!!field.ref && !source" :error="!!error" @update:model-value="set($event || undefined)" />
     </template>
 
     <template v-else-if="field.kind === 'segment'">
-      <span class="pf__label">{{ field.label }}</span>
-      <KSegmentControl :model-value="asString" :options="field.options" :label="field.label" @update:model-value="set(fromOption($event))" />
+      <span class="pf__label">{{ tr(field.label) }}</span>
+      <KSegmentControl :model-value="asString" :options="field.options" :label="tr(field.label)" @update:model-value="set(fromOption($event))" />
     </template>
 
     <template v-else-if="field.kind === 'checks'">
-      <span class="pf__label">{{ field.label }}</span>
+      <span class="pf__label">{{ tr(field.label) }}</span>
       <div class="pf__checks">
-        <KCheckbox v-for="o in field.options" :key="o" :model-value="checks" :value="o" @update:model-value="set($event)">{{ o }}</KCheckbox>
+        <KCheckbox v-for="o in field.options" :key="o" :model-value="checks" :value="o" @update:model-value="set($event)">{{ tr(o) }}</KCheckbox>
       </div>
     </template>
 
     <template v-else-if="field.kind === 'number'">
-      <label class="pf__label">{{ field.label }}<template v-if="field.unit">, {{ field.unit }}</template></label>
-      <KTextField type="number" inputmode="numeric" :model-value="asString" :label="field.label" :error="error" @update:model-value="set($event === '' ? undefined : Number($event))" />
+      <label class="pf__label">{{ tr(field.label) }}<template v-if="field.unit">, {{ tr(field.unit) }}</template></label>
+      <KTextField type="number" inputmode="numeric" :model-value="asString" :label="tr(field.label)" :error="error" @update:model-value="set($event === '' ? undefined : Number($event))" />
     </template>
 
     <template v-else-if="field.kind === 'date'">
-      <label class="pf__label">{{ field.label }}</label>
-      <KTextField type="text" placeholder="ГГГГ-ММ-ДД" :model-value="asString" :label="field.label" :error="error" @update:model-value="set($event || undefined)" />
+      <label class="pf__label">{{ tr(field.label) }}</label>
+      <KTextField type="text" :placeholder="tr('ГГГГ-ММ-ДД')" :model-value="asString" :label="tr(field.label)" :error="error" @update:model-value="set($event || undefined)" />
     </template>
 
     <div v-else class="pf__switch">
-      <span>{{ field.label }}</span>
-      <KSwitch :label="field.label" :model-value="!!value" @update:model-value="set($event)" />
+      <span>{{ tr(field.label) }}</span>
+      <KSwitch :label="tr(field.label)" :model-value="!!value" @update:model-value="set($event)" />
     </div>
 
-    <p v-if="error && field.kind !== 'number' && field.kind !== 'date'" class="pf__error" role="alert">{{ error }}</p>
+    <p v-if="error && field.kind !== 'number' && field.kind !== 'date'" class="pf__error" role="alert">{{ tr(error) }}</p>
   </div>
 </template>
 

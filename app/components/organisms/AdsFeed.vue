@@ -13,7 +13,7 @@ const props = withDefaults(defineProps<{
   emptyText?: string
   /** grid: плитки с фото (по умолчанию), list: строки без фото (работа, услуги) */
   layout?: 'grid' | 'list'
-}>(), { layout: 'grid', skeletons: 10, emptyText: 'Пока нет объявлений. Попробуйте выбрать другой город.' })
+}>(), { layout: 'grid', skeletons: 10 })
 
 const emit = defineEmits<{ more: [], retry: [] }>()
 
@@ -48,7 +48,7 @@ const isEmpty = computed(() => props.status === 'success' && !props.items.length
           :location="card.location"
           :published="formatPublished(card.createdAt)"
           :to="`/ad/${card.id}`"
-          :action="card.section === 'work' ? 'Откликнуться' : 'Связаться'"
+          :action="card.section === 'work' ? tr('Откликнуться') : tr('Связаться')"
           @click="viewed.add(card)"
         />
         <KAdCard
@@ -69,13 +69,13 @@ const isEmpty = computed(() => props.status === 'success' && !props.items.length
     </ul>
 
     <div v-else-if="isEmpty" class="feed__empty">
-      <p class="feed__note">{{ emptyText }}</p>
+      <p class="feed__note">{{ emptyText ?? tr('Пока нет объявлений. Попробуйте выбрать другой город.') }}</p>
       <slot name="empty" />
     </div>
 
     <div v-if="status === 'error'" class="feed__error" role="alert">
-      <p>{{ error?.message ?? 'Не удалось загрузить объявления' }}</p>
-      <KButton variant="outline" @click="emit('retry')">Повторить</KButton>
+      <p>{{ error?.message ?? tr('Не удалось загрузить объявления') }}</p>
+      <KButton variant="outline" @click="emit('retry')">{{ tr('Повторить') }}</KButton>
     </div>
 
     <div v-if="hasMore && status !== 'error'" class="feed__more">

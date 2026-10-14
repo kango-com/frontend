@@ -15,14 +15,14 @@ watch(() => city.current.id, () => ads.loadList(query.value), { immediate: true 
 
 <template>
   <KContainer as="section" class="mapv" aria-labelledby="mapv-title">
-    <h1 id="mapv-title" class="mapv__title">Карта</h1>
-    <div class="mapv__map" role="img" :aria-label="`Карта объявлений: ${city.current.name}`">
+    <h1 id="mapv-title" class="mapv__title">{{ tr('Карта') }}</h1>
+    <div class="mapv__map" role="img" :aria-label="tr('Карта объявлений: {city}', { city: tr(city.current.name) })">
       <Icon name="kango:map-24" size="24" />
-      <span class="mapv__big">{{ city.current.name }}</span>
-      <span>Интерактивная карта появится после выбора провайдера</span>
+      <span class="mapv__big">{{ tr(city.current.name) }}</span>
+      <span>{{ tr('Интерактивная карта появится после выбора провайдера') }}</span>
     </div>
     <AdsFeed
-      title="Объявления в городе"
+      :title="tr('Объявления в городе')"
       :items="feed.items"
       :status="feed.status"
       :has-more="feed.hasMore"

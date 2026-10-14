@@ -14,7 +14,7 @@ const props = withDefaults(defineProps<{
   disabled?: boolean
   /** Максимум файлов: при достижении кнопка добавления отключается, удаление остаётся доступным */
   max?: number
-}>(), { files: () => [], label: 'Добавить фото', accept: 'image/*', multiple: true })
+}>(), { files: () => [], accept: 'image/*', multiple: true })
 
 const emit = defineEmits<{
   add: [files: File[]]
@@ -37,15 +37,15 @@ function onChange(e: Event) {
     <ul class="kaf__list">
       <li v-for="f in props.files" :key="f.id" class="kaf__tile">
         <img class="kaf__img" :src="f.url" :alt="f.name ?? ''">
-        <KIconButton class="kaf__remove" type="cancel" :disabled="disabled" :label="`Удалить ${f.name ?? 'фото'}`" @click="emit('remove', f.id)" />
+        <KIconButton class="kaf__remove" type="cancel" :disabled="disabled" :label="tr('Удалить {name}', { name: f.name ?? tr('фото') })" @click="emit('remove', f.id)" />
       </li>
       <li>
-        <button type="button" class="kaf__add" :disabled="disabled || (max !== undefined && props.files.length >= max)" :aria-label="label" @click="input?.click()">
+        <button type="button" class="kaf__add" :disabled="disabled || (max !== undefined && props.files.length >= max)" :aria-label="tr(label ?? 'Добавить фото')" @click="input?.click()">
           <Icon name="kango:plus-32" size="32" />
         </button>
       </li>
     </ul>
-    <span v-if="!props.files.length" class="kaf__label">{{ label }}</span>
+    <span v-if="!props.files.length" class="kaf__label">{{ tr(label ?? 'Добавить фото') }}</span>
   </div>
 </template>
 

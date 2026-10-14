@@ -20,12 +20,12 @@ const level = computed(() => passwordStrength(props.modelValue))
     <KTextField
       type="password"
       :model-value="modelValue"
-      :placeholder="placeholder ?? 'Пароль'"
+      :placeholder="placeholder ?? tr('Пароль')"
       :error="error"
       :autocomplete="autocomplete"
       @update:model-value="$emit('update:modelValue', $event)"
     />
-    <p v-if="strength && level !== 'empty' && !error" class="pwd__hint" :class="`pwd__hint--${level}`" role="status">{{ STRENGTH_LABELS[level] }}</p>
+    <p v-if="strength && level !== 'empty' && !error" class="pwd__hint" :class="`pwd__hint--${level}`" role="status">{{ tr(STRENGTH_LABELS[level]) }}</p>
   </div>
 </template>
 

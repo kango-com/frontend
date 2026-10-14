@@ -15,7 +15,7 @@ const props = withDefaults(defineProps<{
   name?: string
   /** Красная обводка (состояние ошибки) */
   error?: boolean
-}>(), { modelValue: '', placeholder: 'Выберите', clearable: false })
+}>(), { modelValue: '', clearable: false })
 
 const emit = defineEmits<{ 'update:modelValue': [value: string] }>()
 
@@ -40,13 +40,13 @@ const showClear = computed(() => props.clearable && !!props.modelValue && !props
       :aria-invalid="error ? true : undefined"
       :value="modelValue"
       :disabled="disabled"
-      :aria-label="label ?? placeholder"
+      :aria-label="tr(label ?? placeholder ?? 'Выберите')"
       @change="emit('update:modelValue', ($event.target as HTMLSelectElement).value)"
     >
-      <option value="" disabled hidden>{{ placeholder }}</option>
-      <option v-for="o in options" :key="o.value" :value="o.value">{{ o.label }}</option>
+      <option value="" disabled hidden>{{ tr(placeholder ?? 'Выберите') }}</option>
+      <option v-for="o in options" :key="o.value" :value="o.value">{{ tr(o.label) }}</option>
     </select>
-    <button v-if="showClear" type="button" class="ksel__clear" aria-label="Сбросить" @click="emit('update:modelValue', '')">
+    <button v-if="showClear" type="button" class="ksel__clear" :aria-label="tr('Сбросить')" @click="emit('update:modelValue', '')">
       <Icon name="kango:close-24" size="24" />
     </button>
     <Icon v-else name="kango:chevron-down-24" size="24" class="ksel__chevron" />

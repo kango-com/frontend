@@ -1,6 +1,6 @@
 <script setup lang="ts">
 definePageMeta({ layout: 'minimal', middleware: 'auth' })
-useHead({ title: 'Продвинуть объявление - Kango' })
+useHead({ title: () => tr('Продвинуть объявление - Kango') })
 
 const draft = useDraftAdStore()
 const route = useRoute()

@@ -4,7 +4,7 @@ const props = withDefaults(defineProps<{
   placeholder?: string
   label?: string
   disabled?: boolean
-}>(), { modelValue: '', placeholder: 'Поиск', label: 'Поиск' })
+}>(), { modelValue: '' })
 
 const emit = defineEmits<{
   'update:modelValue': [value: string]
@@ -36,12 +36,12 @@ function clear() {
       type="search"
       enterkeyhint="search"
       :value="modelValue"
-      :placeholder="placeholder"
-      :aria-label="label"
+      :placeholder="tr(placeholder ?? 'Поиск')"
+      :aria-label="tr(label ?? placeholder ?? 'Поиск')"
       :disabled="disabled"
       @input="emit('update:modelValue', ($event.target as HTMLInputElement).value)"
     >
-    <button v-if="modelValue && !disabled" type="button" class="ksf__clear" aria-label="Очистить поиск" @click="clear">
+    <button v-if="modelValue && !disabled" type="button" class="ksf__clear" :aria-label="tr('Очистить поиск')" @click="clear">
       <Icon name="kango:close-24" size="24" />
     </button>
   </form>

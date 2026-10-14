@@ -1,4 +1,5 @@
 import { http } from 'msw'
+import { nameVariants } from '../names'
 import type { SectionInfo } from '~/types'
 import { allAds } from '../db'
 import { cities, districts, streetsOf } from '../fixtures/geo'
@@ -14,9 +15,9 @@ export const geoHandlers = (base: string) => [
     const q = (url.searchParams.get('q') ?? '').trim().toLowerCase()
     const limit = Number(url.searchParams.get('limit') ?? 50)
     // как в макете: совпадение с начала названия или любой его части («Ав» находит «Тель-Авив»)
-    const found = cities.filter(c => c.name.toLowerCase().split(/[\s-]+/).some(w => w.startsWith(q)) || c.name.toLowerCase().startsWith(q))
+    const found = cities.filter(c => nameVariants(c.name).some(n => n.startsWith(q) || n.split(/[\s-]+/).some(w => w.startsWith(q))))
     // совпадения с начала названия выше
-    found.sort((a, b) => Number(b.name.toLowerCase().startsWith(q)) - Number(a.name.toLowerCase().startsWith(q)) || a.name.localeCompare(b.name, 'ru'))
+    found.sort((a, b) => Number(nameVariants(b.name).some(n => n.startsWith(q))) - Number(nameVariants(a.name).some(n => n.startsWith(q))) || a.name.localeCompare(b.name, 'ru'))
     return json(found.slice(0, limit))
   }),
 

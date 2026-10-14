@@ -21,13 +21,13 @@ defineEmits<{ promote: [], remove: [] }>()
       <span class="myad__text">
         <span class="myad__title">{{ title }}</span>
         <span class="myad__price">{{ price }}</span>
-        <span class="myad__meta">{{ location }}<template v-if="published"> · {{ published }}</template></span>
-        <span v-if="promoted" class="myad__badge">Продвигается</span>
+        <span class="myad__meta">{{ trl(location) }}<template v-if="published"> · {{ published }}</template></span>
+        <span v-if="promoted" class="myad__badge">{{ tr('Продвигается') }}</span>
       </span>
     </NuxtLink>
     <div class="myad__actions">
-      <KButton size="sm" variant="outline" @click="$emit('promote')">Продвинуть</KButton>
-      <KTextButton size="sm" @click="$emit('remove')">Удалить</KTextButton>
+      <KButton size="sm" variant="outline" @click="$emit('promote')">{{ tr('Продвинуть') }}</KButton>
+      <KTextButton size="sm" @click="$emit('remove')">{{ tr('Удалить') }}</KTextButton>
     </div>
   </article>
 </template>

@@ -14,11 +14,11 @@ defineEmits<{ select: [] }>()
 <template>
   <button type="button" class="promo" :class="{ 'promo--on': selected }" role="radio" :aria-checked="!!selected" @click="$emit('select')">
     <span class="promo__head">
-      <span class="promo__title">{{ title }}</span>
-      <span v-if="badge" class="promo__badge">{{ badge }}</span>
+      <span class="promo__title">{{ tr(title) }}</span>
+      <span v-if="badge" class="promo__badge">{{ tr(badge) }}</span>
     </span>
     <span class="promo__price">{{ price }}&nbsp;₪</span>
-    <span class="promo__text">{{ description }}</span>
+    <span class="promo__text">{{ tr(description) }}</span>
   </button>
 </template>
 

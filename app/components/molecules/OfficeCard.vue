@@ -5,9 +5,9 @@ defineProps<{
 </script>
 
 <template>
-  <div class="office" role="img" :aria-label="`Карта: ${address}`">
+  <div class="office" role="img" :aria-label="tr('Карта: {address}', { address: tr(address) })">
     <Icon name="kango:map-pin-16" size="16" />
-    <span>Карта появится после выбора провайдера</span>
+    <span>{{ tr('Карта появится после выбора провайдера') }}</span>
   </div>
 </template>
 

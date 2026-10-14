@@ -13,7 +13,7 @@ const props = withDefaults(defineProps<{
 const src = computed(() => (props.variant === 'white' ? logoWhite : logo))
 const width = computed(() => Math.round((props.height * 287) / 97))
 const tag = computed(() => (props.to ? resolveComponent('NuxtLink') : 'span'))
-const attrs = computed(() => (props.to ? { 'to': props.to, 'aria-label': 'Kango, на главную' } : {}))
+const attrs = computed(() => (props.to ? { 'to': props.to, 'aria-label': tr('Kango, на главную') } : {}))
 </script>
 
 <template>

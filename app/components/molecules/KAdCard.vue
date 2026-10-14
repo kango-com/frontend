@@ -23,7 +23,7 @@ const attrs = computed(() => (props.to ? { to: props.to } : {}))
       <KIconButton
         class="kad__fav"
         type="favorite"
-        :label="favorite ? 'Убрать из избранного' : 'В избранное'"
+        :label="favorite ? tr('Убрать из избранного') : tr('В избранное')"
         :selected="favorite"
         @click="$emit('toggle-favorite')"
       />
@@ -31,7 +31,7 @@ const attrs = computed(() => (props.to ? { to: props.to } : {}))
     <component :is="tag" v-bind="attrs" class="kad__body">
       <span class="kad__title">{{ title }}</span>
       <span class="kad__price">{{ price }}</span>
-      <span class="kad__location">{{ location }}</span>
+      <span class="kad__location">{{ trl(location) }}</span>
     </component>
   </article>
 </template>

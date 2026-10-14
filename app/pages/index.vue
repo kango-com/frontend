@@ -1,8 +1,8 @@
 <script setup lang="ts">
 const { t } = useI18n()
 useHead({
-  title: 'Kango - работа, жильё и мастера в Израиле',
-  meta: [{ name: 'description', content: 'Kango - доска объявлений для русскоязычных жителей Израиля: находите работу, жильё, товары и услуги.' }]
+  title: () => tr('Kango - работа, жильё и мастера в Израиле'),
+  meta: [{ name: 'description', content: () => tr('Kango - доска объявлений для русскоязычных жителей Израиля: находите работу, жильё, товары и услуги.') }]
 })
 
 const city = useCityStore()

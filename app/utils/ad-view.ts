@@ -1,5 +1,6 @@
 import type { Ad, Price, Section } from '~/types'
 import { formatDateRu, formatNumber } from './format'
+import { tr } from './tr'
 
 const nbsp = ' '
 
@@ -9,8 +10,8 @@ const PERIOD_LONG: Record<NonNullable<Price['period']>, string> = {
 
 /** Цена для страницы объявления: «5 500 ₪ в месяц», «от 50 ₪» */
 export function formatPriceLong(price: Price): string {
-  const period = price.period ? PERIOD_LONG[price.period] : ''
-  return `${price.from ? 'от ' : ''}${formatNumber(price.amount)}${nbsp}₪${period ? ` ${period}` : ''}`
+  const period = price.period ? tr(PERIOD_LONG[price.period]) : ''
+  return `${price.from ? `${tr('от')} ` : ''}${formatNumber(price.amount)}${nbsp}₪${period ? ` ${period}` : ''}`
 }
 
 const SECTION_TITLES: Record<Section, string> = { work: 'Работа', realty: 'Недвижимость', goods: 'Товары', services: 'Услуги' }
@@ -20,7 +21,7 @@ const REALTY_TYPES: Record<string, string> = {
   'build-land': 'Земля под строительство', 'agri-land': 'Сельхоз участок', 'abroad-any': 'Недвижимость за рубежом', 'hostel-any': 'Хостел'
 }
 const HEBREW: Record<string, string> = { required: 'Требуется иврит', none: 'Без иврита' }
-const yesNo = (v?: boolean) => (v ? 'Да' : 'Нет')
+const yesNo = (v?: boolean) => (v ? tr('Да') : tr('Нет'))
 
 export interface AdTerm {
   label: string
@@ -43,65 +44,65 @@ export function adView(ad: Ad): AdView {
     case 'realty': {
       const p = ad.params
       const chips = [
-        REALTY_TYPES[p.type] ?? p.type,
-        p.area ? `${p.area}${nbsp}м²` : '',
-        p.floor ? `Этаж ${p.floor}${p.floors ? ` из ${p.floors}` : ''}` : '',
-        p.rooms ? `${p.rooms} ${p.rooms === 1 ? 'комната' : p.rooms < 5 ? 'комнаты' : 'комнат'}` : '',
-        p.bathrooms ? `Санузлов: ${p.bathrooms}` : '',
+        tr(REALTY_TYPES[p.type] ?? p.type),
+        p.area ? `${p.area}${nbsp}${tr('м²')}` : '',
+        p.floor ? (p.floors ? tr('Этаж {floor} из {floors}', { floor: p.floor, floors: p.floors }) : tr('Этаж {floor}', { floor: p.floor })) : '',
+        p.rooms ? `${p.rooms} ${p.rooms === 1 ? tr('комната') : p.rooms < 5 ? tr('комнаты') : tr('комнат')}` : '',
+        p.bathrooms ? tr('Санузлов: {n}', { n: p.bathrooms }) : '',
         ...p.features,
         ...p.extras
       ].filter(Boolean)
       const r = p.rent
       return {
         chips,
-        termsTitle: p.deal === 'rent' ? 'Условия аренды' : 'Условия',
+        termsTitle: p.deal === 'rent' ? tr('Условия аренды') : tr('Условия'),
         terms: r
           ? [
-              ...(r.moveInDate ? [{ label: 'Дата въезда', value: formatDateRu(r.moveInDate) }] : []),
-              { label: 'Долгосрочная аренда', value: yesNo(r.longTerm) },
-              { label: 'Можно с животными', value: yesNo(r.pets) },
-              { label: 'Arnona включена', value: yesNo(r.arnona) },
-              { label: 'Vaad Bait включён', value: yesNo(r.vaadBait) }
+              ...(r.moveInDate ? [{ label: tr('Дата въезда'), value: formatDateRu(r.moveInDate) }] : []),
+              { label: tr('Долгосрочная аренда'), value: yesNo(r.longTerm) },
+              { label: tr('Можно с животными'), value: yesNo(r.pets) },
+              { label: tr('Arnona включена'), value: yesNo(r.arnona) },
+              { label: tr('Vaad Bait включён'), value: yesNo(r.vaadBait) }
             ]
           : [],
-        crumbs: ['Недвижимость', p.deal === 'rent' ? 'Снять' : 'Купить', REALTY_TYPES[p.type] ?? p.type]
+        crumbs: [tr('Недвижимость'), p.deal === 'rent' ? tr('Снять') : tr('Купить'), tr(REALTY_TYPES[p.type] ?? p.type)]
       }
     }
     case 'work': {
       const p = ad.params
       return {
-        chips: [...p.schedule, ...p.employment, p.experience === 'none' ? 'Без опыта' : 'Нужен опыт', ...(HEBREW[p.hebrew] ? [HEBREW[p.hebrew]!] : [])],
-        termsTitle: 'Условия работы',
+        chips: [...p.schedule, ...p.employment, p.experience === 'none' ? tr('Без опыта') : tr('Нужен опыт'), ...(HEBREW[p.hebrew] ? [tr(HEBREW[p.hebrew]!)] : [])],
+        termsTitle: tr('Условия работы'),
         terms: [
-          ...(ad.employer ? [{ label: 'Работодатель', value: ad.employer }] : []),
-          ...(p.conditions.length ? [{ label: 'Условия', value: p.conditions.join(', ') }] : []),
-          ...(p.ageLimit ? [{ label: 'Возраст', value: `до ${p.ageLimit} лет` }] : [])
+          ...(ad.employer ? [{ label: tr('Работодатель'), value: ad.employer }] : []),
+          ...(p.conditions.length ? [{ label: tr('Условия'), value: p.conditions.join(', ') }] : []),
+          ...(p.ageLimit ? [{ label: tr('Возраст'), value: tr('до {n} лет', { n: p.ageLimit }) }] : [])
         ],
-        crumbs: ['Работа']
+        crumbs: [tr('Работа')]
       }
     }
     case 'goods': {
       const p = ad.params
       return {
-        chips: [p.condition === 'new' ? 'Новый' : 'Б/У', ...(p.bargain ? ['Торг возможен'] : [])],
-        termsTitle: 'Условия продажи',
+        chips: [p.condition === 'new' ? tr('Новый') : tr('Б/У'), ...(p.bargain ? [tr('Торг возможен')] : [])],
+        termsTitle: tr('Условия продажи'),
         terms: [
-          { label: 'Формат передачи', value: p.handover.join(', ') || 'Не указан' },
-          { label: 'Торг', value: p.bargain ? 'Возможен' : 'Невозможен' }
+          { label: tr('Формат передачи'), value: p.handover.join(', ') || tr('Не указан') },
+          { label: tr('Торг'), value: p.bargain ? tr('Возможен') : tr('Невозможен') }
         ],
-        crumbs: ['Товары']
+        crumbs: [tr('Товары')]
       }
     }
     default: {
       const p = ad.params
       return {
-        chips: [...p.formats, ...(p.roundTheClock ? ['Круглосуточно'] : [])],
-        termsTitle: 'Условия услуги',
+        chips: [...p.formats, ...(p.roundTheClock ? [tr('Круглосуточно')] : [])],
+        termsTitle: tr('Условия услуги'),
         terms: [
-          { label: 'Формат оказания', value: p.formats.join(', ') || 'Не указан' },
-          { label: 'Круглосуточно', value: yesNo(p.roundTheClock) }
+          { label: tr('Формат оказания'), value: p.formats.join(', ') || tr('Не указан') },
+          { label: tr('Круглосуточно'), value: yesNo(p.roundTheClock) }
         ],
-        crumbs: ['Услуги']
+        crumbs: [tr('Услуги')]
       }
     }
   }
@@ -113,7 +114,7 @@ export const sectionTitle = (s: Section) => SECTION_TITLES[s]
 export function contactLinks(contacts: { phone?: string, whatsapp?: string, telegram?: string }) {
   const digits = (s: string) => s.replace(/[^\d]/g, '')
   return [
-    contacts.phone ? { kind: 'phone' as const, label: 'Позвонить', href: `tel:${contacts.phone.replace(/[^\d+]/g, '')}` } : null,
+    contacts.phone ? { kind: 'phone' as const, label: tr('Позвонить'), href: `tel:${contacts.phone.replace(/[^\d+]/g, '')}` } : null,
     contacts.telegram ? { kind: 'telegram' as const, label: 'Telegram', href: `https://t.me/${contacts.telegram.replace(/^@/, '')}` } : null,
     contacts.whatsapp ? { kind: 'whatsapp' as const, label: 'WhatsApp', href: `https://wa.me/${digits(contacts.whatsapp)}` } : null
   ].filter((x): x is NonNullable<typeof x> => !!x)

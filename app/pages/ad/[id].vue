@@ -15,7 +15,7 @@ watch(id, async (value) => {
 
 const notFound = computed(() => ads.detailStatus === 'error' && ads.detailError?.status === 404)
 useHead({
-  title: computed(() => (ad.value ? `${ad.value.title} - Kango` : 'Объявление - Kango')),
+  title: computed(() => (ad.value ? `${ad.value.title} - Kango` : tr('Объявление - Kango'))),
   meta: computed(() => (ad.value
     ? [
         { property: 'og:title', content: ad.value.title },
@@ -30,13 +30,13 @@ useHead({
   <AdDetails v-if="ad" :ad="ad" />
 
   <KContainer v-else-if="ads.detailStatus === 'error'" as="section" class="adp__state" role="alert">
-    <h1>{{ notFound ? 'Объявление не найдено' : 'Не удалось загрузить объявление' }}</h1>
-    <p>{{ notFound ? 'Возможно, оно удалено или ссылка неверна.' : ads.detailError?.message }}</p>
-    <KButton v-if="!notFound" variant="outline" @click="ads.loadDetails(id)">Повторить</KButton>
-    <KButton to="/" :variant="notFound ? 'primary' : 'neutral'">На главную</KButton>
+    <h1>{{ notFound ? tr('Объявление не найдено') : tr('Не удалось загрузить объявление') }}</h1>
+    <p>{{ notFound ? tr('Возможно, оно удалено или ссылка неверна.') : ads.detailError?.message }}</p>
+    <KButton v-if="!notFound" variant="outline" @click="ads.loadDetails(id)">{{ tr('Повторить') }}</KButton>
+    <KButton to="/" :variant="notFound ? 'primary' : 'neutral'">{{ tr('На главную') }}</KButton>
   </KContainer>
 
-  <KContainer v-else class="adp__skeleton" aria-busy="true" aria-label="Загрузка объявления">
+  <KContainer v-else class="adp__skeleton" aria-busy="true" :aria-label="tr('Загрузка объявления')">
     <span class="adp__bone adp__bone--img" />
     <span class="adp__bone" />
     <span class="adp__bone adp__bone--short" />

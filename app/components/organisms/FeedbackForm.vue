@@ -29,10 +29,10 @@ function detach() {
 onBeforeUnmount(detach)
 
 function validate() {
-  errors.name = !name.value.trim() ? 'Заполните поля' : undefined
-  errors.email = !email.value.trim() ? 'Заполните поля' : !isEmail(email.value) ? 'Введите корректный e-mail' : undefined
-  errors.message = !message.value.trim() ? 'Заполните поля' : undefined
-  errors.agree = agree.value ? undefined : 'Подтвердите согласие с политикой'
+  errors.name = !name.value.trim() ? tr('Заполните поля') : undefined
+  errors.email = !email.value.trim() ? tr('Заполните поля') : !isEmail(email.value) ? tr('Введите корректный e-mail') : undefined
+  errors.message = !message.value.trim() ? tr('Заполните поля') : undefined
+  errors.agree = agree.value ? undefined : tr('Подтвердите согласие с политикой')
   return !errors.name && !errors.email && !errors.message && !errors.agree
 }
 
@@ -59,30 +59,30 @@ async function submit() {
 
 <template>
   <section class="fbk" aria-labelledby="fbk-title">
-    <h2 id="fbk-title" class="fbk__title">Напишите нам</h2>
+    <h2 id="fbk-title" class="fbk__title">{{ tr('Напишите нам') }}</h2>
 
     <div v-if="status === 'sent'" class="fbk__done" role="status">
-      <p>Спасибо! Сообщение отправлено, мы ответим на указанную почту.</p>
-      <KButton variant="outline" @click="status = 'idle'">Написать ещё</KButton>
+      <p>{{ tr('Спасибо! Сообщение отправлено, мы ответим на указанную почту.') }}</p>
+      <KButton variant="outline" @click="status = 'idle'">{{ tr('Написать ещё') }}</KButton>
     </div>
 
     <form v-else class="fbk__form" novalidate @submit.prevent="submit">
-      <KTextField v-model="name" placeholder="Имя" autocomplete="name" :error="errors.name" />
+      <KTextField v-model="name" :placeholder="tr('Имя')" autocomplete="name" :error="errors.name" />
       <KTextField v-model="email" type="email" placeholder="E-mail" autocomplete="email" :error="errors.email" />
-      <KTextField v-model="phone" type="tel" placeholder="Телефон" autocomplete="tel" />
+      <KTextField v-model="phone" type="tel" :placeholder="tr('Телефон')" autocomplete="tel" />
       <div class="fbk__msg">
-        <textarea :id="messageId" v-model="message" class="fbk__text" :class="{ 'fbk__text--error': errors.message }" rows="3" placeholder="Какой вопрос?" aria-label="Какой вопрос?" :aria-invalid="!!errors.message" />
+        <textarea :id="messageId" v-model="message" class="fbk__text" :class="{ 'fbk__text--error': errors.message }" rows="3" :placeholder="tr('Какой вопрос?')" :aria-label="tr('Какой вопрос?')" :aria-invalid="!!errors.message" />
         <p v-if="errors.message" class="fbk__error" role="alert">{{ errors.message }}</p>
       </div>
-      <KAttachFile :files="preview" label="Прикрепите файл" :multiple="false" @add="attach" @remove="detach" />
+      <KAttachFile :files="preview" :label="tr('Прикрепите файл')" :multiple="false" @add="attach" @remove="detach" />
       <p v-if="errors.form" class="fbk__error" role="alert">{{ errors.form }}</p>
       <div class="fbk__agree">
         <KCheckbox v-model="agree">
-          Нажимая «Отправить», вы соглашаетесь с <NuxtLink to="/documents/privacy" class="fbk__link" @click.stop>политикой обработки данных</NuxtLink>
+          {{ tr('Нажимая «Отправить», вы соглашаетесь с') }} <NuxtLink to="/documents/privacy" class="fbk__link" @click.stop>{{ tr('политикой обработки данных') }}</NuxtLink>
         </KCheckbox>
         <p v-if="errors.agree" class="fbk__error" role="alert">{{ errors.agree }}</p>
       </div>
-      <KButton block type="submit" :disabled="status === 'sending'">{{ status === 'sending' ? 'Отправка...' : 'Отправить' }}</KButton>
+      <KButton block type="submit" :disabled="status === 'sending'">{{ status === 'sending' ? tr('Отправка...') : tr('Отправить') }}</KButton>
     </form>
   </section>
 </template>

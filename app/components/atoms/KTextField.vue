@@ -61,7 +61,7 @@ function clear() {
         v-if="isPassword"
         type="button"
         class="ktf__action"
-        :aria-label="revealed ? 'Скрыть пароль' : 'Показать пароль'"
+        :aria-label="revealed ? tr('Скрыть пароль') : tr('Показать пароль')"
         :aria-pressed="revealed"
         :disabled="disabled"
         @click="revealed = !revealed"
@@ -72,7 +72,7 @@ function clear() {
         v-else-if="clearable && modelValue && !disabled"
         type="button"
         class="ktf__action"
-        aria-label="Очистить"
+        :aria-label="tr('Очистить')"
         @click="clear"
       >
         <Icon name="kango:close-24" size="24" />

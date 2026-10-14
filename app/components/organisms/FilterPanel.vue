@@ -9,6 +9,7 @@ import { formatAdsCount } from '~/utils/format'
  * Панель фильтров: на 375 во весь экран, от 768 боковая панель. Поля описаны схемой (utils/filter-schema).
  * Значения правятся прямо в сторе `filters`, закрытие без «Показать» возвращает прежние.
  */
+const { locale } = useI18n()
 const ui = useUiStore()
 const store = useFiltersStore()
 const city = useCityStore()
@@ -155,7 +156,7 @@ const labelOf = (id: string) => store.labels[id] ?? id
 function selectValueText(f: SelectField): string {
   const ids = selectIds(f)
   if (!ids.length) return f.anyLabel
-  return f.multiple ? `Выбрано: ${ids.length}` : labelOf(ids[0]!)
+  return f.multiple ? tr('Выбрано: {n}', { n: ids.length }) : labelOf(ids[0]!)
 }
 // зависимое поле неактивно, пока не выбрано то, от чего оно зависит
 const loadedFor = (f: SelectField) => {
@@ -172,7 +173,7 @@ const sortValue = computed({
 })
 
 const count = computed(() => store.counts[section.value])
-const buttonText = computed(() => applyLabel(count.value, formatAdsCount))
+const buttonText = computed(() => applyLabel(count.value, n => formatAdsCount(n, locale.value as 'ru' | 'en' | 'he')))
 
 function reset() {
   store.reset(section.value)
@@ -197,7 +198,7 @@ watch(view, async (next, prev) => {
 })
 const backFromView = () => { view.value = null }
 
-const title = computed(() => (view.value?.kind === 'cities' ? 'Какой город?' : view.value ? view.value.field.label : 'Фильтры'))
+const title = computed(() => (view.value?.kind === 'cities' ? tr('Какой город?') : view.value ? view.value.field.label : tr('Фильтры')))
 
 function fieldKey(f: FieldDef) {
   return f.type === 'range' ? f.fromKey : f.key
@@ -209,7 +210,7 @@ function fieldKey(f: FieldDef) {
     v-model="open"
     fullscreen
     :title="title"
-    :action="view ? undefined : 'Сбросить'"
+    :action="view ? undefined : tr('Сбросить')"
     :back="!!view"
     @action="reset"
     @back="view = null"
@@ -220,8 +221,8 @@ function fieldKey(f: FieldDef) {
         :items="cityItems"
         :model-value="pending"
         multiple
-        any-label="Весь Израиль"
-        search-placeholder="Поиск города"
+        :any-label="tr('Весь Израиль')"
+        :search-placeholder="tr('Поиск города')"
         :status="city.searching ? 'loading' : 'success'"
         remote
         @search="searchCities"
@@ -245,14 +246,14 @@ function fieldKey(f: FieldDef) {
 
     <div v-else-if="view?.kind === 'date'" class="fp__date" @keydown.esc.stop="backFromView">
       <KCalendar v-model="pendingDate" />
-      <KTextButton size="sm" @click="pendingDate = ''">Сбросить дату</KTextButton>
+      <KTextButton size="sm" @click="pendingDate = ''">{{ tr('Сбросить дату') }}</KTextButton>
     </div>
 
     <div v-else class="fp">
-      <KSegmentControl :model-value="section" :options="SECTION_OPTIONS" label="Раздел" @update:model-value="switchSection" />
+      <KSegmentControl :model-value="section" :options="SECTION_OPTIONS" :label="tr('Раздел')" @update:model-value="switchSection" />
 
       <div class="fp__field">
-        <FilterRow label="Где искать" :value="filter.cityIds.length ? `Выбрано: ${filter.cityIds.length}` : 'Весь Израиль'" @click="openCities" />
+        <FilterRow :label="tr('Где искать')" :value="filter.cityIds.length ? tr('Выбрано: {n}', { n: filter.cityIds.length }) : tr('Весь Израиль')" @click="openCities" />
         <ChipsSummary :items="cityNames" @remove="id => changeCities(filter.cityIds.filter(c => c !== id))" />
       </div>
 
@@ -285,16 +286,16 @@ function fieldKey(f: FieldDef) {
           @update:to="setValue(f.toKey, $event)"
         />
         <div v-else class="fp__switch">
-          <span>{{ f.label }}</span>
-          <KSwitch :label="f.label" :model-value="!!record[f.key]" @update:model-value="setValue(f.key, $event)" />
+          <span>{{ tr(f.label) }}</span>
+          <KSwitch :label="tr(f.label)" :model-value="!!record[f.key]" @update:model-value="setValue(f.key, $event)" />
         </div>
       </div>
 
-      <ToggleGroup label="Сортировка" :options="sorts" :model-value="sortValue" @update:model-value="sortValue = $event as SortKey" />
+      <ToggleGroup :label="tr('Сортировка')" :options="sorts" :model-value="sortValue" @update:model-value="sortValue = $event as SortKey" />
     </div>
 
     <template #footer>
-      <KButton v-if="view" block @click="applyPicker">Применить</KButton>
+      <KButton v-if="view" block @click="applyPicker">{{ tr('Применить') }}</KButton>
       <KButton v-else block :disabled="count === 0" @click="apply">{{ buttonText }}</KButton>
     </template>
   </KModalSheet>

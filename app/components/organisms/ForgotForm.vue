@@ -15,7 +15,7 @@ onMounted(() => auth.clearError())
 onBeforeUnmount(() => clearTimeout(timer))
 
 async function submit() {
-  error.value = !email.value.trim() ? 'Заполните поля' : !isEmail(email.value) ? 'Введите корректный e-mail' : undefined
+  error.value = !email.value.trim() ? tr('Заполните поля') : !isEmail(email.value) ? tr('Введите корректный e-mail') : undefined
   if (error.value) return
   try {
     const result = await auth.forgot(email.value.trim())
@@ -32,19 +32,19 @@ async function submit() {
 <template>
   <AuthResult
     v-if="sent"
-    title="Проверьте почту"
-    text="Мы отправили ссылку для сброса пароля на ваш email"
-    action="Войти"
+    :title="tr('Проверьте почту')"
+    :text="tr('Мы отправили ссылку для сброса пароля на ваш email')"
+    :action="tr('Войти')"
     to="/login"
-    note="Вы будете перенаправлены через 3 секунды на главную страницу"
+    :note="tr('Вы будете перенаправлены через 3 секунды на главную страницу')"
   >
-    <p v-if="devLink" class="ff__dev">Мок-режим, письма нет: <NuxtLink :to="devLink">открыть ссылку из письма</NuxtLink></p>
+    <p v-if="devLink" class="ff__dev">{{ tr('Мок-режим, письма нет:') }} <NuxtLink :to="devLink">{{ tr('открыть ссылку из письма') }}</NuxtLink></p>
   </AuthResult>
 
-  <AuthCard v-else title="Восстановление пароля" lead="Введите e-mail, мы отправим ссылку для сброса пароля">
+  <AuthCard v-else :title="tr('Восстановление пароля')" :lead="tr('Введите e-mail, мы отправим ссылку для сброса пароля')">
     <form class="ff" novalidate @submit.prevent="submit">
       <KTextField v-model="email" type="email" placeholder="E-mail" autocomplete="username" :error="error" />
-      <KButton block type="submit" :disabled="busy">{{ busy ? 'Отправка...' : 'Отправить' }}</KButton>
+      <KButton block type="submit" :disabled="busy">{{ busy ? tr('Отправка...') : tr('Отправить') }}</KButton>
     </form>
   </AuthCard>
 </template>

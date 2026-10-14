@@ -5,7 +5,7 @@ const id = useId()
 
 <template>
   <fieldset class="fsec" :aria-labelledby="id">
-    <legend :id="id" class="fsec__title">{{ title }}</legend>
+    <legend :id="id" class="fsec__title">{{ tr(title) }}</legend>
     <div class="fsec__body"><slot /></div>
   </fieldset>
 </template>

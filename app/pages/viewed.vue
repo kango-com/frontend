@@ -1,6 +1,6 @@
 <script setup lang="ts">
 definePageMeta({ layout: 'default' })
-useHead({ title: 'Просмотренные - Kango' })
+useHead({ title: () => tr('Просмотренные - Kango') })
 </script>
 
 <template>

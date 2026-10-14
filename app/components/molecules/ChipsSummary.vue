@@ -19,9 +19,9 @@ const hidden = computed(() => Math.max(0, props.items.length - props.max))
 
 <template>
   <div v-if="items.length" class="csum">
-    <KFilterChip v-for="c in visible" :key="c.id" @remove="$emit('remove', c.id)">{{ c.label }}</KFilterChip>
-    <KTextButton v-if="hidden && !expanded" size="sm" @click="expanded = true">Показать еще {{ hidden }}</KTextButton>
-    <KTextButton v-else-if="hidden" size="sm" @click="expanded = false">Скрыть</KTextButton>
+    <KFilterChip v-for="c in visible" :key="c.id" @remove="$emit('remove', c.id)">{{ tr(c.label) }}</KFilterChip>
+    <KTextButton v-if="hidden && !expanded" size="sm" @click="expanded = true">{{ tr('Показать еще') }} {{ hidden }}</KTextButton>
+    <KTextButton v-else-if="hidden" size="sm" @click="expanded = false">{{ tr('Скрыть') }}</KTextButton>
   </div>
 </template>
 

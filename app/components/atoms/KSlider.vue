@@ -12,7 +12,7 @@ const props = withDefaults(defineProps<{
   disabled?: boolean
   /** Показать значения над дорожкой (в слоте `value` можно задать свой формат) */
   showValue?: boolean
-}>(), { min: 0, max: 100, step: 1, label: 'Значение' })
+}>(), { min: 0, max: 100, step: 1 })
 
 const emit = defineEmits<{ 'update:modelValue': [value: number | [number, number]] }>()
 
@@ -127,7 +127,7 @@ const valueText = computed(() => (isRange.value ? `${values.value[0]} - ${values
         role="slider"
         class="ksl__thumb"
         :style="{ left: `${pct(values[i])}%` }"
-        :aria-label="isRange ? `${label}: ${i === 0 ? 'от' : 'до'}` : label"
+        :aria-label="isRange ? `${tr(label ?? 'Значение')}: ${i === 0 ? tr('от') : tr('до')}` : tr(label ?? 'Значение')"
         :aria-valuemin="bounds(i)[0]"
         :aria-valuemax="bounds(i)[1]"
         :aria-valuenow="values[i]"

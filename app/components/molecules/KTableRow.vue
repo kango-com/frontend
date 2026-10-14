@@ -38,8 +38,8 @@ const interactiveAttrs = computed(() => {
     @update:model-value="emit('update:modelValue', $event as boolean)"
   >
     <span class="ktr__text">
-      <span class="ktr__label">{{ label }}</span>
-      <span v-if="description" class="ktr__desc">{{ description }}</span>
+      <span class="ktr__label">{{ tr(label) }}</span>
+      <span v-if="description" class="ktr__desc">{{ tr(description) }}</span>
     </span>
   </KCheckbox>
 
@@ -52,16 +52,16 @@ const interactiveAttrs = computed(() => {
     @update:model-value="emit('update:modelValue', $event)"
   >
     <span class="ktr__text">
-      <span class="ktr__label">{{ label }}</span>
-      <span v-if="description" class="ktr__desc">{{ description }}</span>
+      <span class="ktr__label">{{ tr(label) }}</span>
+      <span v-if="description" class="ktr__desc">{{ tr(description) }}</span>
     </span>
   </KRadio>
 
   <component :is="interactiveTag" v-else v-bind="interactiveAttrs" class="ktr ktr--row" @click="emit('click')">
     <span v-if="$slots.icon" class="ktr__icon"><slot name="icon" /></span>
     <span class="ktr__text">
-      <span class="ktr__label">{{ label }}</span>
-      <span v-if="description" class="ktr__desc">{{ description }}</span>
+      <span class="ktr__label">{{ tr(label) }}</span>
+      <span v-if="description" class="ktr__desc">{{ tr(description) }}</span>
     </span>
     <Icon v-if="type === 'select' && selected" name="kango:check-20" size="20" class="ktr__check" />
     <Icon v-else-if="type === 'chevron'" name="kango:chevron-right-20" size="20" class="ktr__chevron" />

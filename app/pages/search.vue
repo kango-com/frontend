@@ -4,7 +4,7 @@ definePageMeta({ layout: false, hideHeaderMobile: true })
 
 const route = useRoute()
 const q = computed(() => (typeof route.query.q === 'string' ? route.query.q.trim() : ''))
-useHead({ title: 'Поиск - Kango' })
+useHead({ title: () => tr('Поиск - Kango') })
 </script>
 
 <template>

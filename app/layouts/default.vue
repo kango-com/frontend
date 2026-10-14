@@ -4,7 +4,7 @@ const route = useRoute()
 
 <template>
   <div class="shell">
-    <a class="shell__skip" href="#main">К содержимому</a>
+    <a class="shell__skip" href="#main">{{ tr('К содержимому') }}</a>
     <AppHeader :class="{ 'shell__header--no-mobile': !!route.meta.hideHeaderMobile }" />
     <main id="main" class="shell__main" tabindex="-1">
       <slot />

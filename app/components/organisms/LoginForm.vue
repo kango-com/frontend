@@ -14,8 +14,8 @@ const busy = computed(() => auth.status === 'loading')
 onMounted(() => auth.clearError())
 
 function validate() {
-  errors.email = !email.value.trim() ? 'Заполните поля' : !isEmail(email.value) ? 'Введите корректный e-mail' : undefined
-  errors.password = !password.value ? 'Заполните поля' : undefined
+  errors.email = !email.value.trim() ? tr('Заполните поля') : !isEmail(email.value) ? tr('Введите корректный e-mail') : undefined
+  errors.password = !password.value ? tr('Заполните поля') : undefined
   return !errors.email && !errors.password
 }
 
@@ -48,24 +48,24 @@ async function social(provider: 'google' | 'facebook') {
 </script>
 
 <template>
-  <AuthCard title="Добро пожаловать" lead="Для входа в сервис введите почту и пароль">
+  <AuthCard :title="tr('Добро пожаловать')" :lead="tr('Для входа в сервис введите почту и пароль')">
     <form class="lf" novalidate @submit.prevent="submit">
       <KTextField v-model="email" type="email" placeholder="E-mail" autocomplete="username" :error="errors.email" />
       <PasswordField v-model="password" autocomplete="current-password" :error="errors.password" />
       <p v-if="errors.form" class="lf__error" role="alert">{{ errors.form }}</p>
-      <KTextButton to="/forgot" size="sm" class="lf__forgot">Забыли пароль?</KTextButton>
-      <KButton block type="submit" :disabled="busy">{{ busy ? 'Вход...' : 'Войти' }}</KButton>
+      <KTextButton to="/forgot" size="sm" class="lf__forgot">{{ tr('Забыли пароль?') }}</KTextButton>
+      <KButton block type="submit" :disabled="busy">{{ busy ? tr('Вход...') : tr('Войти') }}</KButton>
     </form>
 
     <div class="lf__social">
-      <p class="lf__or">Войти с помощью</p>
+      <p class="lf__or">{{ tr('Войти с помощью') }}</p>
       <div class="lf__icons">
         <SocialButton provider="facebook" :disabled="busy" @click="social('facebook')" />
         <SocialButton provider="google" :disabled="busy" @click="social('google')" />
       </div>
     </div>
 
-    <p class="lf__switch">Нет аккаунта? <KTextButton :to="registerLink" size="sm">Зарегистрироваться</KTextButton></p>
+    <p class="lf__switch">{{ tr('Нет аккаунта?') }} <KTextButton :to="registerLink" size="sm">{{ tr('Зарегистрироваться') }}</KTextButton></p>
   </AuthCard>
 </template>
 

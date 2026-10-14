@@ -25,7 +25,7 @@ const location = computed(() => [props.ad.city, props.ad.district, props.ad.addr
 
 <template>
   <KContainer as="article" class="ad">
-    <nav v-if="view.crumbs.length" class="ad__crumbs" aria-label="Хлебные крошки">{{ view.crumbs.join(' - ') }}</nav>
+    <nav v-if="view.crumbs.length" class="ad__crumbs" :aria-label="tr('Хлебные крошки')">{{ view.crumbs.map(c => tr(c)).join(' - ') }}</nav>
 
     <div class="ad__layout">
       <div class="ad__main">
@@ -34,46 +34,46 @@ const location = computed(() => [props.ad.city, props.ad.district, props.ad.addr
         <section class="ad__block" aria-labelledby="ad-title">
           <p class="ad__price">{{ formatPriceLong(ad.price) }}</p>
           <h1 id="ad-title" class="ad__title">{{ ad.title }}</h1>
-          <p class="ad__where">{{ location }}</p>
+          <p class="ad__where">{{ trl(location) }}</p>
         </section>
 
-        <ParamChips :items="view.chips" label="Ключевые параметры" />
+        <ParamChips :items="view.chips" :label="tr('Ключевые параметры')" />
 
         <section v-if="ad.description" class="ad__block" aria-labelledby="ad-desc">
-          <h2 id="ad-desc" class="ad__h2">Описание</h2>
+          <h2 id="ad-desc" class="ad__h2">{{ tr('Описание') }}</h2>
           <p class="ad__text">{{ ad.description }}</p>
         </section>
 
         <section v-if="view.terms.length" class="ad__block" aria-labelledby="ad-terms">
-          <h2 id="ad-terms" class="ad__h2">{{ view.termsTitle }}</h2>
+          <h2 id="ad-terms" class="ad__h2">{{ tr(view.termsTitle) }}</h2>
           <dl class="ad__terms">
             <div v-for="t in view.terms" :key="t.label" class="ad__term">
-              <dt>{{ t.label }}</dt>
-              <dd>{{ t.value }}</dd>
+              <dt>{{ tr(t.label) }}</dt>
+              <dd>{{ tr(t.value) }}</dd>
             </div>
           </dl>
         </section>
       </div>
 
-      <aside class="ad__side" aria-label="Контакты и автор">
+      <aside class="ad__side" :aria-label="tr('Контакты и автор')">
         <section class="ad__block ad__contacts" aria-labelledby="ad-contacts">
-          <h2 id="ad-contacts" class="ad__h2">Контакты</h2>
+          <h2 id="ad-contacts" class="ad__h2">{{ tr('Контакты') }}</h2>
           <ContactBar :phone="ad.contacts.phone" :telegram="ad.contacts.telegram" :whatsapp="ad.contacts.whatsapp" />
         </section>
 
         <section class="ad__block" aria-labelledby="ad-author">
-          <h2 id="ad-author" class="ad__h2">Автор объявления</h2>
+          <h2 id="ad-author" class="ad__h2">{{ tr('Автор объявления') }}</h2>
           <AuthorCard :name="ad.author.name" :online="ad.author.online" :since="ad.author.since" />
         </section>
 
         <div class="ad__actions">
-          <KTextButton size="md" @click="toTop">Наверх</KTextButton>
-          <KTextButton size="md" @click="reporting = true">Пожаловаться на объявление</KTextButton>
+          <KTextButton size="md" @click="toTop">{{ tr('Наверх') }}</KTextButton>
+          <KTextButton size="md" @click="reporting = true">{{ tr('Пожаловаться на объявление') }}</KTextButton>
         </div>
       </aside>
     </div>
 
-    <p class="ad__service">Объявление № {{ ad.number }} · {{ formatPublished(ad.createdAt) }}</p>
+    <p class="ad__service">{{ tr('Объявление №') }} {{ ad.number }} · {{ formatPublished(ad.createdAt) }}</p>
     <ReportDialog v-model="reporting" :ad-id="ad.id" />
   </KContainer>
 </template>

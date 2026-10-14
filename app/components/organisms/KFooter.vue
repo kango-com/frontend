@@ -57,16 +57,16 @@ const itemsOf = (group: 'documents' | 'details') => (group === 'documents' ? doc
               <Icon :name="opened === l.group ? 'kango:close-24' : 'kango:plus-24'" size="24" />
             </button>
             <div v-if="l.group === 'details'" v-show="opened === l.group" :id="`${id}-${l.group}`" class="kft-footer__sub">
-              <p v-if="docs.requisites" class="kft-footer__req">{{ docs.requisites.sections.map(s => s.text).join('\n\n') }}</p>
-              <p v-else-if="docs.listStatus === 'error'" class="kft-footer__note">Не удалось загрузить реквизиты</p>
-              <p v-else class="kft-footer__note">Загрузка...</p>
+              <p v-if="docs.requisites" class="kft-footer__req">{{ docs.requisites.sections.map(s => s.text.split('\n').map(line => tr(line)).join('\n')).join('\n\n') }}</p>
+              <p v-else-if="docs.listStatus === 'error'" class="kft-footer__note">{{ tr('Не удалось загрузить реквизиты') }}</p>
+              <p v-else class="kft-footer__note">{{ tr('Загрузка...') }}</p>
             </div>
             <ul v-else v-show="opened === l.group" :id="`${id}-${l.group}`" class="kft-footer__sub">
               <li v-for="d in itemsOf(l.group)" :key="d.slug">
-                <NuxtLink :to="`/documents/${d.slug}`" class="kft-footer__sublink">{{ d.title }}</NuxtLink>
+                <NuxtLink :to="`/documents/${d.slug}`" class="kft-footer__sublink">{{ tr(d.title) }}</NuxtLink>
               </li>
-              <li v-if="docs.listStatus === 'loading'" class="kft-footer__note">Загрузка...</li>
-              <li v-else-if="docs.listStatus === 'error'" class="kft-footer__note">Не удалось загрузить список</li>
+              <li v-if="docs.listStatus === 'loading'" class="kft-footer__note">{{ tr('Загрузка...') }}</li>
+              <li v-else-if="docs.listStatus === 'error'" class="kft-footer__note">{{ tr('Не удалось загрузить список') }}</li>
             </ul>
           </template>
         </li>

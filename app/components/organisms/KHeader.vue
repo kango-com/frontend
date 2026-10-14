@@ -63,7 +63,7 @@ const query = computed({
       <LangSwitch class="khd__lang khd__lang--m" />
       <KButton class="khd__city" variant="plain" @click="emit('city')">
         <template #icon-left><Icon name="kango:map-pin-16" size="16" /></template>
-        {{ city }}
+        {{ tr(city) }}
       </KButton>
       <nav class="khd__links" :aria-label="t('nav.service')">
         <KTextButton :to="loggedIn ? '/profile' : '/login'" size="sm">

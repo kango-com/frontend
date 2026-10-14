@@ -17,7 +17,7 @@ async function confirmRemove() {
   const id = toDelete.value
   toDelete.value = null
   failed.value = ''
-  if (id && !(await mine.remove(id))) failed.value = 'Не удалось удалить объявление. Попробуйте ещё раз.'
+  if (id && !(await mine.remove(id))) failed.value = tr('Не удалось удалить объявление. Попробуйте ещё раз.')
 }
 
 // продвижение существующего объявления не трогает черновик подачи: id уходит в адрес страницы
@@ -35,25 +35,25 @@ const initial = computed(() => auth.user?.name?.trim().charAt(0).toUpperCase() ?
 
 <template>
   <KContainer as="section" class="prof" aria-labelledby="prof-title">
-    <h1 id="prof-title" class="visually-hidden">Профиль</h1>
+    <h1 id="prof-title" class="visually-hidden">{{ tr('Профиль') }}</h1>
 
     <div v-if="auth.user" class="prof__head">
       <span class="prof__avatar" aria-hidden="true">{{ initial }}</span>
       <div class="prof__who">
         <span class="prof__name">{{ auth.user.name }}</span>
         <span class="prof__mail">{{ auth.user.email }}</span>
-        <span class="prof__since">На сервисе с {{ formatSince(auth.user.createdAt) }}</span>
+        <span class="prof__since">{{ tr('На сервисе с') }} {{ formatSince(auth.user.createdAt) }}</span>
       </div>
     </div>
 
-    <nav class="prof__menu" aria-label="Разделы профиля">
-      <KTableRow type="chevron" label="Избранное" :description="favorites.items.length ? `${favorites.items.length} объявл.` : undefined" to="/favorites" />
-      <KTableRow type="chevron" label="Просмотренные" to="/viewed" />
-      <KTableRow type="chevron" label="Подать объявление" to="/new" />
+    <nav class="prof__menu" :aria-label="tr('Разделы профиля')">
+      <KTableRow type="chevron" :label="tr('Избранное')" :description="favorites.items.length ? tr('{n} объявл.', { n: favorites.items.length }) : undefined" to="/favorites" />
+      <KTableRow type="chevron" :label="tr('Просмотренные')" to="/viewed" />
+      <KTableRow type="chevron" :label="tr('Подать объявление')" to="/new" />
     </nav>
 
     <section class="prof__ads" aria-labelledby="prof-ads">
-      <h2 id="prof-ads" class="prof__h2">Мои объявления</h2>
+      <h2 id="prof-ads" class="prof__h2">{{ tr('Мои объявления') }}</h2>
       <p v-if="failed" class="prof__error" role="alert">{{ failed }}</p>
 
       <ul v-if="mine.items.length" class="prof__list">
@@ -71,23 +71,23 @@ const initial = computed(() => auth.user?.name?.trim().charAt(0).toUpperCase() ?
           />
         </li>
       </ul>
-      <p v-else-if="mine.status === 'loading'" class="prof__note" aria-busy="true">Загрузка...</p>
+      <p v-else-if="mine.status === 'loading'" class="prof__note" aria-busy="true">{{ tr('Загрузка...') }}</p>
       <p v-else-if="mine.status === 'error'" class="prof__note" role="alert">
-        Не удалось загрузить объявления. <KTextButton size="sm" @click="mine.load()">Повторить</KTextButton>
+        {{ tr('Не удалось загрузить объявления.') }} <KTextButton size="sm" @click="mine.load()">{{ tr('Повторить') }}</KTextButton>
       </p>
       <div v-else class="prof__empty">
-        <p>У вас пока нет объявлений.</p>
-        <KButton to="/new">Подать объявление</KButton>
+        <p>{{ tr('У вас пока нет объявлений.') }}</p>
+        <KButton to="/new">{{ tr('Подать объявление') }}</KButton>
       </div>
     </section>
 
-    <KButton variant="neutral" class="prof__logout" @click="logout">Выйти</KButton>
+    <KButton variant="neutral" class="prof__logout" @click="logout">{{ tr('Выйти') }}</KButton>
 
-    <KModalSheet :model-value="!!toDelete" title="Удалить объявление?" dialog @update:model-value="v => { if (!v) { toDelete = null; failed = '' } }">
+    <KModalSheet :model-value="!!toDelete" :title="tr('Удалить объявление?')" dialog @update:model-value="v => { if (!v) { toDelete = null; failed = '' } }">
       <div class="prof__confirm">
-        <p>Объявление исчезнет из поиска и ленты. Это действие нельзя отменить.</p>
-        <KButton block @click="confirmRemove">Удалить</KButton>
-        <KButton block variant="outline" @click="toDelete = null">Отмена</KButton>
+        <p>{{ tr('Объявление исчезнет из поиска и ленты. Это действие нельзя отменить.') }}</p>
+        <KButton block @click="confirmRemove">{{ tr('Удалить') }}</KButton>
+        <KButton block variant="outline" @click="toDelete = null">{{ tr('Отмена') }}</KButton>
       </div>
     </KModalSheet>
   </KContainer>

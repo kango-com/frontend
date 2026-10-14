@@ -25,16 +25,16 @@ const next = () => go(Math.min(total.value - 1, index.value + 1))
 </script>
 
 <template>
-  <div class="gal" role="region" aria-roledescription="карусель" :aria-label="`Фото: ${alt}`">
+  <div class="gal" role="region" :aria-roledescription="tr('карусель')" :aria-label="tr('Фото: {alt}', { alt })">
     <div ref="track" class="gal__track" tabindex="0" @scroll.passive="onScroll" @keydown.left.prevent="prev" @keydown.right.prevent="next">
-      <img v-for="(src, i) in images" :key="src + i" class="gal__img" :src="src" :alt="`${alt}, фото ${i + 1}`" :loading="i ? 'lazy' : 'eager'">
-      <div v-if="!images.length" class="gal__empty">Нет фото</div>
+      <img v-for="(src, i) in images" :key="src + i" class="gal__img" :src="src" :alt="tr('{alt}, фото {n}', { alt, n: i + 1 })" :loading="i ? 'lazy' : 'eager'">
+      <div v-if="!images.length" class="gal__empty">{{ tr('Нет фото') }}</div>
     </div>
-    <span v-if="total" class="gal__counter" aria-live="polite">{{ index + 1 }} фото из {{ total }}</span>
-    <KIconButton class="gal__fav" type="favorite" :label="favorite ? 'Убрать из избранного' : 'В избранное'" :selected="favorite" @click="$emit('toggle-favorite')" />
+    <span v-if="total" class="gal__counter" aria-live="polite">{{ index + 1 }} {{ tr('фото из') }} {{ total }}</span>
+    <KIconButton class="gal__fav" type="favorite" :label="favorite ? tr('Убрать из избранного') : tr('В избранное')" :selected="favorite" @click="$emit('toggle-favorite')" />
     <template v-if="total > 1">
-      <KIconButton class="gal__nav gal__nav--prev" type="chevron-left" label="Предыдущее фото" :disabled="index === 0" @click="prev" />
-      <KIconButton class="gal__nav gal__nav--next" type="chevron-right" label="Следующее фото" :disabled="index === total - 1" @click="next" />
+      <KIconButton class="gal__nav gal__nav--prev" type="chevron-left" :label="tr('Предыдущее фото')" :disabled="index === 0" @click="prev" />
+      <KIconButton class="gal__nav gal__nav--next" type="chevron-right" :label="tr('Следующее фото')" :disabled="index === total - 1" @click="next" />
     </template>
   </div>
 </template>

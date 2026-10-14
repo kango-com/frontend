@@ -100,7 +100,7 @@ function dragEnd() {
           role="dialog"
           aria-modal="true"
           :aria-labelledby="title ? `${id}-title` : undefined"
-          :aria-label="title ? undefined : (label ?? 'Окно')"
+          :aria-label="title ? undefined : (label ?? tr('Окно'))"
           :class="{ 'ksheet__panel--dragging': isDragging }"
           :style="{ '--drag': `${dragY}px` }"
           tabindex="-1"
@@ -115,10 +115,10 @@ function dragEnd() {
             <span />
           </div>
           <div v-if="title || action" class="ksheet__head">
-            <KIconButton v-if="back" type="arrow-left" label="Назад" @click="emit('back')" />
-            <KIconButton v-else type="close" label="Закрыть" @click="close" />
-            <h2 :id="`${id}-title`" class="ksheet__title">{{ title }}</h2>
-            <KTextButton v-if="action" size="sm" @click="emit('action')">{{ action }}</KTextButton>
+            <KIconButton v-if="back" type="arrow-left" :label="tr('Назад')" @click="emit('back')" />
+            <KIconButton v-else type="close" :label="tr('Закрыть')" @click="close" />
+            <h2 :id="`${id}-title`" class="ksheet__title">{{ tr(title) }}</h2>
+            <KTextButton v-if="action" size="sm" @click="emit('action')">{{ tr(action) }}</KTextButton>
             <span v-else class="ksheet__spacer" />
           </div>
           <div class="ksheet__body"><slot /></div>

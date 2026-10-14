@@ -30,8 +30,8 @@ function onKey(e: KeyboardEvent) {
 
 <template>
   <div ref="root" class="city-list" @keydown="onKey">
-    <p v-if="!cities.length && !loading" class="empty">Ничего не найдено. Проверьте название города.</p>
-    <ul v-else class="list" aria-label="Города">
+    <p v-if="!cities.length && !loading" class="empty">{{ tr('Ничего не найдено. Проверьте название города.') }}</p>
+    <ul v-else class="list" :aria-label="tr('Города')">
       <li v-for="c in cities" :key="c.id">
         <KTableRow type="select" :label="c.name" :selected="c.id === selectedId" @click="$emit('select', c)" />
       </li>

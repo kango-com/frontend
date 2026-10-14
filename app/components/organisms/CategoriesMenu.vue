@@ -10,6 +10,7 @@ import { formatAdsCount } from '~/utils/format'
 const ui = useUiStore()
 const filters = useFiltersStore()
 const sections = useSectionsStore()
+const { locale } = useI18n()
 const route = useRoute()
 const city = useCityStore()
 
@@ -36,7 +37,7 @@ const items = (e: Entry) => filters.refs[e.key] ?? []
 const status = (e: Entry) => filters.refStatus[e.key]
 const count = (id: Section) => {
   const s = sections.byId(id)
-  return s ? formatAdsCount(s.count) : undefined
+  return s ? formatAdsCount(s.count, locale.value as 'ru' | 'en' | 'he') : undefined
 }
 
 // счётчики разделов подгружаем при открытии, если их ещё нет
@@ -47,18 +48,18 @@ watch(() => route.fullPath, () => { open.value = false })
 </script>
 
 <template>
-  <KModalSheet v-model="open" fullscreen title="Все категории">
+  <KModalSheet v-model="open" fullscreen :title="tr('Все категории')">
     <ul class="cmenu">
       <li v-for="e in ENTRIES" :key="e.id">
-        <KAccordion :model-value="!!expanded[e.id]" :title="e.title" @update:model-value="toggle(e, $event)">
+        <KAccordion :model-value="!!expanded[e.id]" :title="tr(e.title)" @update:model-value="toggle(e, $event)">
           <ul class="cmenu__list">
-            <li><KTableRow type="chevron" :label="`Все в разделе «${e.title}»`" :description="count(e.id)" :to="`/${e.id}`" /></li>
+            <li><KTableRow type="chevron" :label="tr('Все в разделе «{title}»', { title: tr(e.title) })" :description="count(e.id)" :to="`/${e.id}`" /></li>
             <li v-for="c in items(e)" :key="c.id">
-              <KTableRow type="chevron" :label="c.title" :to="`/${e.id}?${e.param}=${encodeURIComponent(c.id)}`" />
+              <KTableRow type="chevron" :label="tr(c.title)" :to="`/${e.id}?${e.param}=${encodeURIComponent(c.id)}`" />
             </li>
-            <li v-if="status(e) === 'loading' && !items(e).length" class="cmenu__note" aria-busy="true">Загрузка...</li>
+            <li v-if="status(e) === 'loading' && !items(e).length" class="cmenu__note" aria-busy="true">{{ tr('Загрузка...') }}</li>
             <li v-else-if="status(e) === 'error'" class="cmenu__note" role="alert">
-              Не удалось загрузить категории. <KTextButton size="sm" @click="filters.loadRef(e.key, e.load, true)">Повторить</KTextButton>
+              {{ tr('Не удалось загрузить категории.') }} <KTextButton size="sm" @click="filters.loadRef(e.key, e.load, true)">{{ tr('Повторить') }}</KTextButton>
             </li>
           </ul>
         </KAccordion>

@@ -11,7 +11,7 @@ const links = computed(() => contactLinks(props))
 </script>
 
 <template>
-  <div v-if="links.length" class="cbar" role="group" aria-label="Связаться с автором">
+  <div v-if="links.length" class="cbar" role="group" :aria-label="tr('Связаться с автором')">
     <KButton
       v-for="l in links"
       :key="l.kind"
@@ -20,9 +20,9 @@ const links = computed(() => contactLinks(props))
       :href="l.href"
       :target="l.kind === 'phone' ? undefined : '_blank'"
       rel="noopener"
-    >{{ l.label }}</KButton>
+    >{{ tr(l.label) }}</KButton>
   </div>
-  <p v-else class="cbar__none">Автор не оставил контактов.</p>
+  <p v-else class="cbar__none">{{ tr('Автор не оставил контактов.') }}</p>
 </template>
 
 <style scoped>

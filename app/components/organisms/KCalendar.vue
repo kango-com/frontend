@@ -148,8 +148,8 @@ function onKey(e: KeyboardEvent, c: Cell) {
   }
 }
 
-const prevLabel = computed(() => (props.locale === 'he' ? 'החודש הקודם' : 'Предыдущий месяц'))
-const nextLabel = computed(() => (props.locale === 'he' ? 'החודש הבא' : 'Следующий месяц'))
+const prevLabel = computed(() => (props.locale === 'he' ? 'החודש הקודם' : tr('Предыдущий месяц')))
+const nextLabel = computed(() => (props.locale === 'he' ? 'החודש הבא' : tr('Следующий месяц')))
 </script>
 
 <template>

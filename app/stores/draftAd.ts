@@ -85,7 +85,7 @@ export const useDraftAdStore = defineStore('draftAd', () => {
       return true
     } catch (e) {
       status.value = 'error'
-      error.value = isApiError(e) ? e : { status: 0, code: 'unknown', message: 'Что-то пошло не так' }
+      error.value = isApiError(e) ? e : { status: 0, code: 'unknown', message: tr('Что-то пошло не так') }
       if (error.value.fields) errors.value = error.value.fields
       return false
     }
@@ -115,7 +115,7 @@ export const useDraftAdStore = defineStore('draftAd', () => {
       return session.redirectUrl
     } catch (e) {
       status.value = 'error'
-      error.value = isApiError(e) ? e : { status: 0, code: 'unknown', message: 'Что-то пошло не так' }
+      error.value = isApiError(e) ? e : { status: 0, code: 'unknown', message: tr('Что-то пошло не так') }
       return null
     }
   }

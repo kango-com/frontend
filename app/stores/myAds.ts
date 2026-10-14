@@ -16,7 +16,7 @@ export const useMyAdsStore = defineStore('myAds', () => {
       status.value = 'success'
     } catch (e) {
       status.value = 'error'
-      error.value = isApiError(e) ? e : { status: 0, code: 'unknown', message: 'Что-то пошло не так' }
+      error.value = isApiError(e) ? e : { status: 0, code: 'unknown', message: tr('Что-то пошло не так') }
     }
   }
 

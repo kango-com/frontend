@@ -2,7 +2,7 @@
 import { paymentsApi } from '~/api'
 
 definePageMeta({ layout: 'minimal' })
-useHead({ title: 'Объявление опубликовано - Kango' })
+useHead({ title: () => tr('Объявление опубликовано - Kango') })
 
 const route = useRoute()
 const router = useRouter()
@@ -42,7 +42,7 @@ onMounted(async () => {
 
 <template>
   <PublishSuccess v-if="state === 'paid' || state === 'skipped'" :promoted="state === 'paid'" :ad-id="adId" />
-  <KContainer v-else class="succ__wait" aria-busy="true">Проверяем оплату...</KContainer>
+  <KContainer v-else class="succ__wait" aria-busy="true">{{ tr('Проверяем оплату...') }}</KContainer>
 </template>
 
 <style scoped>

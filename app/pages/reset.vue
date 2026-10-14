@@ -1,6 +1,6 @@
 <script setup lang="ts">
 definePageMeta({ layout: 'auth' })
-useHead({ title: 'Сброс пароля - Kango' })
+useHead({ title: () => tr('Сброс пароля - Kango') })
 </script>
 
 <template>

@@ -4,7 +4,7 @@ import type { NuxtError } from '#app'
 const props = defineProps<{ error: NuxtError }>()
 const notFound = computed(() => props.error.statusCode === 404)
 
-useHead({ title: notFound.value ? 'Страница не найдена - Kango' : 'Что-то пошло не так - Kango' })
+useHead({ title: () => (notFound.value ? tr('Страница не найдена - Kango') : tr('Что-то пошло не так - Kango')) })
 
 const home = () => clearError({ redirect: '/' })
 </script>
@@ -13,11 +13,11 @@ const home = () => clearError({ redirect: '/' })
   <NuxtLayout name="auth">
     <KContainer as="section" class="error">
       <p class="code">{{ error.statusCode }}</p>
-      <h1>{{ notFound ? 'Страница не найдена' : 'Что-то пошло не так' }}</h1>
+      <h1>{{ notFound ? tr('Страница не найдена') : tr('Что-то пошло не так') }}</h1>
       <p class="text">
-        {{ notFound ? 'Такой страницы нет или она была удалена. Вернитесь на главную и попробуйте найти объявление через поиск.' : 'Мы уже знаем о проблеме. Попробуйте обновить страницу или вернитесь на главную.' }}
+        {{ notFound ? tr('Такой страницы нет или она была удалена. Вернитесь на главную и попробуйте найти объявление через поиск.') : tr('Мы уже знаем о проблеме. Попробуйте обновить страницу или вернитесь на главную.') }}
       </p>
-      <KButton @click="home">На главную</KButton>
+      <KButton @click="home">{{ tr('На главную') }}</KButton>
     </KContainer>
   </NuxtLayout>
 </template>

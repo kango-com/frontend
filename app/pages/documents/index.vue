@@ -1,8 +1,8 @@
 <script setup lang="ts">
 definePageMeta({ layout: 'default' })
-useHead({ title: 'Документы - Kango' })
+useHead({ title: () => tr('Документы - Kango') })
 </script>
 
 <template>
-  <DocumentList group="documents" title="Документы" />
+  <DocumentList group="documents" :title="tr('Документы')" />
 </template>

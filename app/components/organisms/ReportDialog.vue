@@ -25,7 +25,7 @@ watch(open, (v) => {
 })
 
 async function send() {
-  if (!reason.value) { error.value = 'Выберите причину'; return }
+  if (!reason.value) { error.value = tr('Выберите причину'); return }
   error.value = ''
   status.value = 'sending'
   try {
@@ -33,27 +33,27 @@ async function send() {
     status.value = 'done'
   } catch {
     status.value = 'error'
-    error.value = 'Не удалось отправить жалобу. Попробуйте ещё раз.'
+    error.value = tr('Не удалось отправить жалобу. Попробуйте ещё раз.')
   }
 }
 </script>
 
 <template>
-  <KModalSheet v-model="open" title="Пожаловаться" dialog>
+  <KModalSheet v-model="open" :title="tr('Пожаловаться')" dialog>
     <div v-if="status === 'done'" class="rep__done" role="status">
-      <p>Спасибо, жалоба отправлена. Мы проверим объявление.</p>
-      <KButton block @click="open = false">Закрыть</KButton>
+      <p>{{ tr('Спасибо, жалоба отправлена. Мы проверим объявление.') }}</p>
+      <KButton block @click="open = false">{{ tr('Закрыть') }}</KButton>
     </div>
 
     <form v-else class="rep" novalidate @submit.prevent="send">
       <fieldset class="rep__reasons">
-        <legend class="rep__legend">Причина жалобы</legend>
-        <KTableRow v-for="r in REASONS" :key="r.value" v-model="reason" type="radio" name="report-reason" :value="r.value" :label="r.label" />
+        <legend class="rep__legend">{{ tr('Причина жалобы') }}</legend>
+        <KTableRow v-for="r in REASONS" :key="r.value" v-model="reason" type="radio" name="report-reason" :value="r.value" :label="tr(r.label)" />
       </fieldset>
-      <label :for="commentId" class="rep__label">Комментарий (необязательно)</label>
+      <label :for="commentId" class="rep__label">{{ tr('Комментарий (необязательно)') }}</label>
       <textarea :id="commentId" v-model="comment" class="rep__text" rows="3" maxlength="500" />
       <p v-if="error" class="rep__error" role="alert">{{ error }}</p>
-      <KButton block type="submit" :disabled="status === 'sending'">{{ status === 'sending' ? 'Отправка...' : 'Отправить' }}</KButton>
+      <KButton block type="submit" :disabled="status === 'sending'">{{ status === 'sending' ? tr('Отправка...') : tr('Отправить') }}</KButton>
     </form>
   </KModalSheet>
 </template>

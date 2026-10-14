@@ -15,8 +15,8 @@ defineProps<{
     <div class="auth__text">
       <span class="auth__name">{{ name }}</span>
       <span class="auth__meta">
-        <span v-if="online" class="auth__online">Онлайн</span>
-        На сервисе с {{ formatSince(since) }}
+        <span v-if="online" class="auth__online">{{ tr('Онлайн') }}</span>
+        {{ tr('На сервисе с') }} {{ formatSince(since) }}
       </span>
     </div>
   </div>

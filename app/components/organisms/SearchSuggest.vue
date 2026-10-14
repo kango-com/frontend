@@ -42,30 +42,30 @@ function onKey(e: KeyboardEvent) {
     <template v-if="showHistory">
       <!-- без истории экран пустой (как в макете) -->
       <template v-if="search.history.length">
-        <ul class="ssug__list" aria-label="Недавние запросы">
+        <ul class="ssug__list" :aria-label="tr('Недавние запросы')">
           <li v-for="h in search.history" :key="h.id">
             <HistoryRow :text="h.text" :category-title="h.categoryTitle" @select="emit('pick', h.text, h.categoryTitle)" />
           </li>
         </ul>
-        <KTextButton class="ssug__clear" size="sm" @click="search.clearHistory()">Очистить историю</KTextButton>
+        <KTextButton class="ssug__clear" size="sm" @click="search.clearHistory()">{{ tr('Очистить историю') }}</KTextButton>
       </template>
     </template>
 
     <template v-else>
       <p v-if="search.status === 'error'" class="ssug__note" role="alert">
-        Не удалось загрузить подсказки.
-        <KTextButton size="sm" @click="search.suggest(query)">Повторить</KTextButton>
+        {{ tr('Не удалось загрузить подсказки.') }}
+        <KTextButton size="sm" @click="search.suggest(query)">{{ tr('Повторить') }}</KTextButton>
       </p>
-      <ul v-else-if="search.suggestions.length" class="ssug__list" aria-label="Подсказки">
+      <ul v-else-if="search.suggestions.length" class="ssug__list" :aria-label="tr('Подсказки')">
         <li v-for="s in search.suggestions" :key="s.id">
           <SuggestionRow :text="s.text" :category-title="s.categoryTitle" :query="trimmed" @select="emit('pick', s.text, s.categoryTitle)" />
         </li>
       </ul>
-      <div v-else-if="search.status === 'loading'" class="ssug__skeleton" aria-busy="true" aria-label="Загрузка подсказок">
+      <div v-else-if="search.status === 'loading'" class="ssug__skeleton" aria-busy="true" :aria-label="tr('Загрузка подсказок')">
         <span v-for="n in 4" :key="n" class="ssug__bone" />
       </div>
       <p v-else-if="search.status === 'success'" class="ssug__note">
-        Подсказок нет. Нажмите «Найти», чтобы искать «{{ trimmed }}».
+        {{ tr('Подсказок нет. Нажмите «Найти», чтобы искать «') }}{{ trimmed }}».
       </p>
     </template>
   </div>

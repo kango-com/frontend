@@ -9,10 +9,10 @@ defineProps<{
 <template>
   <section class="psucc" aria-labelledby="psucc-title">
     <span class="psucc__icon" aria-hidden="true"><Icon name="kango:check-20" size="20" /></span>
-    <h1 id="psucc-title" class="psucc__title">{{ promoted ? 'Оплата прошла успешно!' : 'Объявление опубликовано!' }}</h1>
-    <p class="psucc__text" role="status">{{ promoted ? 'Ваше объявление опубликовано с продвижением!' : 'Оно уже доступно в ленте и в поиске.' }}</p>
-    <KButton v-if="adId" block :to="`/ad/${adId}`">Перейти к объявлению</KButton>
-    <KButton block variant="outline" to="/">На главную</KButton>
+    <h1 id="psucc-title" class="psucc__title">{{ promoted ? tr('Оплата прошла успешно!') : tr('Объявление опубликовано!') }}</h1>
+    <p class="psucc__text" role="status">{{ promoted ? tr('Ваше объявление опубликовано с продвижением!') : tr('Оно уже доступно в ленте и в поиске.') }}</p>
+    <KButton v-if="adId" block :to="`/ad/${adId}`">{{ tr('Перейти к объявлению') }}</KButton>
+    <KButton block variant="outline" to="/">{{ tr('На главную') }}</KButton>
   </section>
 </template>
 

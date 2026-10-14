@@ -1,6 +1,6 @@
 <script setup lang="ts">
 definePageMeta({ layout: 'default' })
-useHead({ title: 'Карта - Kango' })
+useHead({ title: () => tr('Карта - Kango') })
 </script>
 
 <template>

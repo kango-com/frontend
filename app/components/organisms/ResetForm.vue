@@ -24,8 +24,8 @@ onMounted(async () => {
 
 async function submit() {
   errors.form = undefined
-  errors.password = !password.value ? 'Заполните поля' : passwordStrength(password.value) === 'short' ? 'Короткий пароль' : undefined
-  errors.repeat = !repeat.value ? 'Заполните поля' : repeat.value !== password.value ? 'Пароли не совпадают' : undefined
+  errors.password = !password.value ? tr('Заполните поля') : passwordStrength(password.value) === 'short' ? tr('Короткий пароль') : undefined
+  errors.repeat = !repeat.value ? tr('Заполните поля') : repeat.value !== password.value ? tr('Пароли не совпадают') : undefined
   if (errors.password || errors.repeat) return
   try {
     await auth.reset(token.value, password.value)
@@ -39,20 +39,20 @@ async function submit() {
 </script>
 
 <template>
-  <AuthCard v-if="state === 'checking'" title="Сброс пароля">
-    <p class="rsf__note" aria-busy="true">Проверяем ссылку...</p>
+  <AuthCard v-if="state === 'checking'" :title="tr('Сброс пароля')">
+    <p class="rsf__note" aria-busy="true">{{ tr('Проверяем ссылку...') }}</p>
   </AuthCard>
 
-  <AuthResult v-else-if="state === 'done'" title="Пароль изменён" text="Теперь вы можете войти в аккаунт с новым паролем" action="Войти" to="/login" />
+  <AuthResult v-else-if="state === 'done'" :title="tr('Пароль изменён')" :text="tr('Теперь вы можете войти в аккаунт с новым паролем')" :action="tr('Войти')" to="/login" />
 
-  <AuthResult v-else-if="state === 'expired'" title="Ссылка устарела" text="Не переживайте, запросите новый сброс пароля" action="Восстановить пароль" to="/forgot" />
+  <AuthResult v-else-if="state === 'expired'" :title="tr('Ссылка устарела')" :text="tr('Не переживайте, запросите новый сброс пароля')" :action="tr('Восстановить пароль')" to="/forgot" />
 
-  <AuthCard v-else title="Сброс пароля" lead="Придумайте новый пароль">
+  <AuthCard v-else :title="tr('Сброс пароля')" :lead="tr('Придумайте новый пароль')">
     <form class="rsf" novalidate @submit.prevent="submit">
-      <PasswordField v-model="password" strength placeholder="Новый пароль" autocomplete="new-password" :error="errors.password" />
-      <PasswordField v-model="repeat" placeholder="Повторите пароль" autocomplete="new-password" :error="errors.repeat" />
+      <PasswordField v-model="password" strength :placeholder="tr('Новый пароль')" autocomplete="new-password" :error="errors.password" />
+      <PasswordField v-model="repeat" :placeholder="tr('Повторите пароль')" autocomplete="new-password" :error="errors.repeat" />
       <p v-if="errors.form" class="rsf__error" role="alert">{{ errors.form }}</p>
-      <KButton block type="submit" :disabled="busy">{{ busy ? 'Сохранение...' : 'Сохранить пароль' }}</KButton>
+      <KButton block type="submit" :disabled="busy">{{ busy ? tr('Сохранение...') : tr('Сохранить пароль') }}</KButton>
     </form>
   </AuthCard>
 </template>

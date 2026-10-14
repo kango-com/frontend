@@ -12,15 +12,15 @@ const items = computed(() => (props.group === 'documents' ? store.documents : st
 
 <template>
   <KContainer as="section" class="dlist" aria-labelledby="dlist-title">
-    <h1 id="dlist-title" class="dlist__title">{{ title }}</h1>
+    <h1 id="dlist-title" class="dlist__title">{{ tr(title) }}</h1>
     <p v-if="store.listStatus === 'error'" class="dlist__note" role="alert">
-      Не удалось загрузить список. <KTextButton size="sm" @click="store.list = []; store.load()">Повторить</KTextButton>
+      {{ tr('Не удалось загрузить список.') }} <KTextButton size="sm" @click="store.list = []; store.load()">{{ tr('Повторить') }}</KTextButton>
     </p>
     <ul v-else-if="items.length" class="dlist__list">
-      <li v-for="d in items" :key="d.slug"><KTableRow type="chevron" :label="d.title" :to="`/documents/${d.slug}`" /></li>
+      <li v-for="d in items" :key="d.slug"><KTableRow type="chevron" :label="tr(d.title)" :to="`/documents/${d.slug}`" /></li>
     </ul>
-    <p v-else-if="store.listStatus === 'success'" class="dlist__note">Пока здесь ничего нет.</p>
-    <p v-else class="dlist__note" aria-busy="true">Загрузка...</p>
+    <p v-else-if="store.listStatus === 'success'" class="dlist__note">{{ tr('Пока здесь ничего нет.') }}</p>
+    <p v-else class="dlist__note" aria-busy="true">{{ tr('Загрузка...') }}</p>
   </KContainer>
 </template>
 

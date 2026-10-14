@@ -26,7 +26,7 @@ const emit = defineEmits<{
       @focus="emit('focus')"
       @submit="emit('submit', $event)"
     />
-    <KIconButton type="filter" label="Фильтры" :dot="filterDot" @click="emit('filter')" />
+    <KIconButton type="filter" :label="tr('Фильтры')" :dot="filterDot" @click="emit('filter')" />
   </div>
 </template>
 

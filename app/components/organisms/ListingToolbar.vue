@@ -20,7 +20,7 @@ const emit = defineEmits<{ city: [city: City], sort: [], filters: [] }>()
     <CityChips class="ltb__chips" :cities="cities" :active-id="activeCityId" @select="emit('city', $event)" />
     <div class="ltb__actions">
       <SortButton :label="sortLabel" :active="sortActive" @click="emit('sort')" />
-      <KIconButton class="ltb__filter" type="filter" label="Фильтры" :dot="!!filtersCount" @click="emit('filters')" />
+      <KIconButton class="ltb__filter" type="filter" :label="tr('Фильтры')" :dot="!!filtersCount" @click="emit('filters')" />
     </div>
   </div>
 </template>

@@ -1,4 +1,5 @@
 import type { ApiError } from '~/types'
+import { tr } from '~/utils/tr'
 
 type QueryValue = string | number | boolean | null | undefined | (string | number)[]
 export type ApiQuery = Record<string, QueryValue>
@@ -42,13 +43,13 @@ interface FetchErrorLike {
 export function toApiError(e: unknown): ApiError {
   const err = (e ?? {}) as FetchErrorLike
   const status = err.statusCode ?? err.status ?? 0
-  if (err.name === 'AbortError' || err.cause?.name === 'AbortError') return { status: 0, code: 'aborted', message: 'Запрос отменён' }
-  if (!status) return { status: 0, code: 'network', message: 'Нет соединения с сервером' }
+  if (err.name === 'AbortError' || err.cause?.name === 'AbortError') return { status: 0, code: 'aborted', message: tr('Запрос отменён') }
+  if (!status) return { status: 0, code: 'network', message: tr('Нет соединения с сервером') }
   return {
     status,
     code: err.data?.code ?? `http_${status}`,
-    message: err.data?.message ?? 'Что-то пошло не так, попробуйте ещё раз',
-    fields: err.data?.fields
+    message: err.data?.message ? tr(err.data.message) : tr('Что-то пошло не так, попробуйте ещё раз'),
+    fields: err.data?.fields ? Object.fromEntries(Object.entries(err.data.fields).map(([k, v]) => [k, tr(v)])) : undefined
   }
 }
 

@@ -13,8 +13,8 @@ defineEmits<{ click: [] }>()
 <template>
   <button type="button" class="frow" :disabled="disabled" @click="$emit('click')">
     <span class="frow__text">
-      <span class="frow__label">{{ label }}</span>
-      <span class="frow__value" :class="{ 'frow__value--empty': !value }">{{ value || placeholder }}</span>
+      <span class="frow__label">{{ tr(label) }}</span>
+      <span class="frow__value" :class="{ 'frow__value--empty': !value }">{{ tr(value || placeholder || '') }}</span>
     </span>
     <Icon name="kango:chevron-right-20" size="20" class="frow__chevron" />
   </button>

@@ -25,7 +25,7 @@ function pick(key: SortKey) {
 </script>
 
 <template>
-  <KModalSheet v-model="open" title="Сначала показывать" action="Сбросить" dialog @action="pick('default')">
+  <KModalSheet v-model="open" :title="tr('Сначала показывать')" :action="tr('Сбросить')" dialog @action="pick('default')">
     <ul class="sort">
       <li v-for="key in options" :key="key">
         <KTableRow type="select" :label="SORT_LABELS[key]" :selected="key === modelValue" @click="pick(key)" />

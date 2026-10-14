@@ -36,7 +36,7 @@ const selectedIndex = computed(() => props.options.findIndex(o => o.value === pr
         :checked="o.value === modelValue"
         @change="$emit('update:modelValue', o.value)"
       >
-      <span class="ksg__text">{{ o.label }}</span>
+      <span class="ksg__text">{{ tr(o.label) }}</span>
     </label>
   </div>
 </template>

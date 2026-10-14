@@ -7,8 +7,8 @@ defineProps<{
 </script>
 
 <template>
-  <ul v-if="items.length" class="pchips" :aria-label="label ?? 'Параметры'">
-    <li v-for="(t, i) in items" :key="t + i" class="pchips__item">{{ t }}</li>
+  <ul v-if="items.length" class="pchips" :aria-label="label ?? tr('Параметры')">
+    <li v-for="(t, i) in items" :key="t + i" class="pchips__item">{{ tr(t) }}</li>
   </ul>
 </template>
 

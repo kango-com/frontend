@@ -46,7 +46,7 @@ function setPeriod(v: string) {
   draftStore.patch({ price: { currency: 'ILS', amount: 0, ...draft.value.price, period: v } } as never)
 }
 
-const files = computed<AttachedFile[]>(() => (draft.value.images ?? []).map((url, i) => ({ id: url, url, name: `Фото ${i + 1}` })))
+const files = computed<AttachedFile[]>(() => (draft.value.images ?? []).map((url, i) => ({ id: url, url, name: tr('Фото {n}', { n: i + 1 }) })))
 const uploadError = ref('')
 async function addFiles(list: File[]) {
   uploading.value = true
@@ -54,7 +54,7 @@ async function addFiles(list: File[]) {
   try {
     for (const f of list.slice(0, 10 - files.value.length)) await draftStore.uploadImage(f)
   } catch {
-    uploadError.value = 'Не удалось загрузить фото. Попробуйте ещё раз.'
+    uploadError.value = tr('Не удалось загрузить фото. Попробуйте ещё раз.')
   } finally {
     uploading.value = false
   }
@@ -71,7 +71,7 @@ const setContact = (key: 'phone' | 'whatsapp' | 'telegram', v: string) =>
 
 function back() {
   const filled = !!(draft.value.title || draft.value.description || draft.value.images?.length)
-  if (!filled || window.confirm('Введённые данные будут потеряны. Вернуться к выбору раздела?')) emit('back')
+  if (!filled || window.confirm(tr('Введённые данные будут потеряны. Вернуться к выбору раздела?'))) emit('back')
 }
 
 async function submit() {
@@ -82,8 +82,8 @@ async function submit() {
 <template>
   <form class="adf" novalidate @submit.prevent="submit">
     <header class="adf__head">
-      <KIconButton type="arrow-left" label="Назад к выбору раздела" @click="back" />
-      <h1 class="adf__title">Новое объявление</h1>
+      <KIconButton type="arrow-left" :label="tr('Назад к выбору раздела')" @click="back" />
+      <h1 class="adf__title">{{ tr('Новое объявление') }}</h1>
     </header>
 
     <FormSection v-for="b in blocks" :key="b.title" :title="b.title">
@@ -92,35 +92,35 @@ async function submit() {
       </template>
     </FormSection>
 
-    <FormSection title="Основное">
-      <KTextField :model-value="draft.title ?? ''" placeholder="Назовите объявление" label="Название объявления" :error="errors.title" @update:model-value="draftStore.patch({ title: $event })" />
+    <FormSection :title="tr('Основное')">
+      <KTextField :model-value="draft.title ?? ''" :placeholder="tr('Назовите объявление')" :label="tr('Название объявления')" :error="errors.title" @update:model-value="draftStore.patch({ title: $event })" />
       <DescriptionField :model-value="draft.description ?? ''" :error="errors.description" :generating="generating" @update:model-value="draftStore.patch({ description: $event })" @generate="generate" />
       <div class="adf__price">
-        <KTextField type="number" inputmode="numeric" :placeholder="`${PRICE_LABELS[section]}, ₪`" :label="PRICE_LABELS[section]" :model-value="price" :error="errors.price" @update:model-value="setPrice" />
-        <KSegmentControl v-if="(PRICE_PERIODS[section]?.length ?? 0) > 1" :model-value="period" :options="PRICE_PERIODS[section]!" label="Период" @update:model-value="setPeriod" />
+        <KTextField type="number" inputmode="numeric" :placeholder="`${tr(PRICE_LABELS[section])}, ₪`" :label="tr(PRICE_LABELS[section])" :model-value="price" :error="errors.price" @update:model-value="setPrice" />
+        <KSegmentControl v-if="(PRICE_PERIODS[section]?.length ?? 0) > 1" :model-value="period" :options="PRICE_PERIODS[section]!" :label="tr('Период')" @update:model-value="setPeriod" />
       </div>
     </FormSection>
 
-    <FormSection title="Где">
-      <KSelect :model-value="draft.city ?? ''" :options="cityOptions" placeholder="Город" label="Город" :error="!!errors.city" @update:model-value="draftStore.patch({ city: $event, address: '' })" />
+    <FormSection :title="tr('Где')">
+      <KSelect :model-value="draft.city ?? ''" :options="cityOptions" :placeholder="tr('Город')" :label="tr('Город')" :error="!!errors.city" @update:model-value="draftStore.patch({ city: $event, address: '' })" />
       <p v-if="errors.city" class="adf__error" role="alert">{{ errors.city }}</p>
       <AddressField :model-value="draft.address ?? ''" :suggestions="streets" @update:model-value="draftStore.patch({ address: $event })" />
     </FormSection>
 
-    <FormSection title="Фото">
+    <FormSection :title="tr('Фото')">
       <p v-if="uploadError" class="adf__error" role="alert">{{ uploadError }}</p>
       <KAttachFile :files="files" :disabled="uploading" :max="10" @add="addFiles" @remove="removeFile" />
     </FormSection>
 
-    <FormSection title="Контакты">
-      <KTextField type="tel" placeholder="Телефон" label="Телефон" autocomplete="tel" :model-value="draft.contacts?.phone ?? ''" :error="errors.phone" @update:model-value="setContact('phone', $event)" />
+    <FormSection :title="tr('Контакты')">
+      <KTextField type="tel" :placeholder="tr('Телефон')" :label="tr('Телефон')" autocomplete="tel" :model-value="draft.contacts?.phone ?? ''" :error="errors.phone" @update:model-value="setContact('phone', $event)" />
       <KTextField type="tel" placeholder="WhatsApp" label="WhatsApp" :model-value="draft.contacts?.whatsapp ?? ''" @update:model-value="setContact('whatsapp', $event)" />
       <KTextField placeholder="Telegram (@username)" label="Telegram" :model-value="draft.contacts?.telegram ?? ''" @update:model-value="setContact('telegram', $event)" />
     </FormSection>
 
     <p v-if="draftStore.error && !Object.keys(errors).length" class="adf__error" role="alert">{{ draftStore.error.message }}</p>
-    <p v-if="Object.keys(errors).length" class="adf__error" role="alert">Проверьте поля формы: {{ Object.keys(errors).length }} требуют внимания.</p>
-    <KButton block type="submit" :disabled="busy || uploading">{{ busy ? 'Публикуем...' : 'Опубликовать' }}</KButton>
+    <p v-if="Object.keys(errors).length" class="adf__error" role="alert">{{ tr('Проверьте поля формы:') }} {{ Object.keys(errors).length }} {{ tr('требуют внимания.') }}</p>
+    <KButton block type="submit" :disabled="busy || uploading">{{ busy ? tr('Публикуем...') : tr('Опубликовать') }}</KButton>
   </form>
 </template>
 

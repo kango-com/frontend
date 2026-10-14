@@ -9,6 +9,7 @@ const props = defineProps<{ section?: Section }>()
 const SECTION_TITLES: Record<Section, string> = { work: 'Работа', realty: 'Недвижимость', goods: 'Товары', services: 'Услуги' }
 const SEARCH_HINTS: Record<Section, string> = { work: 'Какую работу хотите?', realty: 'Что вы ищете?', goods: 'Что вы ищете?', services: 'Какую услугу ищите?' }
 
+const { locale } = useI18n()
 const route = useRoute()
 const router = useRouter()
 const city = useCityStore()
@@ -42,10 +43,10 @@ watch(queryJson, () => {
   ads.loadList(query.value)
 }, { immediate: true })
 
-const heading = computed(() => (props.section ? SECTION_TITLES[props.section] : `Все объявления в ${city.current.name}`))
+const heading = computed(() => (props.section ? tr(SECTION_TITLES[props.section]) : tr('Все объявления в {city}', { city: tr(city.current.name) })))
 const subtitle = computed(() => {
   if (feed.value.status !== 'success') return ''
-  return q.value ? `По запросу «${q.value}»: ${formatAdsCount(feed.value.total)}` : formatAdsCount(feed.value.total)
+  return q.value ? tr('По запросу «{q}»: {count}', { q: q.value, count: formatAdsCount(feed.value.total, locale.value as 'ru' | 'en' | 'he') }) : formatAdsCount(feed.value.total, locale.value as 'ru' | 'en' | 'he')
 })
 useHead({ title: computed(() => `${q.value && !props.section ? `${q.value} - ` : ''}${heading.value} - Kango`) })
 
@@ -92,7 +93,7 @@ const workOptions = [{ value: 'seek-job', label: 'Ищу работу' }, { valu
 const kindOptions = computed(() => [{ value: 'apartment', label: deal.value === 'sale' ? 'Новостройки и вторичка' : 'Квартиры' }, { value: 'room', label: 'Комнаты' }])
 
 const layout = computed(() => (props.section === 'work' || props.section === 'services' ? 'list' : 'grid'))
-const emptyText = computed(() => (filterCount.value || q.value ? 'Ничего не найдено. Измените запрос или сбросьте фильтры.' : 'Пока нет объявлений. Попробуйте выбрать другой город.'))
+const emptyText = computed(() => (filterCount.value || q.value ? tr('Ничего не найдено. Измените запрос или сбросьте фильтры.') : tr('Пока нет объявлений. Попробуйте выбрать другой город.')))
 </script>
 
 <template>
@@ -114,18 +115,18 @@ const emptyText = computed(() => (filterCount.value || q.value ? 'Ничего �
       <p v-if="subtitle" class="lp__count" aria-live="polite">{{ subtitle }}</p>
     </header>
 
-    <KSegmentControl v-if="section === 'work'" v-model="workMode" class="lp__seg" :options="workOptions" label="Режим" />
+    <KSegmentControl v-if="section === 'work'" v-model="workMode" class="lp__seg" :options="workOptions" :label="tr('Режим')" />
     <template v-if="section === 'realty'">
-      <KSegmentControl v-model="deal" class="lp__seg" :options="dealOptions" label="Тип сделки" />
-      <KSegmentControl v-model="kind" class="lp__seg" :options="kindOptions" label="Вид жилья" />
+      <KSegmentControl v-model="deal" class="lp__seg" :options="dealOptions" :label="tr('Тип сделки')" />
+      <KSegmentControl v-model="kind" class="lp__seg" :options="kindOptions" :label="tr('Вид жилья')" />
     </template>
 
     <KSearchField
       v-if="section"
       v-model="search"
       class="lp__search"
-      :placeholder="SEARCH_HINTS[section]"
-      :label="SEARCH_HINTS[section]"
+      :placeholder="tr(SEARCH_HINTS[section])"
+      :label="tr(SEARCH_HINTS[section])"
       @submit="setQuery({ q: $event.trim() || undefined })"
     />
 
@@ -152,7 +153,7 @@ const emptyText = computed(() => (filterCount.value || q.value ? 'Ничего �
       @retry="ads.loadList(query)"
     >
       <template #empty>
-        <KButton v-if="filterCount || q || route.query.deal || route.query.type" variant="outline" @click="router.replace({ query: {} })">Сбросить</KButton>
+        <KButton v-if="filterCount || q || route.query.deal || route.query.type" variant="outline" @click="router.replace({ query: {} })">{{ tr('Сбросить') }}</KButton>
       </template>
     </AdsFeed>
 

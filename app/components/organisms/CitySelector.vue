@@ -47,18 +47,18 @@ function first() {
 </script>
 
 <template>
-  <KModalSheet v-model="open" label="Какой город?" dialog full-mobile>
+  <KModalSheet v-model="open" :label="tr('Какой город?')" dialog full-mobile>
     <div class="city-selector">
       <div class="city-selector__top">
-        <KSearchField v-model="query" placeholder="Какой город?" label="Поиск города" @submit="first" @keydown.down.prevent="cityList?.focusFirst()" />
-        <KTextButton size="md" @click="open = false">Отмена</KTextButton>
+        <KSearchField v-model="query" :placeholder="tr('Какой город?')" :label="tr('Поиск города')" @submit="first" @keydown.down.prevent="cityList?.focusFirst()" />
+        <KTextButton size="md" @click="open = false">{{ tr('Отмена') }}</KTextButton>
       </div>
       <div class="scroll">
         <CityList ref="cityList" :cities="list" :selected-id="pending.id" :loading="city.searching" @select="pending = $event" />
       </div>
       <!-- кнопка появляется, когда выбран другой город (как в макете) -->
       <div v-if="pending.id !== city.current.id" class="city-selector__foot">
-        <KButton block variant="outline" @click="confirm">Выбрать</KButton>
+        <KButton block variant="outline" @click="confirm">{{ tr('Выбрать') }}</KButton>
       </div>
     </div>
   </KModalSheet>

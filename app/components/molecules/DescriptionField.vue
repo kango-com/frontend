@@ -14,7 +14,7 @@ const over = computed(() => props.modelValue.length > props.max)
 
 <template>
   <div class="dfield">
-    <label :for="id" class="dfield__label">Описание</label>
+    <label :for="id" class="dfield__label">{{ tr('Описание') }}</label>
     <textarea
       :id="id"
       class="dfield__text"
@@ -26,7 +26,7 @@ const over = computed(() => props.modelValue.length > props.max)
     />
     <div class="dfield__foot">
       <span class="dfield__count" :class="{ 'dfield__count--over': over }">{{ modelValue.length }}/{{ max }}</span>
-      <KTextButton size="sm" :disabled="generating" @click="emit('generate')">{{ generating ? 'Генерируем...' : 'Сгенерировать описание' }}</KTextButton>
+      <KTextButton size="sm" :disabled="generating" @click="emit('generate')">{{ generating ? tr('Генерируем...') : tr('Сгенерировать описание') }}</KTextButton>
     </div>
     <p v-if="error" class="dfield__error" role="alert">{{ error }}</p>
   </div>

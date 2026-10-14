@@ -15,8 +15,8 @@ const listId = useId()
   <div class="addr">
     <KTextField
       :model-value="modelValue"
-      placeholder="Адрес (улица, дом)"
-      label="Адрес"
+      :placeholder="tr('Адрес (улица, дом)')"
+      :label="tr('Адрес')"
       autocomplete="street-address"
       :list="listId"
       :error="error"

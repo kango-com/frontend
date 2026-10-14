@@ -10,7 +10,7 @@ const props = defineProps<{
 
 defineEmits<{ select: [] }>()
 
-const parts = computed(() => highlightParts(props.text, props.query ?? ''))
+const parts = computed(() => highlightParts(tr(props.text), props.query ?? ''))
 </script>
 
 <template>
@@ -21,7 +21,7 @@ const parts = computed(() => highlightParts(props.text, props.query ?? ''))
       <span class="srow__title">
         <template v-for="(p, i) in parts" :key="i"><b v-if="p.match">{{ p.text }}</b><template v-else>{{ p.text }}</template></template>
       </span>
-      <span v-if="categoryTitle" class="srow__cat">{{ categoryTitle }}</span>
+      <span v-if="categoryTitle" class="srow__cat">{{ tr(categoryTitle) }}</span>
     </span>
     <Icon name="kango:chevron-right-20" size="20" class="srow__chevron" />
   </button>

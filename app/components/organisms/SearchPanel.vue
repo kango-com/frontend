@@ -28,18 +28,18 @@ function cancel() {
 
 <template>
   <section class="spanel" aria-labelledby="spanel-title" @keydown.esc="cancel">
-    <h1 id="spanel-title" class="spanel__title">Поиск объявлений</h1>
+    <h1 id="spanel-title" class="spanel__title">{{ tr('Поиск объявлений') }}</h1>
     <div class="spanel__bar">
       <KSearchField
         ref="field"
         v-model="query"
         class="spanel__field"
-        placeholder="Что вы ищете?"
-        label="Что вы ищете?"
+        :placeholder="tr('Что вы ищете?')"
+        :label="tr('Что вы ищете?')"
         @submit="go"
         @keydown.down.prevent="list?.focusFirst()"
       />
-      <KTextButton size="md" @click="cancel">Отмена</KTextButton>
+      <KTextButton size="md" @click="cancel">{{ tr('Отмена') }}</KTextButton>
     </div>
     <SearchSuggest ref="list" :query="query" @pick="go" />
   </section>

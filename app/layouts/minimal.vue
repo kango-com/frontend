@@ -3,7 +3,7 @@
     <header class="shell__top">
       <KContainer class="shell__bar">
         <KLogo to="/" :height="32" />
-        <KTextButton to="/" size="md">Закрыть</KTextButton>
+        <KTextButton to="/" size="md">{{ tr('Закрыть') }}</KTextButton>
       </KContainer>
     </header>
     <main id="main" class="shell__main" tabindex="-1">

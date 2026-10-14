@@ -10,7 +10,7 @@ const NAMES = { google: 'Google', facebook: 'Facebook' }
 </script>
 
 <template>
-  <button type="button" class="soc" :disabled="disabled" :aria-label="`Войти через ${NAMES[provider]}`" @click="$emit('click')">
+  <button type="button" class="soc" :disabled="disabled" :aria-label="tr('Войти через {name}', { name: NAMES[provider] })" @click="$emit('click')">
     <Icon :name="`kango:${provider}`" size="28" />
   </button>
 </template>

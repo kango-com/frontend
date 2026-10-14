@@ -16,10 +16,10 @@ const loginLink = computed(() => (route.query.redirect ? `/login?redirect=${enco
 onMounted(() => auth.clearError())
 
 function validate() {
-  errors.name = !name.value.trim() ? 'Заполните поля' : undefined
-  errors.email = !email.value.trim() ? 'Заполните поля' : !isEmail(email.value) ? 'Введите корректный e-mail' : undefined
-  errors.password = !password.value ? 'Заполните поля' : passwordStrength(password.value) === 'short' ? 'Короткий пароль' : undefined
-  errors.repeat = !repeat.value ? 'Заполните поля' : repeat.value !== password.value ? 'Пароли не совпадают' : undefined
+  errors.name = !name.value.trim() ? tr('Заполните поля') : undefined
+  errors.email = !email.value.trim() ? tr('Заполните поля') : !isEmail(email.value) ? tr('Введите корректный e-mail') : undefined
+  errors.password = !password.value ? tr('Заполните поля') : passwordStrength(password.value) === 'short' ? tr('Короткий пароль') : undefined
+  errors.repeat = !repeat.value ? tr('Заполните поля') : repeat.value !== password.value ? tr('Пароли не совпадают') : undefined
   return !errors.name && !errors.email && !errors.password && !errors.repeat
 }
 
@@ -39,20 +39,20 @@ async function submit() {
 </script>
 
 <template>
-  <AuthCard title="Регистрация" lead="Чтобы подавать объявления и управлять ими, создайте аккаунт">
+  <AuthCard :title="tr('Регистрация')" :lead="tr('Чтобы подавать объявления и управлять ими, создайте аккаунт')">
     <form class="rf" novalidate @submit.prevent="submit">
-      <KTextField v-model="name" placeholder="Имя" autocomplete="name" :error="errors.name" />
+      <KTextField v-model="name" :placeholder="tr('Имя')" autocomplete="name" :error="errors.name" />
       <KTextField v-model="email" type="email" placeholder="E-mail" autocomplete="username" :error="errors.email" />
       <PasswordField v-model="password" strength autocomplete="new-password" :error="errors.password" />
-      <PasswordField v-model="repeat" placeholder="Повторите пароль" autocomplete="new-password" :error="errors.repeat" />
+      <PasswordField v-model="repeat" :placeholder="tr('Повторите пароль')" autocomplete="new-password" :error="errors.repeat" />
       <p v-if="errors.form" class="rf__error" role="alert">{{ errors.form }}</p>
-      <KButton block type="submit" :disabled="busy">{{ busy ? 'Регистрация...' : 'Зарегистрироваться' }}</KButton>
+      <KButton block type="submit" :disabled="busy">{{ busy ? tr('Регистрация...') : tr('Зарегистрироваться') }}</KButton>
       <p class="rf__policy">
-        Нажимая «Зарегистрироваться», вы соглашаетесь с
-        <KTextButton to="/documents/privacy" size="sm" underline>политикой конфиденциальности</KTextButton>
+        {{ tr('Нажимая «Зарегистрироваться», вы соглашаетесь с') }}
+        <KTextButton to="/documents/privacy" size="sm" underline>{{ tr('политикой конфиденциальности') }}</KTextButton>
       </p>
     </form>
-    <p class="rf__switch">Зарегистрированы? <KTextButton :to="loginLink" size="sm">Войти</KTextButton></p>
+    <p class="rf__switch">{{ tr('Зарегистрированы?') }} <KTextButton :to="loginLink" size="sm">{{ tr('Войти') }}</KTextButton></p>
   </AuthCard>
 </template>
 
