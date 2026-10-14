@@ -9,6 +9,7 @@
     <AppTabBar />
     <CitySelector />
     <FilterPanel />
+    <CategoriesMenu />
   </div>
 </template>
 

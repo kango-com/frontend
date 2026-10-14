@@ -9,6 +9,7 @@
     </main>
     <KFooter class="shell__footer" />
     <CitySelector />
+    <CategoriesMenu />
   </div>
 </template>
 
