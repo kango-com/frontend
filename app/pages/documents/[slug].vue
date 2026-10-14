@@ -1,8 +1,9 @@
 <script setup lang="ts">
 definePageMeta({ layout: 'default' })
-useHead({ title: 'Документ - Kango' })
+
+const route = useRoute()
 </script>
 
 <template>
-  <PagePlaceholder title="Документ" description="Текст документа." task="0037" />
+  <DocumentView :slug="String(route.params.slug)" />
 </template>

@@ -4,5 +4,5 @@ useHead({ title: 'Документы - Kango' })
 </script>
 
 <template>
-  <PagePlaceholder title="Документы" description="Юридические документы сервиса." task="0037" />
+  <DocumentList group="documents" title="Документы" />
 </template>

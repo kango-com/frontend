@@ -4,5 +4,5 @@ useHead({ title: 'О нас - Kango' })
 </script>
 
 <template>
-  <PagePlaceholder title="О нас" description="Почему мы создали эту доску объявлений." task="0037" />
+  <AboutContent />
 </template>
