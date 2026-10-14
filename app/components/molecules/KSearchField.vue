@@ -61,7 +61,7 @@ function clear() {
 }
 .ksf--disabled { background: var(--color-fill-gray-3); }
 .ksf--disabled .ksf__input { color: var(--color-label-gray); cursor: not-allowed; }
-.ksf:focus-within { outline: var(--border-width-strong) solid var(--color-stroke-primary); outline-offset: 2px; }
+.ksf:focus-within { border-color: var(--color-stroke-primary); box-shadow: 0 0 0 0.5px var(--color-stroke-primary); }
 .ksf__icon { flex: none; color: var(--color-fill-primary); }
 .ksf__input {
   flex: 1;

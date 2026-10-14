@@ -71,7 +71,7 @@ const showClear = computed(() => props.clearable && !!props.modelValue && !props
 }
 .ksel--error .ksel__select { border-color: var(--color-fill-error); }
 .ksel--empty .ksel__select { color: var(--color-label-secondary); }
-.ksel__select:focus-visible { outline: var(--border-width-strong) solid var(--color-stroke-primary); outline-offset: 2px; }
+.ksel__select:focus-visible { outline: none; border-color: var(--color-stroke-primary); box-shadow: 0 0 0 0.5px var(--color-stroke-primary); }
 .ksel--disabled .ksel__select { background: var(--color-fill-gray-3); color: var(--color-label-gray); cursor: not-allowed; }
 .ksel__chevron { position: absolute; top: 10px; right: 10px; color: var(--color-fill-gray); pointer-events: none; }
 .ksel__clear {

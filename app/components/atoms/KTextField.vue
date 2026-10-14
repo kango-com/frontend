@@ -95,7 +95,7 @@ function clear() {
   background: var(--color-fill-white);
   transition: border-color 0.15s ease-out;
 }
-.ktf__field:focus-within { outline: var(--border-width-strong) solid var(--color-stroke-primary); outline-offset: 2px; }
+.ktf__field:focus-within { border-color: var(--color-stroke-primary); box-shadow: 0 0 0 0.5px var(--color-stroke-primary); }
 .ktf__input {
   flex: 1;
   min-width: 0;

@@ -31,7 +31,7 @@ const suggestOpen = ref(false)
 const dropStyle = ref<Record<string, string>>({})
 
 function onFocusIn(e: FocusEvent) {
-  const field = (e.target as HTMLElement).closest('.khd__search')
+  const field = (e.target as HTMLElement).closest('form[role=search]')
   if (!field || !root.value) return
   if (window.innerWidth < 1380) return
   const box = field.getBoundingClientRect()
@@ -84,6 +84,7 @@ function onFocusOut(e: FocusEvent) {
 .app-header__drop {
   position: absolute;
   z-index: 50;
+  min-width: 420px;
   max-height: 60dvh;
   overflow-y: auto;
   padding: 8px 16px 12px;
