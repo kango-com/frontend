@@ -9,9 +9,13 @@ defineProps<{
   label?: string
   /** От 768px показывать по центру как диалог (на мобильном остаётся шторкой снизу) */
   dialog?: boolean
+  /** На 375px на весь экран, от 768px боковая панель справа (фильтры) */
+  fullscreen?: boolean
+  /** Вместо крестика кнопка «Назад» (вложенный экран внутри окна) */
+  back?: boolean
 }>()
 
-const emit = defineEmits<{ action: [] }>()
+const emit = defineEmits<{ action: [], back: [] }>()
 
 const id = useId()
 const sheet = ref<HTMLElement>()
@@ -87,7 +91,7 @@ function dragEnd() {
 <template>
   <Teleport to="body">
     <Transition name="ksheet">
-      <div v-if="open" class="ksheet" :class="{ 'ksheet--dialog': dialog }" @click.self="close">
+      <div v-if="open" class="ksheet" :class="{ 'ksheet--dialog': dialog, 'ksheet--full': fullscreen }" @click.self="close">
         <div
           ref="sheet"
           class="ksheet__panel"
@@ -109,12 +113,14 @@ function dragEnd() {
             <span />
           </div>
           <div v-if="title || action" class="ksheet__head">
-            <KIconButton type="close" label="Закрыть" @click="close" />
+            <KIconButton v-if="back" type="arrow-left" label="Назад" @click="emit('back')" />
+            <KIconButton v-else type="close" label="Закрыть" @click="close" />
             <h2 :id="`${id}-title`" class="ksheet__title">{{ title }}</h2>
             <KTextButton v-if="action" size="sm" @click="emit('action')">{{ action }}</KTextButton>
             <span v-else class="ksheet__spacer" />
           </div>
           <div class="ksheet__body"><slot /></div>
+          <div v-if="$slots.footer" class="ksheet__footer"><slot name="footer" /></div>
         </div>
       </div>
     </Transition>
@@ -165,7 +171,8 @@ function dragEnd() {
   text-align: center;
 }
 .ksheet__spacer { width: 44px; }
-.ksheet__body { overflow-y: auto; overscroll-behavior: contain; padding: 8px 16px 24px; }
+.ksheet__footer { padding: 12px 16px calc(12px + env(safe-area-inset-bottom)); border-top: var(--border-width) solid var(--color-stroke-gray); background: var(--color-background); }
+.ksheet__body { flex: 1; overflow-y: auto; overscroll-behavior: contain; padding: 8px 16px 24px; }
 
 /* Slide in / out снизу, ease-out, 300ms. Закрытие в обратном направлении */
 .ksheet-enter-active,
@@ -176,6 +183,17 @@ function dragEnd() {
 .ksheet-leave-to { background: transparent; }
 .ksheet-enter-from .ksheet__panel,
 .ksheet-leave-to .ksheet__panel { transform: translateY(100%); }
+
+/* Во весь экран на 375px, боковая панель справа от 768px */
+.ksheet--full .ksheet__panel { max-width: none; height: 100vh; height: 100dvh; max-height: none; border-radius: 0; }
+.ksheet--full .ksheet__grabber { display: none; }
+.ksheet--full .ksheet__head { padding-top: 12px; }
+@media (min-width: 768px) {
+  .ksheet--full { align-items: stretch; justify-content: flex-end; }
+  .ksheet--full .ksheet__panel { width: 480px; border-radius: var(--radius-md) 0 0 var(--radius-md); }
+  .ksheet--full.ksheet-enter-from .ksheet__panel,
+  .ksheet--full.ksheet-leave-to .ksheet__panel { transform: translateX(100%); }
+}
 
 /* Диалог от 768px: по центру, со скруглением со всех сторон, без grabber */
 @media (min-width: 768px) {

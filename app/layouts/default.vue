@@ -8,6 +8,7 @@
     <KFooter />
     <AppTabBar />
     <CitySelector />
+    <FilterPanel />
   </div>
 </template>
 

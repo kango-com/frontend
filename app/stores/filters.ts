@@ -15,7 +15,13 @@ export const useFiltersStore = defineStore('filters', () => {
   const countStatus = ref<LoadStatus>('idle')
   const refs = reactive<Record<string, RefItem[]>>({})
   const refStatus = reactive<Record<string, LoadStatus>>({})
+  /** Названия выбранных значений по id (для чипов и подписей полей), пополняется при загрузке справочников и выборе городов */
+  const labels = reactive<Record<string, string>>({})
   let countController: AbortController | null = null
+
+  const remember = (items: { id: string, title?: string, name?: string }[]) => {
+    for (const i of items) labels[i.id] = i.title ?? i.name ?? i.id
+  }
 
   const get = <S extends Section>(section: S) => state[section] as FilterOfSection<S>
 
@@ -63,6 +69,7 @@ export const useFiltersStore = defineStore('filters', () => {
     refStatus[key] = 'loading'
     try {
       refs[key] = await loader()
+      remember(refs[key])
       refStatus[key] = 'success'
     } catch {
       refStatus[key] = 'error'
@@ -71,5 +78,5 @@ export const useFiltersStore = defineStore('filters', () => {
     return refs[key]
   }
 
-  return { state, counts, countStatus, refs, refStatus, get, setField, replace, reset, setCities, activeCount, toQuery, fromQuery, loadCount, loadRef }
+  return { state, labels, remember, counts, countStatus, refs, refStatus, get, setField, replace, reset, setCities, activeCount, toQuery, fromQuery, loadCount, loadRef }
 })

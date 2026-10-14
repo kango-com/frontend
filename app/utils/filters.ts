@@ -81,3 +81,8 @@ export function sortsFor(section: Section): SortKey[] {
 
 /** Подпись кнопки сортировки: при значении по умолчанию «Сортировка» */
 export const sortButtonLabel = (sort: SortKey) => (sort === 'default' ? 'Сортировка' : SORT_LABELS[sort])
+
+/** Значение поля по умолчанию (для сброса зависимых полей) */
+export function defaultValue(section: Section, key: string): unknown {
+  return (defaultFilter(section) as unknown as Record<string, unknown>)[key]
+}
