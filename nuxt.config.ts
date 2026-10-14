@@ -11,13 +11,26 @@ export default defineNuxtConfig({
       useMock
     }
   },
-  modules: ['@nuxt/icon', '@nuxt/fonts', '@pinia/nuxt'],
+  modules: ['@nuxt/icon', '@nuxt/fonts', '@pinia/nuxt', '@nuxtjs/i18n'],
+  // Язык хранится в cookie (без префиксов в адресе), иврит отображается справа налево
+  i18n: {
+    defaultLocale: 'ru',
+    strategy: 'no_prefix',
+    locales: [
+      { code: 'ru', language: 'ru-RU', name: 'Русский', dir: 'ltr', file: 'ru.json' },
+      { code: 'en', language: 'en-US', name: 'English', dir: 'ltr', file: 'en.json' },
+      { code: 'he', language: 'he-IL', name: 'עברית', dir: 'rtl', file: 'he.json' }
+    ],
+    // язык браузера не определяем (пока переведена только часть интерфейса), выбор хранит плагин 03.lang.ts
+    detectBrowserLanguage: false
+  },
   css: ['~/assets/css/tokens.css', '~/assets/css/base.css'],
   components: [{ path: '~/components', pathPrefix: false }],
   fonts: {
     families: [
       { name: 'Inter', weights: [400, 500, 600], styles: ['normal'], subsets: ['latin', 'cyrillic'] },
-      { name: 'Inter Tight', weights: [400, 500], styles: ['normal'], subsets: ['latin', 'cyrillic'] }
+      { name: 'Inter Tight', weights: [400, 500], styles: ['normal'], subsets: ['latin', 'cyrillic'] },
+      { name: 'Heebo', weights: [400, 500], styles: ['normal'], subsets: ['hebrew', 'latin'] }
     ]
   },
   icon: {

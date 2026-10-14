@@ -1,4 +1,5 @@
 <script setup lang="ts">
+const { t } = useI18n()
 useHead({
   title: 'Kango - работа, жильё и мастера в Израиле',
   meta: [{ name: 'description', content: 'Kango - доска объявлений для русскоязычных жителей Израиля: находите работу, жильё, товары и услуги.' }]
@@ -35,7 +36,7 @@ useHeaderOverCover(computed(() => cover.value?.$el) as unknown as Ref<HTMLElemen
     <HomeCover ref="cover" />
     <KContainer class="home__feed">
       <AdsFeed
-        title="Рекомендации"
+        :title="t('home.recommendations')"
         :items="recommendations.items"
         :status="recommendations.status"
         :has-more="recommendations.hasMore"

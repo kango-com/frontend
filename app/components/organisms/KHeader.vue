@@ -18,6 +18,8 @@ const emit = defineEmits<{
   'search-open': []
 }>()
 
+const { t } = useI18n()
+
 const query = computed({
   get: () => props.search,
   set: v => emit('update:search', v)
@@ -26,20 +28,21 @@ const query = computed({
 
 <template>
   <header class="khd" :class="{ 'khd--search': withSearch }">
-    <nav class="khd__top" aria-label="Служебная (верхняя строка)">
+    <nav class="khd__top" :aria-label="t('nav.service')">
       <div class="khd__tl">
-        <KTextButton to="/about" size="sm">О нас</KTextButton>
-        <KTextButton to="/support" size="sm">Поддержка</KTextButton>
+        <KTextButton to="/about" size="sm">{{ t('nav.about') }}</KTextButton>
+        <KTextButton to="/support" size="sm">{{ t('nav.support') }}</KTextButton>
       </div>
       <div class="khd__tl">
         <KTextButton :to="loggedIn ? '/profile' : '/login'" size="md">
           <template #icon-left><Icon name="kango:user-24" size="24" /></template>
-          {{ loggedIn ? 'Профиль' : 'Вход и регистрация' }}
+          {{ loggedIn ? t('nav.profile') : t('nav.login') }}
         </KTextButton>
         <KTextButton to="/new" size="md">
           <template #icon-left><Icon name="kango:plus-square-24" size="24" /></template>
-          Разместить объявление
+          {{ t('nav.post') }}
         </KTextButton>
+        <LangSwitch class="khd__lang khd__lang--top" />
       </div>
     </nav>
 
@@ -47,29 +50,31 @@ const query = computed({
       <KLogo class="khd__logo" to="/" :height="32" />
       <KButton class="khd__cats" variant="secondary" @click="emit('categories')">
         <template #icon-left><Icon name="kango:menu-24" size="24" /></template>
-        Все категории
+        {{ t('nav.categories') }}
       </KButton>
       <div class="khd__search">
-        <KSearchField v-model="query" placeholder="Что вы ищете?" @submit="emit('submit', $event)" />
-        <KButton class="khd__find" @click="emit('submit', search)">Найти</KButton>
+        <KSearchField v-model="query" :placeholder="t('nav.searchPlaceholder')" @submit="emit('submit', $event)" />
+        <KButton class="khd__find" @click="emit('submit', search)">{{ t('nav.find') }}</KButton>
       </div>
-      <KIconButton class="khd__filter" type="filter" label="Фильтры" :dot="filterDot" @click="emit('filter')" />
-      <button type="button" class="khd__searchbtn" aria-label="Поиск" @click="emit('search-open')">
+      <KIconButton class="khd__filter" type="filter" :label="t('nav.filters')" :dot="filterDot" @click="emit('filter')" />
+      <button type="button" class="khd__searchbtn" :aria-label="t('nav.search')" @click="emit('search-open')">
         <Icon name="kango:search-24" size="24" />
       </button>
+      <LangSwitch class="khd__lang khd__lang--m" />
       <KButton class="khd__city" variant="plain" @click="emit('city')">
         <template #icon-left><Icon name="kango:map-pin-16" size="16" /></template>
         {{ city }}
       </KButton>
-      <nav class="khd__links" aria-label="Служебная">
+      <nav class="khd__links" :aria-label="t('nav.service')">
         <KTextButton :to="loggedIn ? '/profile' : '/login'" size="sm">
           <template #icon-left><Icon name="kango:user-16" size="16" /></template>
-          {{ loggedIn ? 'Профиль' : 'Вход и регистрация' }}
+          {{ loggedIn ? t('nav.profile') : t('nav.login') }}
         </KTextButton>
         <KTextButton to="/new" size="sm">
           <template #icon-left><Icon name="kango:plus-square-16" size="16" /></template>
-          Разместить объявление
+          {{ t('nav.post') }}
         </KTextButton>
+        <LangSwitch class="khd__lang khd__lang--links" />
       </nav>
     </div>
   </header>
@@ -80,7 +85,7 @@ const query = computed({
 .khd__top { display: none; }
 .khd__main {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) auto auto;
+  grid-template-columns: minmax(0, 1fr) auto auto auto;
   align-items: center;
   gap: 8px;
   padding: 3px 16px;
@@ -88,6 +93,10 @@ const query = computed({
 .khd .khd__logo { grid-column: 1; grid-row: 1; justify-self: start; }
 .khd .khd__city { grid-column: 2; grid-row: 1; }
 /* иконка поиска в верхней панели на мобильном и планшете (когда строки поиска нет) */
+.khd .khd__lang--links, .khd .khd__lang--top { display: none; }
+.khd .khd__lang--m { grid-column: 4; grid-row: 1; }
+.khd.khd--search .khd__lang--m { grid-column: 3; grid-row: 1; }
+.khd.khd--search .khd__city { grid-column: 2; }
 .khd .khd__searchbtn { display: inline-flex; grid-column: 3; grid-row: 1; align-items: center; justify-content: center; width: 44px; height: 44px; border: 0; border-radius: var(--radius-md); background: none; color: var(--color-label-primary); cursor: pointer; }
 .khd .khd__searchbtn:focus-visible { outline: var(--border-width-strong) solid var(--color-stroke-primary); outline-offset: 2px; }
 .khd.khd--search .khd__searchbtn { display: none; }
@@ -98,13 +107,13 @@ const query = computed({
 
 /* Мобильная и планшетная шапка со строкой поиска */
 .khd.khd--search .khd__main {
-  grid-template-columns: minmax(0, 1fr) auto;
+  grid-template-columns: minmax(0, 1fr) auto auto;
   padding-bottom: 11px;
   border-radius: 0 0 var(--radius-md) var(--radius-md);
   box-shadow: 0 1px 7px color-mix(in srgb, var(--color-label-primary) 10%, transparent);
 }
-.khd.khd--search .khd__search { display: block; grid-column: 1; grid-row: 2; }
-.khd.khd--search .khd__filter { display: inline-flex; grid-column: 2; grid-row: 2; }
+.khd.khd--search .khd__search { display: block; grid-column: 1 / 3; grid-row: 2; }
+.khd.khd--search .khd__filter { display: inline-flex; grid-column: 3; grid-row: 2; }
 .khd.khd--search .khd__find { display: none; }
 
 /* Брейкпоинт desktop 1380px (media query не принимает переменные).
@@ -135,7 +144,7 @@ const query = computed({
     border-radius: 16px;
     background: var(--color-background);
   }
-  .khd .khd__logo { grid-column: 1; grid-row: 1; margin-right: 30px; }
+  .khd .khd__logo { grid-column: 1; grid-row: 1; margin-right: 16px; }
   .khd .khd__logo :deep(img) { width: auto; height: 41px; }
   .khd .khd__cats { display: inline-flex; grid-column: 2; grid-row: 1; min-width: 155px; height: 44px; white-space: nowrap; z-index: 1; }
   .khd .khd__search,
@@ -147,14 +156,15 @@ const query = computed({
   .khd .khd__city { grid-column: 4; grid-row: 1; margin-inline: 8px; height: 44px; z-index: 1; }
   .khd .khd__find,
   .khd.khd--search .khd__find { display: inline-flex; grid-column: 5; grid-row: 1; min-width: 112px; height: 44px; z-index: 1; }
-  .khd .khd__links { display: flex; grid-column: 6; grid-row: 1; align-items: center; gap: 24px; margin-left: 11px; white-space: nowrap; }
+  .khd .khd__links { display: flex; grid-column: 6; grid-row: 1; align-items: center; gap: 12px; margin-left: 4px; white-space: nowrap; }
   .khd__links :deep(.ktb) { color: var(--color-label-primary); }
 }
 
-@media (min-width: 1380px) { .khd .khd__searchbtn { display: none; } }
+@media (min-width: 1380px) { .khd .khd__searchbtn, .khd .khd__lang--m { display: none; } .khd .khd__lang--links { display: block; } }
 
 /* Wide 1920px: макет из двух строк (верхняя строка со ссылками, ниже категории, поиск, «Найти», город), без плашки */
 @media (min-width: 1920px) {
+  .khd .khd__lang--top { display: block; }
   .khd__top {
     display: flex;
     align-items: center;

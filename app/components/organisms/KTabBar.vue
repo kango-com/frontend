@@ -13,20 +13,22 @@ const props = withDefaults(defineProps<{
   items?: TabBarItem[]
 }>(), { current: '' })
 
+const { t } = useI18n()
+
 const defaults = computed<TabBarItem[]>(() => [
-  { key: 'home', label: 'Главная', to: '/', icon: 'home-24' },
-  { key: 'favorites', label: 'Избранное', to: '/favorites', icon: 'heart-24' },
-  { key: 'add', label: 'Добавить', to: '/new', icon: 'plus-square-24' },
-  { key: 'messages', label: 'Сообщения', to: '/messages', icon: 'message-24' },
+  { key: 'home', label: t('tabs.home'), to: '/', icon: 'home-24' },
+  { key: 'favorites', label: t('tabs.favorites'), to: '/favorites', icon: 'heart-24' },
+  { key: 'add', label: t('tabs.add'), to: '/new', icon: 'plus-square-24' },
+  { key: 'messages', label: t('tabs.messages'), to: '/messages', icon: 'message-24' },
   props.authorized
-    ? { key: 'account', label: 'Профиль', to: '/profile', icon: 'user-24' }
-    : { key: 'account', label: 'Войти', to: '/login', icon: 'user-24' }
+    ? { key: 'account', label: t('tabs.profile'), to: '/profile', icon: 'user-24' }
+    : { key: 'account', label: t('tabs.login'), to: '/login', icon: 'user-24' }
 ])
 const list = computed(() => props.items ?? defaults.value)
 </script>
 
 <template>
-  <nav class="ktbar" aria-label="Основная навигация">
+  <nav class="ktbar" :aria-label="t('nav.main')">
     <KTab v-for="i in list" :key="i.key" class="ktbar__item" :to="i.to" :selected="i.key === current">
       <template #icon><Icon :name="`kango:${i.icon}`" size="24" /></template>
       {{ i.label }}

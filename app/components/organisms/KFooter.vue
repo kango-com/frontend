@@ -6,18 +6,23 @@ export interface FooterLink {
   group?: 'documents' | 'details'
 }
 
-withDefaults(defineProps<{
+const { t } = useI18n()
+
+const props = withDefaults(defineProps<{
   links?: FooterLink[]
   copyright?: string
 }>(), {
-  links: () => [
-    { label: 'О нас', to: '/about' },
-    { label: 'Поддержка', to: '/support' },
-    { label: 'Документы', group: 'documents' },
-    { label: 'Реквизиты', group: 'details' }
-  ],
-  copyright: '© 2026 kango. Все права защищены'
+  links: undefined,
+  copyright: undefined
 })
+
+const footerLinks = computed<FooterLink[]>(() => props.links ?? [
+  { label: t('footer.about'), to: '/about' },
+  { label: t('footer.support'), to: '/support' },
+  { label: t('footer.documents'), group: 'documents' },
+  { label: t('footer.details'), group: 'details' }
+])
+const copyrightText = computed(() => props.copyright ?? t('footer.copyright'))
 
 const docs = useDocumentsStore()
 const opened = ref<string | null>(null)
@@ -35,7 +40,7 @@ const itemsOf = (group: 'documents' | 'details') => (group === 'documents' ? doc
     <div class="kft-footer__inner">
       <KLogo class="kft-footer__logo" to="/" :height="42" />
       <ul class="kft-footer__links">
-        <li v-for="l in links" :key="l.label">
+        <li v-for="l in footerLinks" :key="l.label">
           <NuxtLink v-if="l.to" :to="l.to" class="kft-footer__link">
             <span>{{ l.label }}</span>
             <Icon name="kango:arrow-up-right-24" size="24" />
@@ -66,7 +71,7 @@ const itemsOf = (group: 'documents' | 'details') => (group === 'documents' ? doc
           </template>
         </li>
       </ul>
-      <p class="kft-footer__copy">{{ copyright }}</p>
+      <p class="kft-footer__copy">{{ copyrightText }}</p>
     </div>
   </footer>
 </template>

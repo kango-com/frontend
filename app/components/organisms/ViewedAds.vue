@@ -1,13 +1,14 @@
 <script setup lang="ts">
 import { formatPrice } from '~/utils/format'
 
+const { t } = useI18n()
 const viewed = useViewedStore()
 const id = useId()
 </script>
 
 <template>
   <section v-if="viewed.items.length" class="viewed" :aria-labelledby="id">
-    <h2 :id="id" class="viewed__title">Просмотренные</h2>
+    <h2 :id="id" class="viewed__title">{{ t('home.viewed') }}</h2>
     <ul class="viewed__row">
       <li v-for="card in viewed.items" :key="card.id">
         <KAdCard

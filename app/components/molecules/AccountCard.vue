@@ -1,4 +1,6 @@
 <script setup lang="ts">
+const { t } = useI18n()
+
 defineProps<{
   /** Вошёл ли пользователь: гостю показываем «Войти» */
   loggedIn?: boolean
@@ -7,22 +9,22 @@ defineProps<{
 
 <template>
   <section class="acc" aria-labelledby="acc-title">
-    <h2 id="acc-title" class="acc__title">{{ loggedIn ? 'Ваш аккаунт' : 'Что доступно после входа' }}</h2>
+    <h2 id="acc-title" class="acc__title">{{ loggedIn ? t('account.titleUser') : t('account.titleGuest') }}</h2>
     <ul class="acc__list">
       <li>
         <NuxtLink to="/favorites" class="acc__link">
           <span class="acc__icon"><Icon name="kango:heart-16" size="16" /></span>
-          Избранное
+          {{ t('account.favorites') }}
         </NuxtLink>
       </li>
       <li>
         <NuxtLink to="/profile" class="acc__link">
           <span class="acc__icon"><Icon name="kango:user-16" size="16" /></span>
-          Профиль
+          {{ t('account.profile') }}
         </NuxtLink>
       </li>
     </ul>
-    <KButton v-if="!loggedIn" class="acc__login" variant="outline" block to="/login">Войти</KButton>
+    <KButton v-if="!loggedIn" class="acc__login" variant="outline" block to="/login">{{ t('account.login') }}</KButton>
   </section>
 </template>
 

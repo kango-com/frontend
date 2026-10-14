@@ -17,6 +17,7 @@ const props = withDefaults(defineProps<{
 
 const emit = defineEmits<{ more: [], retry: [] }>()
 
+const { t } = useI18n()
 const favorites = useFavoritesStore()
 const viewed = useViewedStore()
 const router = useRouter()
@@ -78,7 +79,7 @@ const isEmpty = computed(() => props.status === 'success' && !props.items.length
     </div>
 
     <div v-if="hasMore && status !== 'error'" class="feed__more">
-      <KButton variant="outline" :disabled="status === 'loading'" @click="emit('more')">Показать еще</KButton>
+      <KButton variant="outline" :disabled="status === 'loading'" @click="emit('more')">{{ t('home.more') }}</KButton>
     </div>
   </section>
 </template>

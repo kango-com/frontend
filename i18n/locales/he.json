@@ -1,0 +1,46 @@
+{
+  "lang": { "label": "שפה", "ru": "Русский", "en": "English", "he": "עברית" },
+  "nav": {
+    "about": "עלינו",
+    "support": "תמיכה",
+    "login": "כניסה והרשמה",
+    "profile": "פרופיל",
+    "post": "פרסום מודעה",
+    "categories": "כל הקטגוריות",
+    "search": "חיפוש",
+    "searchPlaceholder": "מה אתם מחפשים?",
+    "find": "חיפוש",
+    "filters": "סינון",
+    "service": "קישורי שירות",
+    "main": "ניווט ראשי"
+  },
+  "tabs": {
+    "home": "ראשי",
+    "favorites": "מועדפים",
+    "add": "הוספה",
+    "messages": "הודעות",
+    "profile": "פרופיל",
+    "login": "כניסה"
+  },
+  "hero": {
+    "titleStart": "כל מה שצריך,",
+    "titleAccent": "כאן",
+    "subtitle": "עבודה, דירות, מוצרים, שירותים"
+  },
+  "sections": { "work": "עבודה", "realty": "נדל\"ן", "goods": "מוצרים", "services": "שירותים" },
+  "account": {
+    "titleGuest": "זמין לאחר כניסה",
+    "titleUser": "החשבון שלך",
+    "favorites": "מועדפים",
+    "profile": "פרופיל",
+    "login": "כניסה"
+  },
+  "home": { "recommendations": "המלצות", "viewed": "נצפו לאחרונה", "more": "הצג עוד" },
+  "footer": {
+    "about": "עלינו",
+    "support": "תמיכה",
+    "documents": "מסמכים",
+    "details": "פרטי החברה",
+    "copyright": "© 2026 kango. כל הזכויות שמורות"
+  }
+}

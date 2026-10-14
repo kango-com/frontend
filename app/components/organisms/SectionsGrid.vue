@@ -2,26 +2,27 @@
 import type { Section } from '~/types'
 import { formatAdsCount } from '~/utils/format'
 
+const { t, locale } = useI18n()
 const sections = useSectionsStore()
 const auth = useAuthStore()
 
-const cards: { id: Section, category: 'work' | 'real-estate' | 'goods' | 'services', title: string }[] = [
-  { id: 'work', category: 'work', title: 'Работа' },
-  { id: 'realty', category: 'real-estate', title: 'Недвижимость' },
-  { id: 'goods', category: 'goods', title: 'Товары' },
-  { id: 'services', category: 'services', title: 'Услуги' }
+const cards: { id: Section, category: 'work' | 'real-estate' | 'goods' | 'services' }[] = [
+  { id: 'work', category: 'work' },
+  { id: 'realty', category: 'real-estate' },
+  { id: 'goods', category: 'goods' },
+  { id: 'services', category: 'services' }
 ]
 
 const caption = (id: Section) => {
   const s = sections.byId(id)
-  return s ? formatAdsCount(s.count) : undefined
+  return s ? formatAdsCount(s.count, locale.value as 'ru' | 'en' | 'he') : undefined
 }
 </script>
 
 <template>
-  <ul class="sections" aria-label="Разделы">
+  <ul class="sections">
     <li v-for="c in cards" :key="c.id">
-      <KCategoryCard :category="c.category" :title="c.title" :caption="caption(c.id)" :to="`/${c.id}`" />
+      <KCategoryCard :category="c.category" :title="t(`sections.${c.id}`)" :caption="caption(c.id)" :to="`/${c.id}`" />
     </li>
     <li class="sections__account"><AccountCard :logged-in="auth.isAuthed" /></li>
   </ul>

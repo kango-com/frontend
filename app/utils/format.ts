@@ -35,8 +35,10 @@ export function formatPublished(iso: string, now: Date = new Date()): string {
   return `${d.getDate()} ${MONTHS[d.getMonth()]}, ${time(d)}`
 }
 
-/** «1 345 объявлений», «1 объявление», «2 объявления» */
-export function formatAdsCount(n: number): string {
+/** «1 345 объявлений», «1 объявление», «2 объявления»; для en и he свои формы */
+export function formatAdsCount(n: number, locale: 'ru' | 'en' | 'he' = 'ru'): string {
+  if (locale === 'en') return `${formatNumber(n)} ${n === 1 ? 'ad' : 'ads'}`
+  if (locale === 'he') return `${formatNumber(n)} ${n === 1 ? 'מודעה' : 'מודעות'}`
   const mod10 = n % 10
   const mod100 = n % 100
   const word = mod10 === 1 && mod100 !== 11 ? 'объявление' : mod10 >= 2 && mod10 <= 4 && (mod100 < 10 || mod100 >= 20) ? 'объявления' : 'объявлений'

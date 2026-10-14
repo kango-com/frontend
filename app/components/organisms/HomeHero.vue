@@ -1,4 +1,5 @@
 <script setup lang="ts">
+const { t } = useI18n()
 const city = useCityStore()
 const ui = useUiStore()
 const router = useRouter()
@@ -10,8 +11,8 @@ const submit = (q: string) => router.push({ path: '/search', query: q ? { q } : 
 <template>
   <div class="hero">
     <div class="hero__text">
-      <h1 class="hero__title">Всё, что нужно, <span class="hero__accent">здесь</span></h1>
-      <p class="hero__subtitle">Работа, жильё, товары, услуги</p>
+      <h1 class="hero__title">{{ t('hero.titleStart') }} <span class="hero__accent">{{ t('hero.titleAccent') }}</span></h1>
+      <p class="hero__subtitle">{{ t('hero.subtitle') }}</p>
     </div>
     <div class="hero__bar">
       <SearchBar v-model="query" @submit="submit" @focus="router.push('/search')" @filter="ui.open('filters')" />

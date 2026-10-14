@@ -1,0 +1,46 @@
+{
+  "lang": { "label": "Язык", "ru": "Русский", "en": "English", "he": "עברית" },
+  "nav": {
+    "about": "О нас",
+    "support": "Поддержка",
+    "login": "Вход и регистрация",
+    "profile": "Профиль",
+    "post": "Разместить объявление",
+    "categories": "Все категории",
+    "search": "Поиск",
+    "searchPlaceholder": "Что вы ищете?",
+    "find": "Найти",
+    "filters": "Фильтры",
+    "service": "Служебная",
+    "main": "Основная навигация"
+  },
+  "tabs": {
+    "home": "Главная",
+    "favorites": "Избранное",
+    "add": "Добавить",
+    "messages": "Сообщения",
+    "profile": "Профиль",
+    "login": "Войти"
+  },
+  "hero": {
+    "titleStart": "Всё, что нужно,",
+    "titleAccent": "здесь",
+    "subtitle": "Работа, жильё, товары, услуги"
+  },
+  "sections": { "work": "Работа", "realty": "Недвижимость", "goods": "Товары", "services": "Услуги" },
+  "account": {
+    "titleGuest": "Что доступно после входа",
+    "titleUser": "Ваш аккаунт",
+    "favorites": "Избранное",
+    "profile": "Профиль",
+    "login": "Войти"
+  },
+  "home": { "recommendations": "Рекомендации", "viewed": "Просмотренные", "more": "Показать еще" },
+  "footer": {
+    "about": "О нас",
+    "support": "Поддержка",
+    "documents": "Документы",
+    "details": "Реквизиты",
+    "copyright": "© 2026 kango. Все права защищены"
+  }
+}

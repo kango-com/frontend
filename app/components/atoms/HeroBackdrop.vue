@@ -63,4 +63,9 @@ import wide from '~/assets/img/hero/hero-desktop-wide.webp'
     filter: blur(45px);
   }
 }
+
+/* Иврит: баннер зеркалится, чтобы кенгуру не закрывал текст (кроме 1920, где баннер привязан к левой границе контента) */
+@media (max-width: 1919px) {
+  :global([dir='rtl']) .backdrop { transform: scaleX(-1); }
+}
 </style>

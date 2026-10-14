@@ -1,4 +1,6 @@
 <script setup lang="ts">
+const { t } = useI18n()
+
 defineProps<{
   modelValue?: string
   placeholder?: string
@@ -19,7 +21,7 @@ const emit = defineEmits<{
     <KSearchField
       class="searchbar__field"
       :model-value="modelValue"
-      :placeholder="placeholder ?? 'Что вы ищете?'"
+      :placeholder="placeholder ?? t('nav.searchPlaceholder')"
       @update:model-value="emit('update:modelValue', $event)"
       @focus="emit('focus')"
       @submit="emit('submit', $event)"

@@ -1,0 +1,46 @@
+{
+  "lang": { "label": "Language", "ru": "Русский", "en": "English", "he": "עברית" },
+  "nav": {
+    "about": "About us",
+    "support": "Support",
+    "login": "Log in / Sign up",
+    "profile": "Profile",
+    "post": "Post an ad",
+    "categories": "All categories",
+    "search": "Search",
+    "searchPlaceholder": "What are you looking for?",
+    "find": "Search",
+    "filters": "Filters",
+    "service": "Service links",
+    "main": "Main navigation"
+  },
+  "tabs": {
+    "home": "Home",
+    "favorites": "Favorites",
+    "add": "Add",
+    "messages": "Messages",
+    "profile": "Profile",
+    "login": "Log in"
+  },
+  "hero": {
+    "titleStart": "Everything you need,",
+    "titleAccent": "here",
+    "subtitle": "Jobs, housing, goods, services"
+  },
+  "sections": { "work": "Jobs", "realty": "Real estate", "goods": "Goods", "services": "Services" },
+  "account": {
+    "titleGuest": "Available after login",
+    "titleUser": "Your account",
+    "favorites": "Favorites",
+    "profile": "Profile",
+    "login": "Log in"
+  },
+  "home": { "recommendations": "Recommendations", "viewed": "Recently viewed", "more": "Show more" },
+  "footer": {
+    "about": "About us",
+    "support": "Support",
+    "documents": "Documents",
+    "details": "Company details",
+    "copyright": "© 2026 kango. All rights reserved"
+  }
+}
