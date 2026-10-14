@@ -14,7 +14,7 @@ const submit = (q: string) => router.push({ path: '/search', query: q ? { q } : 
       <p class="hero__subtitle">Работа, жильё, товары, услуги</p>
     </div>
     <div class="hero__bar">
-      <SearchBar v-model="query" @submit="submit" @filter="ui.open('filters')" />
+      <SearchBar v-model="query" @submit="submit" @focus="router.push('/search')" @filter="ui.open('filters')" />
       <CityChips :cities="city.chips" :active-id="city.current.id" @select="city.select" />
     </div>
   </div>

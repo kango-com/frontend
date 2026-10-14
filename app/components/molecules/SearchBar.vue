@@ -10,6 +10,7 @@ const emit = defineEmits<{
   'update:modelValue': [value: string]
   'submit': [value: string]
   'filter': []
+  'focus': []
 }>()
 </script>
 
@@ -20,6 +21,7 @@ const emit = defineEmits<{
       :model-value="modelValue"
       :placeholder="placeholder ?? 'Что вы ищете?'"
       @update:model-value="emit('update:modelValue', $event)"
+      @focus="emit('focus')"
       @submit="emit('submit', $event)"
     />
     <KIconButton type="filter" label="Фильтры" :dot="filterDot" @click="emit('filter')" />
