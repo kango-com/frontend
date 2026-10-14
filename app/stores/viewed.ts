@@ -43,5 +43,11 @@ export const useViewedStore = defineStore('viewed', () => {
     }
   }
 
-  return { items, status, load, add }
+  /** Очистка локальной истории (у вошедшего сервер историю не удаляет, остаётся только скрытие в списке) */
+  function clear() {
+    items.value = []
+    if (import.meta.client) try { localStorage.removeItem(KEY) } catch { /* ignore */ }
+  }
+
+  return { items, status, load, add, clear }
 })
