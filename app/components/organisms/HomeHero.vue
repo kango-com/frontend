@@ -54,4 +54,11 @@ const submit = (q: string) => router.push({ path: '/search', query: q ? { q } : 
   .hero__subtitle { margin-top: 12px; color: var(--color-fill-gray); font-size: 28px; line-height: 32px; }
   .hero__bar { display: none; }
 }
+
+/* Wide 1920: заголовок справа от разделов, компактный (как в макете 1920) */
+@media (min-width: 1920px) {
+  .hero__title { max-width: 254px; font-family: var(--font-sans-tight); font-size: 34px; line-height: 36px; letter-spacing: 0; }
+  .hero__accent { color: inherit; }
+  .hero__subtitle { margin-top: 8px; color: var(--color-label-primary); font-size: var(--text-17-20); line-height: var(--leading-17-20); }
+}
 </style>

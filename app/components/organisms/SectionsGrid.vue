@@ -47,4 +47,11 @@ const caption = (id: Section) => {
   .sections__account { display: block; }
   .sections :deep(.kcat) { aspect-ratio: auto; height: 200px; }
 }
+
+/* Wide 1920: четыре раздела 194x170, карточки аккаунта нет */
+@media (min-width: 1920px) {
+  .sections { grid-template-columns: repeat(4, 194px); }
+  .sections__account { display: none; }
+  .sections :deep(.kcat) { aspect-ratio: 194 / 170; height: auto; }
+}
 </style>

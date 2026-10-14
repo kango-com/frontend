@@ -27,4 +27,18 @@
   .cover__inner { padding-top: 151px; }
   .cover__sections { margin-top: 120px; }
 }
+
+/* Wide 1920: слева четыре раздела, справа заголовок на баннере */
+@media (min-width: 1920px) {
+  .cover__inner {
+    display: grid;
+    grid-template-columns: 812px minmax(0, 1fr);
+    grid-template-areas: 'sections hero';
+    align-items: start;
+    min-height: 407px;
+    padding-top: calc(var(--header-h, 104px) + 32px);
+  }
+  .cover__sections { grid-area: sections; margin-top: 0; }
+  .cover__hero { grid-area: hero; margin: 34px 0 0 11px; }
+}
 </style>

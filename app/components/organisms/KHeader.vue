@@ -25,6 +25,23 @@ const query = computed({
 
 <template>
   <header class="khd" :class="{ 'khd--search': withSearch }">
+    <nav class="khd__top" aria-label="Служебная (верхняя строка)">
+      <div class="khd__tl">
+        <KTextButton to="/about" size="sm">О нас</KTextButton>
+        <KTextButton to="/support" size="sm">Поддержка</KTextButton>
+      </div>
+      <div class="khd__tl">
+        <KTextButton :to="loggedIn ? '/profile' : '/login'" size="md">
+          <template #icon-left><Icon name="kango:user-24" size="24" /></template>
+          {{ loggedIn ? 'Профиль' : 'Вход и регистрация' }}
+        </KTextButton>
+        <KTextButton to="/new" size="md">
+          <template #icon-left><Icon name="kango:plus-square-24" size="24" /></template>
+          Разместить объявление
+        </KTextButton>
+      </div>
+    </nav>
+
     <div class="khd__main">
       <KLogo class="khd__logo" to="/" :height="32" />
       <KButton class="khd__cats" variant="secondary" @click="emit('categories')">
@@ -87,7 +104,6 @@ const query = computed({
    Над баннером главной шапка прозрачная, плашка остаётся белой. */
 .khd__links { display: none; }
 @media (min-width: 1380px) {
-  .khd__top { display: none; }
   .khd__main,
   .khd.khd--search .khd__main {
     position: relative;
@@ -125,5 +141,40 @@ const query = computed({
   .khd.khd--search .khd__find { display: inline-flex; grid-column: 5; grid-row: 1; min-width: 112px; height: 44px; z-index: 1; }
   .khd .khd__links { display: flex; grid-column: 6; grid-row: 1; align-items: center; gap: 24px; margin-left: 11px; white-space: nowrap; }
   .khd__links :deep(.ktb) { color: var(--color-label-primary); }
+}
+
+/* Wide 1920px: макет из двух строк (верхняя строка со ссылками, ниже категории, поиск, «Найти», город), без плашки */
+@media (min-width: 1920px) {
+  .khd__top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    max-width: 1380px;
+    height: 32px;
+    margin-inline: auto;
+    padding: 12px 50px 0;
+  }
+  .khd__tl { display: flex; align-items: center; gap: 24px; }
+  .khd__tl :deep(.ktb--sm) { color: var(--color-label-secondary); }
+  .khd__main,
+  .khd.khd--search .khd__main {
+    grid-template-columns: auto auto minmax(0, 1fr) auto auto;
+    grid-template-rows: auto;
+    gap: 12px;
+    padding: 20px 50px 0;
+  }
+  .khd__main::before,
+  .khd.khd--search .khd__main::before { display: none; }
+  .khd .khd__logo { margin-right: 36px; }
+  .khd .khd__cats { width: 224px; height: 52px; background: var(--color-background); color: var(--color-label-primary); border: var(--border-width) solid var(--color-fill-color-3); }
+  .khd .khd__search,
+  .khd.khd--search .khd__search { display: flex; align-items: center; gap: 12px; grid-column: 3; grid-row: 1; }
+  .khd .khd__search > :first-child { grid-column: auto; grid-row: auto; }
+  .khd .khd__find,
+  .khd.khd--search .khd__find { grid-column: auto; flex: none; height: 52px; }
+  .khd .khd__filter,
+  .khd.khd--search .khd__filter { display: inline-flex; grid-column: 4; grid-row: 1; }
+  .khd .khd__city { grid-column: 5; margin-inline: 0; height: auto; }
+  .khd .khd__links { display: none; }
 }
 </style>
