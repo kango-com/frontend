@@ -42,3 +42,9 @@ export function formatAdsCount(n: number): string {
   const word = mod10 === 1 && mod100 !== 11 ? 'объявление' : mod10 >= 2 && mod10 <= 4 && (mod100 < 10 || mod100 >= 20) ? 'объявления' : 'объявлений'
   return `${formatNumber(n)} ${word}`
 }
+
+/** «2026-10-15» → «15 окт 2026» */
+export function formatDateRu(iso: string): string {
+  const [y, m, d] = iso.split('-').map(Number)
+  return y && m && d ? `${d} ${MONTHS[m - 1]} ${y}` : iso
+}

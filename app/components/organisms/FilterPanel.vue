@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import type { City, FilterState, RefItem, Section, SortKey } from '~/types'
+import { formatDateRu } from '~/utils/format'
 import { FILTER_SCHEMA, SECTION_OPTIONS, applyLabel, type FieldDef, type SelectField } from '~/utils/filter-schema'
 import { SORT_LABELS, defaultValue, filterToQuery, sortsFor } from '~/utils/filters'
 import { formatAdsCount } from '~/utils/format'
@@ -25,10 +26,11 @@ const record = computed(() => filter.value as unknown as Record<string, unknown>
 const fields = computed(() => FILTER_SCHEMA[section.value].filter(f => !f.visible || f.visible(filter.value)))
 const q = computed(() => (typeof route.query.q === 'string' ? route.query.q.trim() : ''))
 
-type View = { kind: 'cities' } | { kind: 'select', field: SelectField }
+type View = { kind: 'cities' } | { kind: 'select', field: SelectField } | { kind: 'date', field: DateField }
 const view = ref<View | null>(null)
 /** Выбор в открытом пикере, применяется кнопкой «Применить» */
 const pending = ref<string[]>([])
+const pendingDate = ref('')
 
 let snapshot: Partial<Record<Section, string>> = {}
 let applied = false
@@ -55,10 +57,11 @@ watch(() => JSON.stringify(filter.value), () => {
 })
 onBeforeUnmount(() => clearTimeout(timer))
 
-function setValue(key: string, value: unknown, resets?: string[]) {
+function setValue(key: string, value: unknown, resets?: string[], onChange?: FieldDef['onChange']) {
   const rec = store.state[section.value] as unknown as Record<string, unknown>
   rec[key] = value
   for (const k of resets ?? []) rec[k] = defaultValue(section.value, k)
+  if (onChange) Object.assign(rec, onChange(value, filter.value))
 }
 
 function switchSection(next: string) {
@@ -90,6 +93,11 @@ function applyCities(ids: string[]) {
 let cityTimer: ReturnType<typeof setTimeout> | undefined
 const searchCities = (qq: string) => { clearTimeout(cityTimer); cityTimer = setTimeout(() => city.search(qq), 200) }
 
+function openDate(f: DateField) {
+  pendingDate.value = String(record.value[f.key] ?? '')
+  view.value = { kind: 'date', field: f }
+}
+
 const source = (f: SelectField) => f.ref(filter.value)
 async function openSelect(f: SelectField) {
   const src = source(f)
@@ -113,9 +121,10 @@ function applyPicker() {
   const v = view.value
   if (!v) return
   if (v.kind === 'cities') { applyCities(pending.value); return }
+  if (v.kind === 'date') { setValue(v.field.key, pendingDate.value || undefined); view.value = null; return }
   const ids = pending.value
   const f = v.field
-  setValue(f.key, f.multiple ? ids : (ids[0] ?? defaultValue(section.value, f.key)), f.resets)
+  setValue(f.key, f.multiple ? ids : (ids[0] ?? defaultValue(section.value, f.key)), f.resets, f.onChange)
   view.value = null
 }
 
@@ -134,7 +143,8 @@ const loadedFor = (f: SelectField) => {
   const src = source(f)
   if (src && !store.refs[src.key] && !store.refStatus[src.key]) store.loadRef(src.key, src.load)
 }
-watch(fields, (list) => { if (open.value) list.forEach(f => f.type === 'select' && f.multiple && selectIds(f).length && loadedFor(f)) }, { immediate: true })
+// подписи выбранных значений нужны сразу: загружаем справочники полей, где что-то выбрано
+watch([fields, open], ([list, isOpen]) => { if (isOpen) list.forEach(f => f.type === 'select' && selectIds(f).length && loadedFor(f)) }, { immediate: true })
 
 const sorts = computed(() => sortsFor(section.value).map(k => ({ value: k, label: SORT_LABELS[k] })))
 const sortValue = computed({
@@ -158,7 +168,7 @@ function apply() {
   router.push({ path: `/${section.value}`, query })
 }
 
-const title = computed(() => (view.value?.kind === 'cities' ? 'Какой город?' : view.value?.kind === 'select' ? view.value.field.label : 'Фильтры'))
+const title = computed(() => (view.value?.kind === 'cities' ? 'Какой город?' : view.value ? view.value.field.label : 'Фильтры'))
 
 function fieldKey(f: FieldDef) {
   return f.type === 'range' ? f.fromKey : f.key
@@ -195,12 +205,17 @@ function fieldKey(f: FieldDef) {
         :items="selectItems"
         :model-value="pending"
         :multiple="view.field.multiple"
-        :any-label="view.field.anyLabel"
+        :any-label="view.field.required ? undefined : view.field.anyLabel"
         :search-placeholder="view.field.searchPlaceholder"
         :status="selectStatus"
         @update:model-value="pending = $event"
       />
     </template>
+
+    <div v-else-if="view?.kind === 'date'" class="fp__date">
+      <KCalendar v-model="pendingDate" />
+      <KTextButton size="sm" @click="pendingDate = ''">Сбросить дату</KTextButton>
+    </div>
 
     <div v-else class="fp">
       <KSegmentControl :model-value="section" :options="SECTION_OPTIONS" label="Раздел" @update:model-value="switchSection" />
@@ -219,13 +234,14 @@ function fieldKey(f: FieldDef) {
             @remove="id => setValue(f.key, selectIds(f).filter(x => x !== id))"
           />
         </template>
+        <FilterRow v-else-if="f.type === 'date'" :label="f.label" :value="record[f.key] ? formatDateRu(String(record[f.key])) : ''" :placeholder="f.placeholder" @click="openDate(f)" />
         <ToggleGroup
           v-else-if="f.type === 'options'"
           :label="f.label"
           :options="f.options"
           :multiple="f.multiple"
-          :model-value="record[f.key] as string | string[] | undefined"
-          @update:model-value="setValue(f.key, $event ?? defaultValue(section, f.key), f.resets)"
+          :model-value="f.numeric && record[f.key] !== undefined ? String(record[f.key]) : (record[f.key] as string | string[] | undefined)"
+          @update:model-value="setValue(f.key, f.numeric && typeof $event === 'string' ? Number($event) : ($event ?? defaultValue(section, f.key)), f.resets, f.onChange)"
         />
         <RangeFields
           v-else-if="f.type === 'range'"
@@ -254,6 +270,7 @@ function fieldKey(f: FieldDef) {
 
 <style scoped>
 .fp { display: flex; flex-direction: column; gap: 20px; }
+.fp__date { display: flex; flex-direction: column; align-items: center; gap: 12px; }
 .fp__field { display: flex; flex-direction: column; gap: 8px; }
 .fp__switch { display: flex; align-items: center; justify-content: space-between; gap: 12px; font-size: var(--text-16-20); line-height: var(--leading-16-20); }
 </style>
