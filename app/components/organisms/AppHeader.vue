@@ -62,6 +62,7 @@ function onFocusOut(e: FocusEvent) {
       @city="ui.open('city')"
       @filter="ui.open('filters')"
       @categories="ui.open('menu')"
+      @search-open="router.push('/search')"
       @submit="submit"
     />
     <div v-if="suggestOpen" class="app-header__drop" :style="dropStyle" @mousedown.prevent>

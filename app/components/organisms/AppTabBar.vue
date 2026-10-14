@@ -5,7 +5,7 @@ const route = useRoute()
 const current = computed(() => {
   const p = route.path
   if (p === '/') return 'home'
-  if (p.startsWith('/map')) return 'map'
+  if (p.startsWith('/messages')) return 'messages'
   if (p.startsWith('/new')) return 'add'
   if (p.startsWith('/favorites')) return 'favorites'
   if (['/login', '/register', '/forgot', '/reset', '/profile'].some(x => p.startsWith(x))) return 'account'

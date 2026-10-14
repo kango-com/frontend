@@ -7,7 +7,7 @@ export interface TabBarItem {
 }
 
 const props = withDefaults(defineProps<{
-  /** Ключ активного пункта (home, map, add, favorites, account) */
+  /** Ключ активного пункта (home, favorites, add, messages, account) */
   current?: string
   authorized?: boolean
   items?: TabBarItem[]
@@ -15,9 +15,9 @@ const props = withDefaults(defineProps<{
 
 const defaults = computed<TabBarItem[]>(() => [
   { key: 'home', label: 'Главная', to: '/', icon: 'home-24' },
-  { key: 'map', label: 'Карта', to: '/map', icon: 'map-24' },
-  { key: 'add', label: 'Добавить', to: '/new', icon: 'plus-square-24' },
   { key: 'favorites', label: 'Избранное', to: '/favorites', icon: 'heart-24' },
+  { key: 'add', label: 'Добавить', to: '/new', icon: 'plus-square-24' },
+  { key: 'messages', label: 'Сообщения', to: '/messages', icon: 'message-24' },
   props.authorized
     ? { key: 'account', label: 'Профиль', to: '/profile', icon: 'user-24' }
     : { key: 'account', label: 'Войти', to: '/login', icon: 'user-24' }

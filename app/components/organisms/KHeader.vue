@@ -15,6 +15,7 @@ const emit = defineEmits<{
   'filter': []
   'city': []
   'categories': []
+  'search-open': []
 }>()
 
 const query = computed({
@@ -53,6 +54,9 @@ const query = computed({
         <KButton class="khd__find" @click="emit('submit', search)">Найти</KButton>
       </div>
       <KIconButton class="khd__filter" type="filter" label="Фильтры" :dot="filterDot" @click="emit('filter')" />
+      <button type="button" class="khd__searchbtn" aria-label="Поиск" @click="emit('search-open')">
+        <Icon name="kango:search-24" size="24" />
+      </button>
       <KButton class="khd__city" variant="plain" @click="emit('city')">
         <template #icon-left><Icon name="kango:map-pin-16" size="16" /></template>
         {{ city }}
@@ -76,13 +80,17 @@ const query = computed({
 .khd__top { display: none; }
 .khd__main {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) auto;
+  grid-template-columns: minmax(0, 1fr) auto auto;
   align-items: center;
   gap: 8px;
   padding: 3px 16px;
 }
 .khd .khd__logo { grid-column: 1; grid-row: 1; justify-self: start; }
 .khd .khd__city { grid-column: 2; grid-row: 1; }
+/* иконка поиска в верхней панели на мобильном и планшете (когда строки поиска нет) */
+.khd .khd__searchbtn { display: inline-flex; grid-column: 3; grid-row: 1; align-items: center; justify-content: center; width: 44px; height: 44px; border: 0; border-radius: var(--radius-md); background: none; color: var(--color-label-primary); cursor: pointer; }
+.khd .khd__searchbtn:focus-visible { outline: var(--border-width-strong) solid var(--color-stroke-primary); outline-offset: 2px; }
+.khd.khd--search .khd__searchbtn { display: none; }
 .khd .khd__cats,
 .khd .khd__find,
 .khd .khd__search,
@@ -142,6 +150,8 @@ const query = computed({
   .khd .khd__links { display: flex; grid-column: 6; grid-row: 1; align-items: center; gap: 24px; margin-left: 11px; white-space: nowrap; }
   .khd__links :deep(.ktb) { color: var(--color-label-primary); }
 }
+
+@media (min-width: 1380px) { .khd .khd__searchbtn { display: none; } }
 
 /* Wide 1920px: макет из двух строк (верхняя строка со ссылками, ниже категории, поиск, «Найти», город), без плашки */
 @media (min-width: 1920px) {
