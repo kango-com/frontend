@@ -61,7 +61,7 @@ useHeaderOverCover(computed(() => cover.value?.$el) as unknown as Ref<HTMLElemen
   .home__feed { padding-top: 48px; }
   .home__viewed { padding-block: 48px 64px; }
 }
-@media (min-width: 1920px) {
+@media (min-width: 1900px) {
   .home__feed { padding-top: 0; }
 }
 </style>
