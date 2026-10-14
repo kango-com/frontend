@@ -2,6 +2,7 @@ import { defineStore } from 'pinia'
 import { adsApi, contentApi, isApiError, paymentsApi } from '~/api'
 import type { AdDraft, ApiError, LoadStatus, PromoPackage, PromoPackageId, Section } from '~/types'
 import { type DraftData, validateDraft } from '~/utils/draft'
+import { defaultParams, PRICE_PERIODS } from '~/utils/publish-schema'
 
 export type PublishStep = 'section' | 'form' | 'promote' | 'success'
 const KEY = 'kango.draft'
@@ -37,9 +38,9 @@ export const useDraftAdStore = defineStore('draftAd', () => {
         description: '',
         images: [],
         contacts: {},
-        city: '',
-        params: {},
-        price: { amount: 0, currency: 'ILS' }
+        city: useCityStore().current.name,
+        params: defaultParams(section),
+        price: { amount: 0, currency: 'ILS', period: PRICE_PERIODS[section]?.[0]?.value }
       } as unknown as DraftData
     }
     errors.value = {}
