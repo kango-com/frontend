@@ -2,7 +2,7 @@
 definePageMeta({ layout: false })
 useHead({ title: 'Блоки объявления - Kango' })
 
-import realty from '~/assets/img/categories/realty.webp'
+import realty from '~/assets/img/categories/real-estate.webp'
 import goods from '~/assets/img/categories/goods.webp'
 
 const reporting = ref(false)
