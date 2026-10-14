@@ -39,3 +39,13 @@ describe('фильтры', () => {
     expect(sortsFor('goods')).not.toContain('salary-desc')
   })
 })
+
+describe('filterFromQuery: защита от мусора', () => {
+  it('нечисловые и неизвестные значения игнорируются', async () => {
+    const { filterFromQuery } = await import('../app/utils/filters')
+    const f = filterFromQuery('realty', { priceFrom: 'abc', deal: 'garbage', sort: 'nope' }) as Record<string, unknown>
+    expect(f.priceFrom).toBeUndefined()
+    expect(f.deal).toBe('rent')
+    expect(f.sort).toBe('default')
+  })
+})

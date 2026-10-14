@@ -105,7 +105,7 @@ const query = computed({
   .khd.khd--search .khd__main {
     max-width: 1380px;
     margin-inline: auto;
-    grid-template-columns: auto auto minmax(0, 1fr) auto;
+    grid-template-columns: auto auto minmax(0, 1fr) auto auto;
     gap: 12px;
     padding: 20px 50px 0;
     border-radius: 0;
@@ -120,7 +120,7 @@ const query = computed({
   .khd .khd__find,
   .khd.khd--search .khd__find { display: inline-flex; flex: none; min-width: 112px; }
   .khd .khd__filter,
-  .khd.khd--search .khd__filter { display: none; }
-  .khd .khd__city { grid-column: 4; grid-row: 1; }
+  .khd.khd--search .khd__filter { display: inline-flex; grid-column: 4; grid-row: 1; }
+  .khd .khd__city { grid-column: 5; grid-row: 1; }
 }
 </style>

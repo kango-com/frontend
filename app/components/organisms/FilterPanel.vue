@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type { City, FilterState, RefItem, Section, SortKey } from '~/types'
 import { formatDateRu } from '~/utils/format'
-import { FILTER_SCHEMA, SECTION_OPTIONS, applyLabel, type FieldDef, type SelectField } from '~/utils/filter-schema'
+import { CITY_DEPENDENT, FILTER_SCHEMA, SECTION_OPTIONS, applyLabel, hiddenDefaults, type FieldDef, type SelectField } from '~/utils/filter-schema'
 import { SORT_LABELS, defaultValue, filterToQuery, sortsFor } from '~/utils/filters'
 import { formatAdsCount } from '~/utils/format'
 
@@ -41,6 +41,12 @@ watch(open, (v) => {
     if (current) section.value = current
     view.value = null
     applied = false
+    // по умолчанию ищем в выбранном городе (как список), «Весь Израиль» задаётся явно через anyCity=1
+    if (route.query.anyCity !== '1') {
+      for (const s of Object.keys(store.state) as Section[]) {
+        if (!store.state[s].cityIds.length) store.setCities(s, [city.current.id])
+      }
+    }
     snapshot = Object.fromEntries((Object.keys(store.state) as Section[]).map(s => [s, JSON.stringify(store.state[s])]))
     store.loadCount(section.value, q.value || undefined)
   } else if (!applied) {
@@ -62,6 +68,19 @@ function setValue(key: string, value: unknown, resets?: string[], onChange?: Fie
   rec[key] = value
   for (const k of resets ?? []) rec[k] = defaultValue(section.value, k)
   if (onChange) Object.assign(rec, onChange(value, filter.value))
+  pruneHidden()
+}
+
+/** Скрытое поле не должно влиять на счётчик и список: возвращаем его к умолчанию */
+function pruneHidden() {
+  Object.assign(store.state[section.value] as unknown as Record<string, unknown>, hiddenDefaults(section.value, filter.value))
+}
+
+/** Города поменялись: районы, ЖК и застройщики прежних городов сбрасываются */
+function changeCities(ids: string[]) {
+  store.setCities(section.value, ids)
+  const rec = store.state[section.value] as unknown as Record<string, unknown>
+  for (const k of CITY_DEPENDENT[section.value]) rec[k] = defaultValue(section.value, k)
 }
 
 function switchSection(next: string) {
@@ -87,7 +106,7 @@ async function openCities() {
 function applyCities(ids: string[]) {
   const all: City[] = [...city.popular, ...city.results]
   store.remember(all.filter(c => ids.includes(c.id)).map(c => ({ id: c.id, title: c.name })))
-  store.setCities(section.value, ids)
+  changeCities(ids)
   view.value = null
 }
 let cityTimer: ReturnType<typeof setTimeout> | undefined
@@ -163,10 +182,20 @@ function reset() {
 function apply() {
   applied = true
   const query: Record<string, string> = { ...filterToQuery(filter.value) }
+  if (!filter.value.cityIds.length) query.anyCity = '1'
   if (q.value) query.q = q.value
   open.value = false
   router.push({ path: `/${section.value}`, query })
 }
+
+// фокус на вложенном экране и обратно на строку, с которой его открыли
+watch(view, async (next, prev) => {
+  await nextTick()
+  const root = document.querySelector<HTMLElement>('.ksheet__panel')
+  if (next) root?.querySelector<HTMLElement>('input[type=search], input')?.focus()
+  else if (prev) root?.querySelector<HTMLElement>('.frow, .kbtn')?.focus()
+})
+const backFromView = () => { view.value = null }
 
 const title = computed(() => (view.value?.kind === 'cities' ? 'Какой город?' : view.value ? view.value.field.label : 'Фильтры'))
 
@@ -187,6 +216,7 @@ function fieldKey(f: FieldDef) {
   >
     <template v-if="view?.kind === 'cities'">
       <PickerView
+        @keydown.esc.stop="backFromView"
         :items="cityItems"
         :model-value="pending"
         multiple
@@ -203,6 +233,7 @@ function fieldKey(f: FieldDef) {
       <PickerView
         :key="view.field.key"
         :items="selectItems"
+        @keydown.esc.stop="backFromView"
         :model-value="pending"
         :multiple="view.field.multiple"
         :any-label="view.field.required ? undefined : view.field.anyLabel"
@@ -212,7 +243,7 @@ function fieldKey(f: FieldDef) {
       />
     </template>
 
-    <div v-else-if="view?.kind === 'date'" class="fp__date">
+    <div v-else-if="view?.kind === 'date'" class="fp__date" @keydown.esc.stop="backFromView">
       <KCalendar v-model="pendingDate" />
       <KTextButton size="sm" @click="pendingDate = ''">Сбросить дату</KTextButton>
     </div>
@@ -222,7 +253,7 @@ function fieldKey(f: FieldDef) {
 
       <div class="fp__field">
         <FilterRow label="Где искать" :value="filter.cityIds.length ? `Выбрано: ${filter.cityIds.length}` : 'Весь Израиль'" @click="openCities" />
-        <ChipsSummary :items="cityNames" @remove="id => store.setCities(section, filter.cityIds.filter(c => c !== id))" />
+        <ChipsSummary :items="cityNames" @remove="id => changeCities(filter.cityIds.filter(c => c !== id))" />
       </div>
 
       <div v-for="f in fields" :key="fieldKey(f)" class="fp__field">
@@ -240,6 +271,7 @@ function fieldKey(f: FieldDef) {
           :label="f.label"
           :options="f.options"
           :multiple="f.multiple"
+          :required="f.required"
           :model-value="f.numeric && record[f.key] !== undefined ? String(record[f.key]) : (record[f.key] as string | string[] | undefined)"
           @update:model-value="setValue(f.key, f.numeric && typeof $event === 'string' ? Number($event) : ($event ?? defaultValue(section, f.key)), f.resets, f.onChange)"
         />

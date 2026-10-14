@@ -1,5 +1,5 @@
 <script setup lang="ts">
-definePageMeta({ layout: 'minimal' })
+definePageMeta({ layout: 'minimal', middleware: 'auth' })
 useHead({ title: 'Подать объявление - Kango' })
 </script>
 

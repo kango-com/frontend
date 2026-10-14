@@ -10,6 +10,8 @@ const props = defineProps<{
   /** Одно значение (строка) или набор (массив) */
   modelValue: string | string[] | undefined
   multiple?: boolean
+  /** Одиночный выбор: повторный тап по выбранному значению его не снимает */
+  required?: boolean
 }>()
 
 const emit = defineEmits<{ 'update:modelValue': [value: string | string[] | undefined] }>()
@@ -20,8 +22,9 @@ const isOn = (v: string) => selected.value.includes(v)
 
 function toggle(v: string) {
   if (props.multiple) emit('update:modelValue', isOn(v) ? selected.value.filter(x => x !== v) : [...selected.value, v])
-  // для одиночного выбора повторный тап снимает значение
-  else emit('update:modelValue', isOn(v) ? undefined : v)
+  // для одиночного выбора повторный тап снимает значение (если не required)
+  else if (isOn(v)) { if (!props.required) emit('update:modelValue', undefined) }
+  else emit('update:modelValue', v)
 }
 </script>
 

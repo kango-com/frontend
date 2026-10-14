@@ -1,5 +1,6 @@
 import { geoApi, referencesApi } from '~/api'
 import type { FilterState, RefItem, Section } from '~/types'
+import { defaultValue } from './filters'
 
 /** Откуда берутся варианты выбора: ключ кэша и загрузчик. null - зависимость ещё не выбрана, поле неактивно */
 export type RefSource = (filter: FilterState) => { key: string, load: () => Promise<RefItem[]> } | null
@@ -37,6 +38,8 @@ export interface OptionsField extends FieldBase {
   multiple?: boolean
   /** Значение хранится числом (ограничение возраста) */
   numeric?: boolean
+  /** Одиночный выбор без снятия: повторный тап по выбранному ничего не меняет (тип сделки) */
+  required?: boolean
 }
 
 /** Диапазон «от и до» */
@@ -103,7 +106,7 @@ export const FILTER_SCHEMA: Record<Section, FieldDef[]> = {
   ],
 
   realty: [
-    { type: 'options', key: 'deal', label: 'Тип сделки', options: [opt('rent', 'Аренда'), opt('sale', 'Продажа')], onChange: v => (v === 'sale' ? { market: 'secondary' } : { market: undefined, projectIds: [], developerIds: [] }) },
+    { type: 'options', key: 'deal', label: 'Тип сделки', required: true, options: [opt('rent', 'Аренда'), opt('sale', 'Продажа')], onChange: v => (v === 'sale' ? { market: 'secondary' } : { market: undefined, projectIds: [], developerIds: [] }) },
     {
       type: 'select', key: 'category', label: 'Категория', anyLabel: 'Жилая недвижимость', required: true, searchPlaceholder: 'Поиск категории',
       resets: ['subtype', 'rooms', 'features', 'extras'],
@@ -211,4 +214,33 @@ export function applyLabel(count: number | null, plural: (n: number) => string):
   if (count === null) return 'Показать объявления'
   if (count >= COUNT_CAP) return 'Показать более 1 тыс. объявлений'
   return `Показать ${plural(count)}`
+}
+
+/**
+ * Значения скрытых полей, которые нужно вернуть к умолчанию (скрытое поле не должно влиять на счётчик и список).
+ * Ключ, который использует хоть одно видимое поле, не трогаем (цена в аренде и продаже).
+ */
+export function hiddenDefaults(section: Section, filter: FilterState): Record<string, unknown> {
+  const keysOf = (f: FieldDef) => (f.type === 'range' ? [f.fromKey, f.toKey] : [f.key])
+  const fields = FILTER_SCHEMA[section]
+  const visible = new Set(fields.filter(f => !f.visible || f.visible(filter)).flatMap(keysOf))
+  const rec = filter as unknown as Record<string, unknown>
+  const out: Record<string, unknown> = {}
+  for (const f of fields) {
+    if (!f.visible || f.visible(filter)) continue
+    for (const k of keysOf(f)) {
+      if (visible.has(k)) continue
+      const d = defaultValue(section, k)
+      if (JSON.stringify(rec[k]) !== JSON.stringify(d)) out[k] = d
+    }
+  }
+  return out
+}
+
+/** Поля, зависящие от выбранных городов (при смене городов сбрасываются) */
+export const CITY_DEPENDENT: Record<Section, string[]> = {
+  work: [],
+  realty: ['districtIds', 'projectIds', 'developerIds'],
+  goods: [],
+  services: ['districtIds']
 }

@@ -25,7 +25,7 @@ const sort = computed<SortKey>(() => (filter.value?.sort ?? (route.query.sort as
 const query = computed<AdsQuery>(() => ({
   section: props.section,
   q: q.value || undefined,
-  cityIds: filter.value?.cityIds.length ? filter.value.cityIds : city.cityIds,
+  cityIds: filter.value?.cityIds.length ? filter.value.cityIds : route.query.anyCity === '1' ? [] : city.cityIds,
   sort: sort.value,
   filter: filter.value
 }))
@@ -60,7 +60,7 @@ watch(q, v => { search.value = v })
 const setSort = (key: SortKey) => setQuery({ sort: key === 'default' ? undefined : key })
 const selectCity = (c: City) => {
   city.select(c)
-  if (filter.value?.cityIds.length) setQuery({ cityIds: undefined })
+  if (filter.value?.cityIds.length || route.query.anyCity) setQuery({ cityIds: undefined, anyCity: undefined })
 }
 
 const filterCount = computed(() => (filter.value ? activeFilterCount(filter.value) : 0))

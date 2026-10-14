@@ -16,3 +16,25 @@ describe('кнопка применения фильтров', () => {
     expect(defaultValue('work', 'categoryId')).toBeUndefined()
   })
 })
+
+describe('скрытые поля фильтра', () => {
+  it('при переходе на продажу параметры аренды сбрасываются', async () => {
+    const { hiddenDefaults } = await import('../app/utils/filter-schema')
+    const { defaultFilter } = await import('../app/utils/filters')
+    const f = { ...defaultFilter('realty'), deal: 'sale' as const, rent: ['daily'], moveInBefore: '2026-11-01' }
+    expect(hiddenDefaults('realty', f)).toEqual({ rent: [], moveInBefore: undefined })
+  })
+  it('цена общая для аренды и продажи, не сбрасывается', async () => {
+    const { hiddenDefaults } = await import('../app/utils/filter-schema')
+    const { defaultFilter } = await import('../app/utils/filters')
+    const f = { ...defaultFilter('realty'), deal: 'sale' as const, priceFrom: 1000 }
+    expect(hiddenDefaults('realty', f)).not.toHaveProperty('priceFrom')
+  })
+  it('район услуг виден только при формате «По адресу исполнителя»', async () => {
+    const { hiddenDefaults } = await import('../app/utils/filter-schema')
+    const { defaultFilter } = await import('../app/utils/filters')
+    const f = { ...defaultFilter('services'), districtIds: ['tlv-center'], formats: ['Онлайн'] }
+    expect(hiddenDefaults('services', f)).toEqual({ districtIds: [] })
+    expect(hiddenDefaults('services', { ...f, formats: ['По адресу исполнителя'] })).toEqual({})
+  })
+})

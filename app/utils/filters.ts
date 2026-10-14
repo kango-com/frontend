@@ -45,18 +45,25 @@ export function filterToQuery(filter: FilterState): Record<string, string> {
 }
 
 /** Параметры URL обратно в фильтр раздела (тип значения берётся из значения по умолчанию) */
+const ENUMS: Record<string, string[]> = {
+  mode: ['seek-job', 'seek-employee'], hebrew: ['any', 'required', 'none'], deal: ['rent', 'sale'], market: ['secondary', 'new'],
+  condition: ['used', 'new'], bargain: ['possible', 'impossible'], experience: ['required', 'none'],
+  sort: ['default', 'date', 'cheaper', 'expensive', 'distance', 'salary-desc', 'salary-asc']
+}
+
 export function filterFromQuery(section: Section, query: Record<string, unknown>): FilterState {
   const def = defaultFilter(section) as unknown as Rec
   const out: Rec = { ...def }
   const numericFields = new Set(['priceFrom', 'priceTo', 'areaFrom', 'areaTo', 'floorFrom', 'floorTo', 'ageLimit'])
   for (const [key, raw] of Object.entries(query)) {
     if (typeof raw !== 'string' || raw === '') continue
+    if (ENUMS[key] && !ENUMS[key]!.includes(raw)) continue
     if (key === 'sort') { out.sort = raw; continue }
     if (!(key in def) && !numericFields.has(key) && !['categoryId', 'subcategoryId', 'subtype', 'market', 'rooms', 'condition', 'bargain', 'gender', 'age', 'size', 'experience', 'salaryPeriod', 'moveInBefore'].includes(key)) continue
     const d = def[key]
     if (Array.isArray(d)) out[key] = raw.split(',').filter(Boolean)
     else if (typeof d === 'boolean') out[key] = raw === '1'
-    else if (numericFields.has(key)) out[key] = Number(raw)
+    else if (numericFields.has(key)) { const n = Number(raw); if (!Number.isNaN(n)) out[key] = n }
     else out[key] = raw
   }
   return out as unknown as FilterState
