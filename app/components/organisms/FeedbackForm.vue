@@ -75,7 +75,7 @@ async function submit() {
       <KButton block type="submit" :disabled="status === 'sending'">{{ status === 'sending' ? 'Отправка...' : 'Отправить' }}</KButton>
       <p class="fbk__policy">
         Нажимая «Отправить», вы соглашаетесь с
-        <KTextButton to="/documents" size="sm" underline>политикой обработки данных</KTextButton>
+        <KTextButton to="/documents/privacy" size="sm" underline>политикой обработки данных</KTextButton>
       </p>
     </form>
   </section>

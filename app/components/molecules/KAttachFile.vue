@@ -12,6 +12,8 @@ const props = withDefaults(defineProps<{
   accept?: string
   multiple?: boolean
   disabled?: boolean
+  /** Максимум файлов: при достижении кнопка добавления отключается, удаление остаётся доступным */
+  max?: number
 }>(), { files: () => [], label: 'Добавить фото', accept: 'image/*', multiple: true })
 
 const emit = defineEmits<{
@@ -38,7 +40,7 @@ function onChange(e: Event) {
         <KIconButton class="kaf__remove" type="cancel" :disabled="disabled" :label="`Удалить ${f.name ?? 'фото'}`" @click="emit('remove', f.id)" />
       </li>
       <li>
-        <button type="button" class="kaf__add" :disabled="disabled" :aria-label="label" @click="input?.click()">
+        <button type="button" class="kaf__add" :disabled="disabled || (max !== undefined && props.files.length >= max)" :aria-label="label" @click="input?.click()">
           <Icon name="kango:plus-32" size="32" />
         </button>
       </li>

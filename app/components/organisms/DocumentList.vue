@@ -13,13 +13,13 @@ const items = computed(() => (props.group === 'documents' ? store.documents : st
 <template>
   <KContainer as="section" class="dlist" aria-labelledby="dlist-title">
     <h1 id="dlist-title" class="dlist__title">{{ title }}</h1>
-    <p v-if="store.status === 'error'" class="dlist__note" role="alert">
+    <p v-if="store.listStatus === 'error'" class="dlist__note" role="alert">
       Не удалось загрузить список. <KTextButton size="sm" @click="store.list = []; store.load()">Повторить</KTextButton>
     </p>
     <ul v-else-if="items.length" class="dlist__list">
       <li v-for="d in items" :key="d.slug"><KTableRow type="chevron" :label="d.title" :to="`/documents/${d.slug}`" /></li>
     </ul>
-    <p v-else-if="store.status === 'success'" class="dlist__note">Пока здесь ничего нет.</p>
+    <p v-else-if="store.listStatus === 'success'" class="dlist__note">Пока здесь ничего нет.</p>
     <p v-else class="dlist__note" aria-busy="true">Загрузка...</p>
   </KContainer>
 </template>

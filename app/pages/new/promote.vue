@@ -6,7 +6,10 @@ const draft = useDraftAdStore()
 const router = useRouter()
 
 // без созданного объявления продвигать нечего
-onMounted(() => { if (!draft.createdId) router.replace('/new') })
+onMounted(() => {
+  if (!draft.createdId) draft.restore()
+  if (!draft.createdId) router.replace('/new')
+})
 
 async function skip() {
   const id = draft.createdId

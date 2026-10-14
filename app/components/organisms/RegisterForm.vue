@@ -49,7 +49,7 @@ async function submit() {
       <KButton block type="submit" :disabled="busy">{{ busy ? 'Регистрация...' : 'Зарегистрироваться' }}</KButton>
       <p class="rf__policy">
         Нажимая «Зарегистрироваться», вы соглашаетесь с
-        <KTextButton to="/documents" size="sm" underline>политикой конфиденциальности</KTextButton>
+        <KTextButton to="/documents/privacy" size="sm" underline>политикой конфиденциальности</KTextButton>
       </p>
     </form>
     <p class="rf__switch">Зарегистрированы? <KTextButton :to="loginLink" size="sm">Войти</KTextButton></p>

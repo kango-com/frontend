@@ -47,10 +47,14 @@ function setPeriod(v: string) {
 }
 
 const files = computed<AttachedFile[]>(() => (draft.value.images ?? []).map((url, i) => ({ id: url, url, name: `Фото ${i + 1}` })))
+const uploadError = ref('')
 async function addFiles(list: File[]) {
   uploading.value = true
+  uploadError.value = ''
   try {
     for (const f of list.slice(0, 10 - files.value.length)) await draftStore.uploadImage(f)
+  } catch {
+    uploadError.value = 'Не удалось загрузить фото. Попробуйте ещё раз.'
   } finally {
     uploading.value = false
   }
@@ -65,6 +69,11 @@ async function generate() {
 const setContact = (key: 'phone' | 'whatsapp' | 'telegram', v: string) =>
   draftStore.patch({ contacts: { ...draft.value.contacts, [key]: v || undefined } })
 
+function back() {
+  const filled = !!(draft.value.title || draft.value.description || draft.value.images?.length)
+  if (!filled || window.confirm('Введённые данные будут потеряны. Вернуться к выбору раздела?')) emit('back')
+}
+
 async function submit() {
   if (await draftStore.publish()) emit('published')
 }
@@ -73,7 +82,7 @@ async function submit() {
 <template>
   <form class="adf" novalidate @submit.prevent="submit">
     <header class="adf__head">
-      <KIconButton type="arrow-left" label="Назад к выбору раздела" @click="emit('back')" />
+      <KIconButton type="arrow-left" label="Назад к выбору раздела" @click="back" />
       <h1 class="adf__title">Новое объявление</h1>
     </header>
 
@@ -99,7 +108,8 @@ async function submit() {
     </FormSection>
 
     <FormSection title="Фото">
-      <KAttachFile :files="files" :disabled="uploading || files.length >= 10" @add="addFiles" @remove="removeFile" />
+      <p v-if="uploadError" class="adf__error" role="alert">{{ uploadError }}</p>
+      <KAttachFile :files="files" :disabled="uploading" :max="10" @add="addFiles" @remove="removeFile" />
     </FormSection>
 
     <FormSection title="Контакты">

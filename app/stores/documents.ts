@@ -6,18 +6,20 @@ export const useDocumentsStore = defineStore('documents', () => {
   const list = ref<DocumentInfo[]>([])
   const current = ref<DocumentFull | null>(null)
   const status = ref<LoadStatus>('idle')
+  /** Статус списка отдельно от статуса открытого документа */
+  const listStatus = ref<LoadStatus>('idle')
 
   const documents = computed(() => list.value.filter(d => d.group === 'documents'))
   const details = computed(() => list.value.filter(d => d.group === 'details'))
 
   async function load() {
     if (list.value.length) return
-    status.value = 'loading'
+    listStatus.value = 'loading'
     try {
       list.value = await contentApi.documents()
-      status.value = 'success'
+      listStatus.value = 'success'
     } catch {
-      status.value = 'error'
+      listStatus.value = 'error'
     }
   }
 
@@ -32,5 +34,5 @@ export const useDocumentsStore = defineStore('documents', () => {
     }
   }
 
-  return { list, documents, details, current, status, load, open }
+  return { list, documents, details, current, status, listStatus, load, open }
 })

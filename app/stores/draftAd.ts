@@ -18,15 +18,15 @@ export const useDraftAdStore = defineStore('draftAd', () => {
   const selectedPackage = ref<PromoPackageId | null>(null)
 
   const persist = () => {
-    if (import.meta.client) try { localStorage.setItem(KEY, JSON.stringify({ draft: draft.value, step: step.value })) } catch { /* ignore */ }
+    if (import.meta.client) try { localStorage.setItem(KEY, JSON.stringify({ draft: draft.value, step: step.value, createdId: createdId.value })) } catch { /* ignore */ }
   }
 
   /** Восстановить черновик, если пользователь не завершил подачу */
   function restore() {
     if (!import.meta.client) return
     try {
-      const raw = JSON.parse(localStorage.getItem(KEY) ?? 'null') as { draft?: DraftData, step?: PublishStep } | null
-      if (raw?.draft?.section) { draft.value = raw.draft; step.value = raw.step === 'success' ? 'section' : raw.step ?? 'form' }
+      const raw = JSON.parse(localStorage.getItem(KEY) ?? 'null') as { draft?: DraftData, step?: PublishStep, createdId?: string | null } | null
+      if (raw?.draft?.section) { draft.value = raw.draft; createdId.value = raw.createdId ?? null; step.value = raw.step === 'success' ? 'section' : raw.step ?? 'form' }
     } catch { /* ignore */ }
   }
 

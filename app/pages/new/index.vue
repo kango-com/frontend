@@ -5,7 +5,11 @@ useHead({ title: 'Подать объявление - Kango' })
 const draft = useDraftAdStore()
 const router = useRouter()
 
-onMounted(() => { if (draft.step === 'section' || draft.step === 'form') draft.restore() })
+onMounted(() => {
+  draft.restore()
+  // объявление уже создано, осталось продвижение: повторная публикация дала бы дубль
+  if (draft.createdId) router.replace('/new/promote')
+})
 // после публикации уходим со страницы без предупреждения
 const leaving = ref(false)
 const dirty = computed(() => !leaving.value && draft.step === 'form' && !!(draft.draft.title || draft.draft.description || draft.draft.images?.length))
