@@ -61,6 +61,7 @@ const sections: Section[] = [
       { slug: 'calendar', title: 'Календарь', items: [o('KCalendar')] },
       { slug: 'city-selector', title: 'Выбор города', items: [m('CityList'), o('CitySelector')] },
       { slug: 'search-blocks', title: 'Блоки поиска', items: [m('SuggestionRow'), m('HistoryRow'), o('SearchSuggest'), o('SearchPanel')] },
+      { slug: 'listing-blocks', title: 'Блоки списков', items: [m('AdRowCard'), m('SortButton'), o('SortSheet'), o('ListingToolbar'), o('ListingPage')] },
       { slug: 'home-blocks', title: 'Блоки главной', items: [m('SearchBar'), m('CityChips'), o('SectionsGrid'), o('AdsFeed'), o('HomeHero'), o('HomeCover'), o('ViewedAds'), o('AppHeader'), o('AppTabBar'), a('KContainer'), a('HeroBackdrop')] }
     ]
   }

@@ -39,6 +39,13 @@ function onFocusIn(e: FocusEvent) {
   dropStyle.value = { left: `${box.left - host.left}px`, top: `${box.bottom - host.top + 4}px`, width: `${box.width}px` }
   suggestOpen.value = true
 }
+/** Стрелка вниз из поля шапки переводит фокус на первую строку списка */
+function onKeydown(e: KeyboardEvent) {
+  if (e.key !== 'ArrowDown' || !suggestOpen.value) return
+  if (!(e.target as HTMLElement).closest('.khd__search')) return
+  const first = root.value?.querySelector<HTMLElement>('.app-header__drop .srow, .app-header__drop .hrow__main')
+  if (first) { e.preventDefault(); first.focus() }
+}
 function onFocusOut(e: FocusEvent) {
   const next = e.relatedTarget as Node | null
   if (!next || !root.value?.contains(next)) suggestOpen.value = false
@@ -46,7 +53,7 @@ function onFocusOut(e: FocusEvent) {
 </script>
 
 <template>
-  <div ref="root" class="app-header" :class="{ 'app-header--solid': solid }" @focusin="onFocusIn" @focusout="onFocusOut" @keydown.esc="suggestOpen = false">
+  <div ref="root" class="app-header" :class="{ 'app-header--solid': solid }" @focusin="onFocusIn" @focusout="onFocusOut" @keydown.esc="suggestOpen = false" @keydown="onKeydown">
     <KHeader
       v-model:search="search"
       :city="city.current.name"
