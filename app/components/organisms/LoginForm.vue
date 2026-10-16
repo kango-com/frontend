@@ -6,6 +6,7 @@ const props = defineProps<{
   modal?: boolean
 }>()
 
+const { locale } = useI18n()
 const auth = useAuthStore()
 const ui = useUiStore()
 const route = useRoute()
@@ -19,6 +20,8 @@ const errors = reactive<{ email?: string, password?: string, form?: string }>({}
 const registerLink = computed(() => (redirect.value ? `/register?redirect=${encodeURIComponent(String(redirect.value))}` : '/register'))
 /** В модалке экраны переключаются внутри окна, на странице работают обычные ссылки */
 const go = (view: 'register' | 'forgot') => { if (props.modal) ui.authView = view }
+/** Вход через Facebook и Google скрыт в русской версии интерфейса */
+const showSocial = computed(() => locale.value !== 'ru')
 const busy = computed(() => auth.status === 'loading')
 
 onMounted(() => auth.clearError())
@@ -65,7 +68,7 @@ async function social(provider: 'google' | 'facebook') {
       <KButton block type="submit" :disabled="busy">{{ busy ? tr('Вход...') : tr('Войти') }}</KButton>
     </form>
 
-    <div class="lf__social" :class="{ 'lf__social--modal': modal }">
+    <div v-if="showSocial" class="lf__social" :class="{ 'lf__social--modal': modal }">
       <p class="lf__or">{{ modal ? tr('или войдите с помощью') : tr('Войти с помощью') }}</p>
       <div class="lf__icons">
         <SocialButton provider="facebook" :wide="modal" :disabled="busy" @click="social('facebook')" />

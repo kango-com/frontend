@@ -40,6 +40,11 @@ const submit = (q: string) => router.push({ path: '/search', query: q ? { q } : 
 /* Поиск и чипы городов: 30px под подписью, чипы через 12px */
 .hero__bar { display: flex; flex-direction: column; gap: 12px; margin-top: 30px; }
 
+/* Иврит (RTL): баннер не зеркалится, кенгуру справа, поэтому блок заголовка уходит в левую часть обложки */
+@media (max-width: 1919px) {
+  .hero__text:dir(rtl) { width: fit-content; margin-inline-start: auto; }
+}
+
 /* Планшет: заголовок сверху, поиск и города внизу обложки */
 @media (min-width: 768px) {
   .hero { min-height: 341px; }
