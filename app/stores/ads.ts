@@ -40,10 +40,11 @@ const feed = (key: string): Feed => {
     try {
       const nextPage = reset ? 1 : f.page + 1
       const result = await request(nextPage, controller.signal)
-      f.items = reset ? result.items : [...f.items, ...result.items]
-      f.total = result.total
-      f.page = result.page
-      f.hasMore = result.hasMore
+      const items = Array.isArray(result?.items) ? result.items : []
+      f.items = reset ? items : [...f.items, ...items]
+      f.total = result?.total ?? f.items.length
+      f.page = result?.page ?? nextPage
+      f.hasMore = !!result?.hasMore
       f.status = 'success'
     } catch (e) {
       if (isApiError(e) && e.code === 'aborted') return

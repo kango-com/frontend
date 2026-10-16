@@ -53,6 +53,7 @@
 | Метод и путь | Запрос | Ответ |
 |---|---|---|
 | `GET /search/suggest?q=` | | `SearchSuggestion[]` (по префиксу, с категорией) |
+| `GET /search/popular` | | `SearchSuggestion[]` (популярные запросы для пустого поля) |
 | `GET /search/history` | | `SearchHistoryItem[]` (нужен вход, иначе пусто) |
 | `POST /search/history` | `{ text, categoryTitle? }` | `SearchHistoryItem` |
 | `DELETE /search/history/:id`, `DELETE /search/history` | | 204 |

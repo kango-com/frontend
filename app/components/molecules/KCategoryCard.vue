@@ -45,6 +45,7 @@ const attrs = computed(() => (props.to ? { to: props.to } : {}))
   overflow: hidden;
   border-radius: var(--radius-md);
   background-color: #f7ebdf;
+  box-shadow: 0 2px 8px color-mix(in srgb, var(--color-label-primary) 8%, transparent);
   background-position: center bottom;
   background-repeat: no-repeat;
   background-size: 100% auto;
@@ -57,24 +58,25 @@ const attrs = computed(() => (props.to ? { to: props.to } : {}))
 .kcat--services { background-color: #eeecf7; }
 .kcat__text { display: flex; flex-direction: column; gap: 4px; min-width: 0; padding: 4px 0 0 4px; }
 .kcat__title {
-  font-size: var(--text-16-16);
-  line-height: var(--leading-16-16);
+  font-size: var(--text-17-20);
+  line-height: var(--leading-17-20);
   font-weight: var(--font-weight-medium);
 }
 .kcat__caption {
-  color: var(--color-fill-gray);
-  font-size: var(--text-12-12);
-  line-height: var(--leading-12-12);
+  color: var(--color-label-secondary);
+  font-size: var(--text-13-16);
+  line-height: var(--leading-13-16);
 }
 .kcat__arrow {
   display: inline-flex;
   flex: none;
   align-items: center;
   justify-content: center;
-  width: 24px;
-  height: 24px;
+  width: 32px;
+  height: 32px;
   border-radius: 50%;
   background: var(--color-fill-white);
+  box-shadow: 0 1px 4px color-mix(in srgb, var(--color-label-primary) 12%, transparent);
   color: var(--color-fill-primary);
   transition: transform 0.15s ease-out;
 }

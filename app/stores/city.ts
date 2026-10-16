@@ -12,6 +12,8 @@ export const useCityStore = defineStore('city', () => {
   const results = ref<City[]>([])
   const status = ref<LoadStatus>('idle')
   const searching = ref(false)
+  /** Ошибка последнего поиска по городам (нужна, чтобы не показывать вечную загрузку) */
+  const searchError = ref<unknown>(null)
   let controller: AbortController | null = null
 
   const cityIds = computed(() => [current.value.id])
@@ -32,10 +34,16 @@ export const useCityStore = defineStore('city', () => {
     controller?.abort()
     controller = new AbortController()
     searching.value = true
+    searchError.value = null
     try {
-      results.value = await geoApi.cities(q, 60, controller.signal)
+      const list = await geoApi.cities(q, 60, controller.signal)
+      results.value = Array.isArray(list) ? list : []
     } catch (e) {
-      if ((e as { code?: string }).code !== 'aborted') results.value = []
+      if ((e as { code?: string }).code !== 'aborted') {
+        results.value = []
+        searchError.value = e
+        console.error('[city] не удалось загрузить города', e)
+      }
     } finally {
       searching.value = false
     }
@@ -52,5 +60,5 @@ export const useCityStore = defineStore('city', () => {
     return [current.value, ...rest].slice(0, 12)
   })
 
-  return { current, popular, results, status, searching, cityIds, chips, loadPopular, search, select }
+  return { current, popular, results, status, searching, searchError, cityIds, chips, loadPopular, search, select }
 })

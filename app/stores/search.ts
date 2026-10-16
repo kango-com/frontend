@@ -6,7 +6,17 @@ import { useAuthStore } from './auth'
 const KEY = 'kango.search.history'
 const MAX = 10
 
+/** Запасной список: показывается сразу, до ответа сервера и если он недоступен */
+const DEFAULT_POPULAR: SearchSuggestion[] = [
+  { id: 'd0', text: 'Квартира в Тель-Авиве', categoryTitle: 'Недвижимость', section: 'realty' },
+  { id: 'd1', text: 'Аренда квартиры', categoryTitle: 'Недвижимость', section: 'realty' },
+  { id: 'd2', text: 'Диван', categoryTitle: 'Мебель', section: 'goods' },
+  { id: 'd3', text: 'Холодильник', categoryTitle: 'Бытовая техника', section: 'goods' },
+  { id: 'd4', text: 'Телефоны', categoryTitle: 'Электроника и телефоны', section: 'goods' }
+]
+
 export const useSearchStore = defineStore('search', () => {
+  const popular = ref<SearchSuggestion[]>(DEFAULT_POPULAR)
   const query = ref('')
   const suggestions = ref<SearchSuggestion[]>([])
   const history = ref<SearchHistoryItem[]>([])
@@ -36,6 +46,13 @@ export const useSearchStore = defineStore('search', () => {
       suggestions.value = []
       status.value = 'error'
     }
+  }
+
+  async function loadPopular() {
+    try {
+      const list = await searchApi.popular()
+      if (Array.isArray(list) && list.length) popular.value = list
+    } catch { /* остаётся запасной список */ }
   }
 
   async function loadHistory() {
@@ -78,5 +95,5 @@ export const useSearchStore = defineStore('search', () => {
     status.value = 'idle'
   }
 
-  return { query, suggestions, history, status, suggest, loadHistory, submit, removeHistory, clearHistory, reset }
+  return { query, suggestions, history, popular, status, suggest, loadPopular, loadHistory, submit, removeHistory, clearHistory, reset }
 })

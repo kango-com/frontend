@@ -9,6 +9,7 @@
     </main>
     <KFooter class="shell__footer" />
     <CitySelector />
+    <LoginModal />
     <CategoriesMenu />
   </div>
 </template>
@@ -32,11 +33,11 @@
 }
 .shell__skip:focus { transform: none; }
 @media (min-width: 1380px) {
-  .shell { --header-h: 96px; }
+  .shell { --header-h: 128px; }
   .shell__header { display: block; }
   .shell__footer { display: block; }
 }
 @media (min-width: 1920px) {
-  .shell { --header-h: 104px; }
+  .shell { --header-h: 128px; }
 }
 </style>

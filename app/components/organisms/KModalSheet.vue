@@ -15,6 +15,8 @@ defineProps<{
   fullMobile?: boolean
   /** Вместо крестика кнопка «Назад» (вложенный экран внутри окна) */
   back?: boolean
+  /** Дополнительный класс панели окна (для особой ширины и отступов) */
+  panelClass?: string
 }>()
 
 const emit = defineEmits<{ action: [], back: [] }>()
@@ -44,13 +46,12 @@ function onKey(e: KeyboardEvent) {
 }
 
 let active = false
-
 async function activate() {
   if (active || !import.meta.client) return
   active = true
   lastFocus = document.activeElement as HTMLElement | null
   document.addEventListener('keydown', onKey)
-  document.body.style.overflow = 'hidden'
+  lockScroll()
   await nextTick()
   sheet.value?.querySelector<HTMLElement>('button:not([disabled]), [href], input:not([disabled]), select:not([disabled]), textarea:not([disabled])')?.focus()
 }
@@ -59,7 +60,7 @@ function deactivate() {
   if (!active || !import.meta.client) return
   active = false
   document.removeEventListener('keydown', onKey)
-  document.body.style.overflow = ''
+  unlockScroll()
   lastFocus?.focus()
 }
 
@@ -101,7 +102,7 @@ function dragEnd() {
           aria-modal="true"
           :aria-labelledby="title ? `${id}-title` : undefined"
           :aria-label="title ? undefined : (label ?? tr('Окно'))"
-          :class="{ 'ksheet__panel--dragging': isDragging }"
+          :class="[panelClass, { 'ksheet__panel--dragging': isDragging }]"
           :style="{ '--drag': `${dragY}px` }"
           tabindex="-1"
         >

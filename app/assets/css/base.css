@@ -35,3 +35,26 @@ textarea {
     animation-duration: 0.01ms !important;
   }
 }
+
+/* Скроллбар в стиле системы: тонкий серый ползунок на прозрачной дорожке (окно и все прокручиваемые блоки) */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-label-gray) transparent;
+}
+/* Chromium и Safari: свой ползунок без стрелок. Стандартные свойства сбрасываем, иначе Chromium игнорирует ::-webkit-scrollbar */
+@supports selector(::-webkit-scrollbar) {
+  * { scrollbar-width: auto; scrollbar-color: auto; }
+  ::-webkit-scrollbar { width: 12px; height: 12px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-button { display: none; width: 0; height: 0; }
+  ::-webkit-scrollbar-thumb {
+    border: 3px solid transparent;
+    border-radius: var(--radius-pill);
+    background: var(--color-label-gray);
+    background-clip: content-box;
+  }
+  ::-webkit-scrollbar-thumb:hover { background: var(--color-fill-gray); background-clip: content-box; }
+}
+
+/* встроенный крестик браузера в полях поиска не показываем */
+input[type='search']::-webkit-search-cancel-button { appearance: none; display: none; }

@@ -57,12 +57,28 @@ export function isApiError(e: unknown): e is ApiError {
   return !!e && typeof e === 'object' && 'code' in e && 'status' in e && 'message' in e
 }
 
-/** Единая точка входа во все запросы к API */
+const wait = (ms: number) => new Promise(resolve => setTimeout(resolve, ms))
+
+/** Единая точка входа во все запросы к API. Безопасные GET один раз повторяются при сбое сети или ответе 5xx */
 export async function apiFetch<T>(path: string, options: RequestOptions = {}): Promise<T> {
+  const retries = (options.method ?? 'GET') === 'GET' ? 2 : 0
+  for (let attempt = 0; ; attempt++) {
+    try {
+      return await request<T>(path, options)
+    } catch (e) {
+      const err = e as ApiError
+      const transient = err.code === 'network' || err.status >= 500
+      if (attempt >= retries || !transient || options.signal?.aborted) throw e
+      await wait(300 * (attempt + 1))
+    }
+  }
+}
+
+async function request<T>(path: string, options: RequestOptions): Promise<T> {
   const config = useRuntimeConfig()
   const token = useAuthToken()
   try {
-    return await $fetch<T>(path, {
+    const data = await $fetch<T>(path, {
       baseURL: config.public.apiBase as string,
       method: options.method ?? 'GET',
       query: cleanQuery(options.query),
@@ -70,6 +86,9 @@ export async function apiFetch<T>(path: string, options: RequestOptions = {}): P
       signal: options.signal,
       headers: token.value ? { Authorization: `Bearer ${token.value}` } : undefined
     })
+    // API ответило HTML-страницей (запрос не дошёл до мока или бэкенда): это не данные, а сбой связи
+    if (typeof data === 'string' && /^\s*<(!doctype|html)/i.test(data)) throw Object.assign(new Error('html instead of json'), { status: 0 })
+    return data
   } catch (e) {
     throw toApiError(e)
   }

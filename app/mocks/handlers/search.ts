@@ -24,6 +24,15 @@ export const searchHandlers = (base: string) => [
     return json([...fromVocab, ...fromAds].filter(s => !seen.has(s.text) && seen.add(s.text)).slice(0, 8))
   }),
 
+  http.get(`${base}/search/popular`, async () => {
+    const err = await simulate(); if (err) return err
+    const popular = ['Квартира в Тель-Авиве', 'Аренда квартиры', 'Диван', 'Холодильник', 'Гитара', 'Дом с садом', 'Телефоны']
+    return json(popular.flatMap((text, i) => {
+      const v = searchVocabulary.find(x => x.text === text)
+      return v ? [{ id: `p${i}`, text: v.text, categoryTitle: v.categoryTitle, section: v.section }] : []
+    }))
+  }),
+
   http.get(`${base}/search/history`, async ({ request }) => {
     const err = await simulate(); if (err) return err
     if (!currentUser(request)) return json([])

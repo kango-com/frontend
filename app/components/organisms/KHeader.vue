@@ -7,6 +7,8 @@ const props = withDefaults(defineProps<{
   loggedIn?: boolean
   /** Показать красную точку на кнопке фильтра */
   filterDot?: boolean
+  /** Раскрытый поиск (desktop): поле на всю ширину, «Найти» внутри, подсказки под ним */
+  searching?: boolean
 }>(), { city: 'Тель-Авив', search: '' })
 
 const emit = defineEmits<{
@@ -20,6 +22,21 @@ const emit = defineEmits<{
 
 const { t } = useI18n()
 
+/** Ширина кнопки города нужна полю поиска: город лежит поверх его правого края, крестик очистки стоит вплотную к нему */
+const root = ref<HTMLElement>()
+const cityBtn = ref<{ $el: HTMLElement }>()
+onMounted(() => {
+  const el = cityBtn.value?.$el
+  if (!el || typeof ResizeObserver === 'undefined') return
+  const ro = new ResizeObserver(() => {
+    const w = el.offsetWidth
+    // в раскрытом поиске город скрыт (ширина 0): оставляем последнее известное значение
+    if (w > 0) root.value?.style.setProperty('--khd-city-w', `${w}px`)
+  })
+  ro.observe(el)
+  onBeforeUnmount(() => ro.disconnect())
+})
+
 const query = computed({
   get: () => props.search,
   set: v => emit('update:search', v)
@@ -27,19 +44,15 @@ const query = computed({
 </script>
 
 <template>
-  <header class="khd" :class="{ 'khd--search': withSearch }">
+  <header ref="root" class="khd" :class="{ 'khd--search': withSearch, 'khd--searching': searching }">
     <nav class="khd__top" :aria-label="t('nav.service')">
       <div class="khd__tl">
         <KTextButton to="/about" size="sm">{{ t('nav.about') }}</KTextButton>
         <KTextButton to="/support" size="sm">{{ t('nav.support') }}</KTextButton>
       </div>
       <div class="khd__tl">
-        <KTextButton :to="loggedIn ? '/profile' : '/login'" size="md">
-          <template #icon-left><Icon name="kango:user-24" size="24" /></template>
-          {{ loggedIn ? t('nav.profile') : t('nav.login') }}
-        </KTextButton>
         <KTextButton to="/new" size="md">
-          <template #icon-left><Icon name="kango:plus-square-24" size="24" /></template>
+          <template #icon-left><Icon name="kango:plus-24" size="24" /></template>
           {{ t('nav.post') }}
         </KTextButton>
         <LangSwitch class="khd__lang khd__lang--top" />
@@ -61,10 +74,15 @@ const query = computed({
         <Icon name="kango:search-24" size="24" />
       </button>
       <LangSwitch class="khd__lang khd__lang--m" />
-      <KButton class="khd__city" variant="plain" @click="emit('city')">
+      <KButton ref="cityBtn" class="khd__city" variant="plain" @click="emit('city')">
         <template #icon-left><Icon name="kango:map-pin-16" size="16" /></template>
         {{ tr(city) }}
       </KButton>
+      <nav class="khd__tools" :aria-label="t('nav.service')">
+        <NuxtLink to="/favorites" class="khd__tool" :aria-label="t('tabs.favorites')"><Icon name="kango:heart-24" size="24" /></NuxtLink>
+        <NuxtLink v-if="loggedIn" to="/messages" class="khd__tool" :aria-label="t('tabs.messages')"><Icon name="kango:message-24" size="24" /></NuxtLink>
+        <NuxtLink :to="loggedIn ? '/profile' : '/login'" class="khd__tool khd__tool--user" :aria-label="loggedIn ? t('nav.profile') : t('nav.login')"><Icon name="kango:user-24" size="24" /></NuxtLink>
+      </nav>
       <nav class="khd__links" :aria-label="t('nav.service')">
         <KTextButton :to="loggedIn ? '/profile' : '/login'" size="sm">
           <template #icon-left><Icon name="kango:user-16" size="16" /></template>
@@ -116,85 +134,80 @@ const query = computed({
 .khd.khd--search .khd__filter { display: inline-flex; grid-column: 3; grid-row: 2; }
 .khd.khd--search .khd__find { display: none; }
 
-/* Брейкпоинт desktop 1380px (media query не принимает переменные).
-   Одна строка: логотип, белая плашка (категории, поиск, город, «Найти»), справа служебные ссылки.
-   Над баннером главной шапка прозрачная, плашка остаётся белой. */
-.khd__links { display: none; }
+/* Desktop 1380+ (композиция как у крупных досок объявлений): две строки.
+   Верхняя: слева «О нас» и «Поддержка», справа «Разместить объявление».
+   Основная: логотип, синяя «Все категории», поле поиска с городом внутри, язык, справа избранное, сообщения и профиль. */
+.khd__links, .khd__tools { display: none; }
 @media (min-width: 1380px) {
-  .khd__main,
-  .khd.khd--search .khd__main {
-    position: relative;
-    max-width: 1380px;
-    margin-inline: auto;
-    grid-template-columns: auto auto minmax(0, 1fr) auto auto auto;
-    grid-template-rows: 44px;
-    gap: 8px;
-    padding: 32px 50px 20px;
-    border-radius: 0;
-    box-shadow: none;
-  }
-  /* белая плашка за колонками 2-6 (категории ... «Найти») */
-  .khd__main::before,
-  .khd.khd--search .khd__main::before {
-    content: '';
-    grid-column: 2 / 6;
-    grid-row: 1;
-    align-self: stretch;
-    margin: -6px -9px;
-    border-radius: 16px;
-    background: var(--color-background);
-  }
-  .khd .khd__logo { grid-column: 1; grid-row: 1; margin-right: 16px; }
-  .khd .khd__logo :deep(img) { width: auto; height: 41px; }
-  .khd .khd__cats { display: inline-flex; grid-column: 2; grid-row: 1; min-width: 155px; height: 44px; white-space: nowrap; z-index: 1; }
-  .khd .khd__search,
-  .khd.khd--search .khd__search { display: contents; }
-  .khd .khd__search > :first-child { grid-column: 3; grid-row: 1; z-index: 1; }
-  /* на desktop фильтры открываются со страниц списков (как в макете главной), кнопки в шапке нет */
-  .khd .khd__filter,
-  .khd.khd--search .khd__filter { display: none; }
-  .khd .khd__city { grid-column: 4; grid-row: 1; margin-inline: 8px; height: 44px; z-index: 1; }
-  .khd .khd__find,
-  .khd.khd--search .khd__find { display: inline-flex; grid-column: 5; grid-row: 1; min-width: 112px; height: 44px; z-index: 1; }
-  .khd .khd__links { display: flex; grid-column: 6; grid-row: 1; align-items: center; gap: 12px; margin-left: 4px; white-space: nowrap; }
-  .khd__links :deep(.ktb) { color: var(--color-label-primary); }
-}
-
-@media (min-width: 1380px) { .khd .khd__searchbtn, .khd .khd__lang--m { display: none; } .khd .khd__lang--links { display: block; } }
-
-/* Wide 1920px: макет из двух строк (верхняя строка со ссылками, ниже категории, поиск, «Найти», город), без плашки */
-@media (min-width: 1920px) {
-  .khd .khd__lang--top { display: block; }
+  .khd .khd__lang--top { display: none; }
   .khd__top {
     display: flex;
     align-items: center;
     justify-content: space-between;
     max-width: 1380px;
-    height: 32px;
+    height: 44px;
     margin-inline: auto;
-    padding: 12px 50px 0;
+    padding: 16px 50px 0;
   }
   .khd__tl { display: flex; align-items: center; gap: 24px; }
-  .khd__tl :deep(.ktb--sm) { color: var(--color-label-secondary); }
+  /* все ссылки верхней строки одного цвета и размера */
+  .khd__tl :deep(.ktb--sm),
+  .khd__tl :deep(.ktb--md) { color: var(--color-label-primary); font-size: var(--text-15-16); line-height: var(--leading-15-16); }
+  .khd__tl :deep(.ktb__icon) { color: var(--color-label-primary); }
+
   .khd__main,
   .khd.khd--search .khd__main {
+    max-width: 1380px;
+    margin-inline: auto;
     grid-template-columns: auto auto minmax(0, 1fr) auto auto;
     grid-template-rows: auto;
     gap: 12px;
-    padding: 20px 50px 0;
+    /* 44 (верхняя строка) + 10 + 52 + 22 = 128px, как --header-h в layout */
+    padding: 10px 50px 22px;
+    border-radius: 0;
+    box-shadow: none;
   }
-  .khd__main::before,
-  .khd.khd--search .khd__main::before { display: none; }
-  .khd .khd__logo { margin-right: 36px; }
-  .khd .khd__cats { width: 224px; height: 52px; background: var(--color-background); color: var(--color-label-primary); border: var(--border-width) solid var(--color-fill-color-3); }
+  .khd .khd__logo { grid-column: 1; grid-row: 1; margin-right: 24px; }
+  .khd .khd__logo :deep(img) { width: auto; height: 41px; }
+  .khd .khd__cats { display: inline-flex; grid-column: 2; grid-row: 1; min-width: 176px; height: 52px; white-space: nowrap; }
+
+  /* поле поиска; город лежит внутри него справа */
   .khd .khd__search,
-  .khd.khd--search .khd__search { display: flex; align-items: center; gap: 12px; grid-column: 3; grid-row: 1; }
-  .khd .khd__search > :first-child { grid-column: auto; grid-row: auto; }
+  .khd.khd--search .khd__search { display: contents; }
+  .khd .khd__search > :first-child {
+    grid-column: 3;
+    grid-row: 1;
+    height: 52px;
+    padding: 0 calc(var(--khd-city-w, 140px) + 16px) 0 16px;
+  }
+  .khd .khd__city { grid-column: 3; grid-row: 1; justify-self: end; margin-inline: 0 8px; height: 40px; max-width: 180px; z-index: 1; }
+  /* вместо «Найти» справа от поля стоит переключатель языка (отправка поиска по Enter) */
   .khd .khd__find,
-  .khd.khd--search .khd__find { grid-column: auto; flex: none; height: 52px; }
+  .khd.khd--search .khd__find { display: none; }
+  .khd .khd__lang--m,
+  .khd.khd--search .khd__lang--m { display: block; grid-column: 4; grid-row: 1; }
+  /* на desktop фильтры открываются со страниц списков, кнопки в шапке нет */
   .khd .khd__filter,
-  .khd.khd--search .khd__filter { display: inline-flex; grid-column: 4; grid-row: 1; }
-  .khd .khd__city { grid-column: 5; margin-inline: 0; height: auto; }
-  .khd .khd__links { display: none; }
+  .khd.khd--search .khd__filter { display: none; }
+
+  /* Раскрытый поиск: ширина поля не меняется, вместо города внутри поля справа стоит «Найти» */
+  .khd.khd--searching .khd__city { display: none; }
+  .khd.khd--searching .khd__search > :first-child { padding-right: 124px; }
+  .khd.khd--searching .khd__find { display: inline-flex; grid-column: 3; grid-row: 1; justify-self: end; margin-right: 6px; min-width: 104px; height: 40px; z-index: 1; }
+
+  /* в поле поиска шапки крестика очистки нет */
+  .khd .khd__search :deep(.ksf__clear) { display: none; }
+
+  .khd .khd__tools { display: flex; grid-column: 5; grid-row: 1; align-items: center; gap: 4px; }
+  /* язык, избранное, сообщения и профиль: одинаковые круглые кнопки на белой подложке, один цвет иконок */
+  .khd .khd__tool,
+  .khd .khd__lang--m :deep(.lang__btn) { display: inline-flex; align-items: center; justify-content: center; height: 44px; border-radius: 22px; background: color-mix(in srgb, var(--color-background) 85%, transparent); color: var(--color-label-primary); text-decoration: none; transition: color 0.15s ease-out, background-color 0.15s ease-out; }
+  .khd .khd__tool { width: 44px; }
+  .khd .khd__lang--m :deep(.lang__btn) { padding-inline: 12px; }
+  .khd .khd__tool:focus-visible { outline: var(--border-width-strong) solid var(--color-stroke-primary); outline-offset: 2px; }
+  .khd .khd__searchbtn, .khd .khd__links { display: none; }
+}
+@media (min-width: 1380px) and (hover: hover) {
+  .khd .khd__tool:hover { color: var(--color-fill-color-4); background: var(--color-fill-tint); }
 }
 </style>

@@ -41,6 +41,10 @@ function onKey(e: KeyboardEvent) {
 
 <style scoped>
 .list { margin: 0; padding: 0; list-style: none; }
-.list li { border-bottom: var(--border-width) solid var(--color-separator-gray); }
+.list { display: flex; flex-direction: column; gap: 2px; }
+/* строка: текст и галочка отступают от края подсветки одинаково (12px), подсветка скруглена */
+.list li :deep(.ktr--row) { min-height: 44px; padding-inline: 12px; border-radius: var(--radius-md); transition: background-color 0.15s ease-out; }
+@media (hover: hover) and (pointer: fine) { .list li :deep(.ktr--row:hover) { background: var(--color-fill-gray-3); } }
+.list li :deep(.ktr--row:focus-visible) { outline: var(--border-width-strong) solid var(--color-stroke-primary); outline-offset: -2px; }
 .empty { margin: 0; padding: 24px 0; color: var(--color-label-secondary); font-size: var(--text-16-20); line-height: var(--leading-16-20); text-align: center; }
 </style>

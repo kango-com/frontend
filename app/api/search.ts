@@ -3,6 +3,7 @@ import { apiFetch } from './client'
 
 export const searchApi = {
   suggest: (q: string, signal?: AbortSignal) => apiFetch<SearchSuggestion[]>('/search/suggest', { query: { q }, signal }),
+  popular: () => apiFetch<SearchSuggestion[]>('/search/popular'),
   history: () => apiFetch<SearchHistoryItem[]>('/search/history'),
   saveHistory: (text: string, categoryTitle?: string) =>
     apiFetch<SearchHistoryItem>('/search/history', { method: 'POST', body: { text, categoryTitle } }),

@@ -50,16 +50,16 @@ const submit = (q: string) => router.push({ path: '/search', query: q ? { q } : 
 /* Desktop: поиск уже в шапке, в обложке крупный заголовок слева (слово «здесь» оранжевое) и подпись */
 @media (min-width: 1380px) {
   .hero { min-height: 0; }
-  .hero__title { max-width: 500px; font-family: var(--font-sans); font-size: 68px; line-height: 72px; letter-spacing: -0.01em; }
+  .hero__title { max-width: 560px; font-family: var(--font-sans); font-size: 76px; line-height: 78px; font-weight: 600; letter-spacing: -0.025em; }
   .hero__accent { color: var(--color-fill-primary); }
-  .hero__subtitle { margin-top: 12px; color: var(--color-fill-gray); font-size: 28px; line-height: 32px; }
+  .hero__subtitle { margin-top: 20px; color: var(--color-label-primary); font-size: 24px; line-height: 32px; font-weight: var(--font-weight-medium); }
   .hero__bar { display: none; }
 }
 
 /* Wide 1920: заголовок справа от разделов, компактный (как в макете 1920) */
 @media (min-width: 1920px) {
-  .hero__title { max-width: 254px; font-family: var(--font-sans-tight); font-size: 34px; line-height: 36px; letter-spacing: 0; }
+  .hero__title { max-width: 254px; font-family: var(--font-sans-tight); font-size: 34px; line-height: 36px; font-weight: var(--font-weight-medium); letter-spacing: 0; }
   .hero__accent { color: inherit; }
-  .hero__subtitle { margin-top: 8px; color: var(--color-label-primary); font-size: var(--text-17-20); line-height: var(--leading-17-20); }
+  .hero__subtitle { margin-top: 8px; color: var(--color-label-primary); font-size: var(--text-17-20); line-height: var(--leading-17-20); font-weight: 400; }
 }
 </style>

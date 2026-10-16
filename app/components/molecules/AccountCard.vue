@@ -37,14 +37,15 @@ defineProps<{
   height: 100%;
   padding: 12px;
   border-radius: var(--radius-md);
-  background: var(--color-fill-gray-3);
+  background: var(--color-background);
+  box-shadow: 0 2px 8px color-mix(in srgb, var(--color-label-primary) 8%, transparent);
   color: var(--color-label-primary);
 }
-.acc__title { margin: 0; padding: 4px 0 0 4px; font-size: var(--text-16-16); line-height: var(--leading-16-16); font-weight: var(--font-weight-medium); }
-.acc__list { display: flex; flex-direction: column; gap: 0; margin: 0; padding: 0; list-style: none; }
+.acc__title { margin: 0; padding: 4px 0 0 4px; font-size: var(--text-17-20); line-height: var(--leading-17-20); font-weight: var(--font-weight-medium); }
+.acc__list { display: flex; flex-direction: column; gap: 8px; margin: 0; padding: 0; list-style: none; }
 .acc .acc__link { display: flex; align-items: center; gap: 12px; padding: 2px 4px; color: inherit; font-size: var(--text-16-20); text-decoration: none; }
 .acc .acc__link:focus-visible { outline: var(--border-width-strong) solid var(--color-stroke-primary); outline-offset: 2px; border-radius: var(--radius-md); }
-.acc__icon { display: inline-flex; flex: none; align-items: center; justify-content: center; width: 32px; height: 32px; border-radius: 50%; background: var(--color-fill-white); color: var(--color-fill-color-3); }
+.acc__icon { display: inline-flex; flex: none; align-items: center; justify-content: center; width: 32px; height: 32px; border-radius: 50%; background: var(--color-fill-tint); color: var(--color-fill-color-3); }
 .acc .acc__login { margin-top: auto; }
 @media (hover: hover) { .acc .acc__link:hover { color: var(--color-fill-color-4); } }
 </style>

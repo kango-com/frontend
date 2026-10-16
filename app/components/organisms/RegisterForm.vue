@@ -1,9 +1,15 @@
 <script setup lang="ts">
-import { isEmail, passwordStrength, safeRedirect } from '~/utils/password'
+import { isEmail, passwordStrength } from '~/utils/password'
+
+const props = defineProps<{
+  /** Форма в модальном окне входа */
+  modal?: boolean
+}>()
 
 const auth = useAuthStore()
+const ui = useUiStore()
 const route = useRoute()
-const router = useRouter()
+const done = useAuthDone(() => props.modal)
 
 const name = ref('')
 const email = ref('')
@@ -28,7 +34,7 @@ async function submit() {
   if (!validate()) return
   try {
     await auth.register({ name: name.value.trim(), email: email.value.trim(), password: password.value })
-    await router.push(safeRedirect(route.query.redirect))
+    await done()
   } catch {
     errors.name = auth.fieldErrors.name
     errors.email = auth.fieldErrors.email
@@ -39,8 +45,8 @@ async function submit() {
 </script>
 
 <template>
-  <AuthCard :title="tr('Регистрация')" :lead="tr('Чтобы подавать объявления и управлять ими, создайте аккаунт')">
-    <form class="rf" novalidate @submit.prevent="submit">
+  <AuthCard :title="tr('Регистрация')" :lead="tr('Чтобы подавать объявления и управлять ими, создайте аккаунт')" :plain="modal">
+    <form class="rf" :class="{ 'rf--modal': modal }" novalidate @submit.prevent="submit">
       <KTextField v-model="name" :placeholder="tr('Имя')" autocomplete="name" :error="errors.name" />
       <KTextField v-model="email" type="email" placeholder="E-mail" autocomplete="username" :error="errors.email" />
       <PasswordField v-model="password" strength autocomplete="new-password" :error="errors.password" />
@@ -49,10 +55,10 @@ async function submit() {
       <KButton block type="submit" :disabled="busy">{{ busy ? tr('Регистрация...') : tr('Зарегистрироваться') }}</KButton>
       <p class="rf__policy">
         {{ tr('Нажимая «Зарегистрироваться», вы соглашаетесь с') }}
-        <KTextButton to="/documents/privacy" size="sm" underline>{{ tr('политикой конфиденциальности') }}</KTextButton>
+        <KTextButton to="/documents/privacy" size="sm" underline @click="modal && ui.close('login')">{{ tr('политикой конфиденциальности') }}</KTextButton>
       </p>
     </form>
-    <p class="rf__switch">{{ tr('Зарегистрированы?') }} <KTextButton :to="loginLink" size="sm">{{ tr('Войти') }}</KTextButton></p>
+    <p class="rf__switch" :class="{ 'rf__switch--modal': modal }">{{ tr('Зарегистрированы?') }} <KTextButton :to="modal ? undefined : loginLink" size="sm" @click="modal && (ui.authView = 'login')">{{ tr('Войти') }}</KTextButton></p>
   </AuthCard>
 </template>
 
@@ -61,4 +67,6 @@ async function submit() {
 .rf__error { margin: 0; color: var(--color-fill-error); font-size: var(--text-14-16); line-height: var(--leading-14-16); }
 .rf__policy, .rf__switch { margin: 0; color: var(--color-label-secondary); font-size: var(--text-12-16); line-height: var(--leading-12-16); text-align: center; }
 .rf__switch { font-size: var(--text-14-16); }
+.rf--modal { text-align: left; }
+.rf__switch--modal { margin-top: 4px; padding-top: 18px; border-top: var(--border-width) solid var(--color-separator-gray); }
 </style>

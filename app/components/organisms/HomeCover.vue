@@ -24,8 +24,8 @@
 
 /* 1380+: заголовок слева сверху на баннере, под ним в ряд пять карточек (отсчёт от верха обложки: заголовок 151, ряд 459) */
 @media (min-width: 1380px) {
-  .cover__inner { padding-top: 151px; }
-  .cover__sections { margin-top: 120px; }
+  .cover__inner { padding-top: 167px; }
+  .cover__sections { margin-top: 104px; }
 }
 
 /* Wide 1920: слева четыре раздела, справа заголовок на баннере */
@@ -36,7 +36,7 @@
     grid-template-areas: 'sections hero';
     align-items: start;
     min-height: 407px;
-    padding-top: calc(var(--header-h, 104px) + 32px);
+    padding-top: calc(var(--header-h, 128px) + 8px);
   }
   .cover__sections { grid-area: sections; margin-top: 0; }
   .cover__hero { grid-area: hero; margin: 34px 0 0 11px; }

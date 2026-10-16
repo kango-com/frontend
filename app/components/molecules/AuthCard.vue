@@ -2,11 +2,13 @@
 defineProps<{
   title: string
   lead?: string
+  /** Внутри модального окна: без собственной рамки и отступов карточки */
+  plain?: boolean
 }>()
 </script>
 
 <template>
-  <section class="acard">
+  <section class="acard" :class="{ 'acard--plain': plain }">
     <h1 class="acard__title">{{ title }}</h1>
     <p v-if="lead" class="acard__lead">{{ lead }}</p>
     <slot />
@@ -21,4 +23,7 @@ defineProps<{
 @media (min-width: 768px) {
   .acard { margin-block: 32px; padding: 32px; border: var(--border-width) solid var(--color-stroke-gray); border-radius: var(--radius-md); }
 }
+.acard.acard--plain { gap: 20px; max-width: none; margin: 0; padding: 12px 0 0; border: 0; border-radius: 0; text-align: center; }
+.acard--plain .acard__title { font-size: 26px; line-height: 30px; }
+.acard--plain .acard__lead { margin: -12px 0 0; }
 </style>

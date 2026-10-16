@@ -73,4 +73,6 @@
   /* Motion */
   --duration-base: 300ms;
   --ease-out: ease-out;
+  /* сильный ease-out для заметных появлений (встроенный ease-out слишком слабый) */
+  --ease-out-strong: cubic-bezier(0.23, 1, 0.32, 1);
 }

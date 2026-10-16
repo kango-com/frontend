@@ -1,24 +1,23 @@
 /**
- * Шапка прозрачна над обложкой и заливается после того, как обложка прокручена
+ * Шапка прозрачна над обложкой только пока страница в самом верху и заливается сразу, как началась прокрутка
  * (комментарий дизайнера к «Поведение навигационной панели при скролле»).
- * Передайте элемент обложки; при уходе со страницы шапка снова становится залитой.
+ * Параметр обложки оставлен для совместимости вызовов; при уходе со страницы шапка снова становится залитой.
  */
-export function useHeaderOverCover(target: Ref<HTMLElement | undefined>) {
+export function useHeaderOverCover(_target?: Ref<HTMLElement | undefined>) {
   const solid = useState('header-solid', () => true)
-  let observer: IntersectionObserver | null = null
+
+  // при блокировке прокрутки (модалка, поиск) позиция страницы лежит в body.scrollTop
+  const offset = () => window.scrollY || document.body.scrollTop
+  const update = () => { solid.value = offset() > 1 }
 
   onMounted(() => {
-    solid.value = false
-    const header = document.querySelector('.app-header')?.getBoundingClientRect().height ?? 50
-    observer = new IntersectionObserver(([entry]) => { solid.value = !entry?.isIntersecting }, {
-      rootMargin: `-${Math.round(header)}px 0px 0px 0px`,
-      threshold: 0
-    })
-    if (target.value) observer.observe(target.value)
+    update()
+    // scroll у body не всплывает, поэтому слушаем на фазе перехвата
+    document.addEventListener('scroll', update, { passive: true, capture: true })
   })
 
   onBeforeUnmount(() => {
-    observer?.disconnect()
+    document.removeEventListener('scroll', update, { capture: true })
     solid.value = true
   })
 }

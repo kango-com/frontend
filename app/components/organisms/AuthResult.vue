@@ -1,19 +1,23 @@
 <script setup lang="ts">
+defineEmits<{ action: [] }>()
+
 defineProps<{
   title: string
   text?: string
   action: string
-  to: string
+  to?: string
+  /** Внутри модального окна */
+  plain?: boolean
   /** Дополнительная строка под кнопкой («Вы будете перенаправлены...») */
   note?: string
 }>()
 </script>
 
 <template>
-  <AuthCard :title="title">
+  <AuthCard :title="title" :plain="plain">
     <p v-if="text" class="ares__text" role="status">{{ text }}</p>
     <slot />
-    <KButton block :to="to">{{ action }}</KButton>
+    <KButton block :to="to" @click="$emit('action')">{{ action }}</KButton>
     <p v-if="note" class="ares__note">{{ note }}</p>
   </AuthCard>
 </template>

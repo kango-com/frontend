@@ -12,6 +12,7 @@ const route = useRoute()
     <KFooter />
     <AppTabBar />
     <CitySelector />
+    <LoginModal />
     <FilterPanel />
     <CategoriesMenu />
   </div>
@@ -35,10 +36,10 @@ const route = useRoute()
 }
 .shell__skip:focus { transform: none; }
 @media (min-width: 1380px) {
-  .shell { --header-h: 96px; padding-bottom: 0; }
+  .shell { --header-h: 128px; padding-bottom: 0; }
 }
 @media (min-width: 1920px) {
-  .shell { --header-h: 104px; }
+  .shell { --header-h: 128px; }
 }
 @media (max-width: 767px) {
   .shell__header--no-mobile { display: none; }
