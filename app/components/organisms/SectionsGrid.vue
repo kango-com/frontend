@@ -41,6 +41,8 @@ const caption = (id: Section) => {
 @media (min-width: 768px) {
   .sections { grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; }
 }
+/* Без счётчиков объявлений на всех ширинах: только название и стрелка, как в макете */
+.sections :deep(.kcat__caption) { display: none; }
 /* карточка аккаунта только на desktop */
 .sections__account { display: none; }
 @media (min-width: 1380px) {

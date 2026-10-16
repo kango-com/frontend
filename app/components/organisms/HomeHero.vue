@@ -5,13 +5,20 @@ const ui = useUiStore()
 const router = useRouter()
 
 const query = ref('')
+// Слово с оранжевым росчерком под ним (мобильный и планшет): титул режем по нему
+const titleParts = computed(() => {
+  const start = t('hero.titleStart')
+  const word = t('hero.titleUnderline')
+  const i = start.indexOf(word)
+  return i < 0 ? { before: start, word: '', after: '' } : { before: start.slice(0, i), word, after: start.slice(i + word.length) }
+})
 const submit = (q: string) => router.push({ path: '/search', query: q ? { q } : undefined })
 </script>
 
 <template>
   <div class="hero">
     <div class="hero__text">
-      <h1 class="hero__title">{{ t('hero.titleStart') }} <span class="hero__accent">{{ t('hero.titleAccent') }}</span></h1>
+      <h1 class="hero__title">{{ titleParts.before }}<span v-if="titleParts.word" class="hero__underline">{{ titleParts.word }}</span>{{ titleParts.after }} <span class="hero__accent">{{ t('hero.titleAccent') }}</span></h1>
       <p class="hero__subtitle">{{ t('hero.subtitle') }}</p>
     </div>
     <div class="hero__bar">
@@ -31,6 +38,14 @@ const submit = (q: string) => router.push({ path: '/search', query: q ? { q } : 
   line-height: var(--leading-28-28);
   font-weight: var(--font-weight-medium);
 }
+.hero__underline { position: relative; }
+.hero__underline::after {
+  content: '';
+  position: absolute;
+  inset: auto -2px -6px;
+  height: 7px;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 7' preserveAspectRatio='none'%3E%3Cpath d='M1 5.5C20 2 55 1.5 99 3.2' fill='none' stroke='%23fd4a00' stroke-width='2.4' stroke-linecap='round'/%3E%3C/svg%3E") center / 100% 100% no-repeat;
+}
 .hero__subtitle {
   margin: 8px 0 0;
   color: var(--color-label-primary);
@@ -43,6 +58,11 @@ const submit = (q: string) => router.push({ path: '/search', query: q ? { q } : 
 /* Иврит (RTL): баннер не зеркалится, кенгуру справа, поэтому блок заголовка уходит в левую часть обложки */
 @media (max-width: 1919px) {
   .hero__text:dir(rtl) { width: fit-content; margin-inline-start: auto; }
+}
+
+/* Росчерк на мобильном и планшете; на desktop акцент - оранжевое слово */
+@media (min-width: 1380px) {
+  .hero__underline::after { display: none; }
 }
 
 /* Планшет: заголовок сверху, поиск и города внизу обложки */

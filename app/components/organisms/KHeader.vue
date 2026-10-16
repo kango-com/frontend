@@ -77,6 +77,7 @@ const query = computed({
       <KButton ref="cityBtn" class="khd__city" variant="plain" @click="emit('city')">
         <template #icon-left><Icon name="kango:map-pin-16" size="16" /></template>
         {{ tr(city) }}
+        <template #icon-right><Icon class="khd__chev" name="kango:chevron-down-16" size="16" /></template>
       </KButton>
       <nav class="khd__tools" :aria-label="t('nav.service')">
         <NuxtLink to="/favorites" class="khd__tool" :aria-label="t('tabs.favorites')"><Icon name="kango:heart-24" size="24" /></NuxtLink>
@@ -122,6 +123,23 @@ const query = computed({
 .khd .khd__find,
 .khd .khd__search,
 .khd .khd__filter { display: none; }
+
+/* Мобильный и планшет: город, поиск и язык - светлые «таблетки» на подложке, как в макете */
+@media (max-width: 1379px) {
+  .khd .khd__city,
+  .khd .khd__searchbtn,
+  .khd .khd__lang--m :deep(.lang__btn) {
+    height: 40px;
+    border-radius: 20px;
+    background: color-mix(in srgb, var(--color-background) 85%, transparent);
+    box-shadow: 0 1px 4px color-mix(in srgb, var(--color-label-primary) 10%, transparent);
+  }
+  .khd .khd__city { padding: 0 12px; font-size: var(--text-15-16); line-height: var(--leading-15-16); font-weight: var(--font-weight-medium); }
+  .khd .khd__city :deep(.kbtn__icon) { color: var(--color-fill-color); }
+  .khd .khd__searchbtn { width: 40px; }
+  .khd .khd__lang--m :deep(.lang__btn) { padding: 0 12px; font-weight: var(--font-weight-medium); }
+}
+@media (min-width: 1380px) { .khd .khd__chev { display: none; } }
 
 /* Мобильная и планшетная шапка со строкой поиска */
 .khd.khd--search .khd__main {

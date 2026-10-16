@@ -24,6 +24,7 @@
   },
   "hero": {
     "titleStart": "כל מה שצריך,",
+    "titleUnderline": "שצריך",
     "titleAccent": "כאן",
     "subtitle": "עבודה, דירות, מוצרים, שירותים"
   },

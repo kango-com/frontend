@@ -24,6 +24,7 @@
   },
   "hero": {
     "titleStart": "Всё, что нужно,",
+    "titleUnderline": "нужно",
     "titleAccent": "здесь",
     "subtitle": "Работа, жильё, товары, услуги"
   },
