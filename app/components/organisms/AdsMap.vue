@@ -60,20 +60,24 @@ function fit() {
   map.fitBounds(b, { padding: 48, maxZoom: 15, duration: 0 })
 }
 
+/** Внешний элемент принадлежит MapLibre (он сам двигает его через transform), вид и анимации - во внутренней кнопке */
 function pinElement(id: string, price: number, approx: boolean, title: string) {
+  const wrap = document.createElement('div')
+  wrap.className = 'kmap-pin-wrap'
+  if (id === props.selectedId) wrap.classList.add('is-active')
+  wrap.dataset.id = id
   const el = document.createElement('button')
   el.type = 'button'
   el.className = 'kmap-pin'
   if (approx) el.classList.add('kmap-pin--approx')
-  if (id === props.selectedId) el.classList.add('is-active')
-  el.dataset.id = id
   el.textContent = (approx ? '≈ ' : '') + formatPriceShort(price)
   el.setAttribute('aria-label', `${title}, ${formatPriceShort(price)}${approx ? `, ${tr('приблизительное место')}` : ''}`)
   el.addEventListener('click', (e) => {
     e.stopPropagation()
     emit('select', id)
   })
-  return el
+  wrap.append(el)
+  return wrap
 }
 
 function clusterElement(count: number, clusterId: number, lngLat: [number, number]) {
@@ -174,7 +178,7 @@ watch(() => props.points, () => {
 })
 watch(() => props.fitKey, () => nextTick(fit))
 watch(() => props.selectedId, (id) => {
-  mapEl.value?.querySelectorAll<HTMLElement>('.kmap-pin').forEach(el => el.classList.toggle('is-active', !!id && el.dataset.id === id))
+  mapEl.value?.querySelectorAll<HTMLElement>('.kmap-pin-wrap').forEach(el => el.classList.toggle('is-active', !!id && el.dataset.id === id))
 })
 watch(() => props.area, (a) => { (map?.getSource('area') as GeoJSONSource | undefined)?.setData(areaGeo(a)) })
 
@@ -324,12 +328,13 @@ defineExpose({
   transition: transform 0.12s ease-out, background-color 0.12s ease-out;
 }
 .kmap .kmap-pin--approx { outline: 1.5px dashed var(--color-fill-gray); outline-offset: -3px; }
-.kmap .kmap-pin.is-active { z-index: 2; background: var(--color-fill-primary); color: var(--color-label-white); transform: scale(1.12); }
+.kmap .kmap-pin-wrap.is-active { z-index: 2; }
+.kmap .kmap-pin-wrap.is-active .kmap-pin { background: var(--color-fill-primary); color: var(--color-label-white); transform: scale(1.12); }
 .kmap .kmap-pin:focus-visible, .kmap .kmap-cluster:focus-visible { outline: 3px solid var(--color-fill-color-3); outline-offset: 2px; }
 .kmap .kmap-cluster { display: block; width: 44px; height: 44px; padding: 0; border: 0; background: none; cursor: pointer; }
 .kmap .kmap-cluster span { display: grid; width: 44px; height: 44px; place-items: center; border: 3px solid var(--color-background); border-radius: 50%; background: var(--color-fill-primary); box-shadow: 0 2px 6px color-mix(in srgb, var(--color-label-primary) 30%, transparent); color: var(--color-label-white); font-family: var(--font-sans); font-size: 14px; font-weight: var(--font-weight-semibold); }
 @media (hover: hover) and (pointer: fine) {
-  .kmap .kmap-pin:not(.is-active):hover { background: var(--color-label-primary); color: var(--color-label-white); }
+  .kmap .kmap-pin-wrap:not(.is-active) .kmap-pin:hover { background: var(--color-label-primary); color: var(--color-label-white); }
   .kmap .kmap-cluster:hover span { transform: scale(1.08); }
 }
 .kmap .maplibregl-ctrl-attrib { font-size: 11px; }

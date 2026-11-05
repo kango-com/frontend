@@ -46,7 +46,7 @@ export default defineNuxtConfig({
     // язык браузера не определяем (пока переведена только часть интерфейса), выбор хранит плагин 03.lang.ts
     detectBrowserLanguage: false
   },
-  css: ['~/assets/css/tokens.css', '~/assets/css/base.css'],
+  css: ['maplibre-gl/dist/maplibre-gl.css', '~/assets/css/tokens.css', '~/assets/css/base.css'],
   components: [{ path: '~/components', pathPrefix: false }],
   fonts: {
     families: [

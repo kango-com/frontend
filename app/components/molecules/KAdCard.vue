@@ -8,6 +8,8 @@ const props = defineProps<{
   imageAlt?: string
   to?: string
   favorite?: boolean
+  /** Горизонтальная карточка (фото слева): списки рядом с картой */
+  compact?: boolean
 }>()
 
 defineEmits<{ 'toggle-favorite': [] }>()
@@ -17,7 +19,7 @@ const attrs = computed(() => (props.to ? { to: props.to } : {}))
 </script>
 
 <template>
-  <article class="kad">
+  <article class="kad" :class="{ 'kad--compact': compact }">
     <div class="kad__media">
       <img v-if="image" class="kad__img" :src="image" :alt="imageAlt ?? ''" loading="lazy">
       <KIconButton
@@ -78,6 +80,12 @@ const attrs = computed(() => (props.to ? { to: props.to } : {}))
 .kad__price { font-size: var(--text-14-16); line-height: var(--leading-14-16); font-weight: var(--font-weight-semibold); }
 .kad__location { color: var(--color-label-secondary); font-size: var(--text-10-12); line-height: var(--leading-10-12); }
 
+/* Горизонтальный вариант: фото слева, текст справа (список рядом с картой) */
+.kad--compact { flex-direction: row; align-items: stretch; }
+.kad--compact .kad__media { flex: 0 0 132px; width: 132px; height: auto; min-height: 104px; aspect-ratio: auto; }
+.kad--compact .kad__body { flex: 1; min-width: 0; justify-content: center; gap: 6px; padding: 10px 12px; }
+.kad--compact .kad__fav { top: 4px; right: auto; left: 4px; }
+
 /* Брейкпоинт desktop 1380px */
 @media (min-width: 1380px) {
   .kad { border: 0; }
@@ -86,5 +94,8 @@ const attrs = computed(() => (props.to ? { to: props.to } : {}))
   .kad__title,
   .kad__price { font-size: var(--text-15-16); line-height: var(--leading-15-16); }
   .kad__location { font-size: var(--text-12-12); line-height: var(--leading-12-12); }
+  .kad--compact { border: var(--border-width) solid var(--color-stroke-gray); }
+  .kad--compact .kad__media { aspect-ratio: auto; }
+  .kad--compact .kad__body { gap: 6px; padding: 10px 12px; }
 }
 </style>

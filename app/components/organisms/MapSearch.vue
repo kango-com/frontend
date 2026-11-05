@@ -78,10 +78,30 @@ async function toggleFavorite(id: string) {
 
 // на телефоне список открывается шторкой поверх карты
 const sheet = ref(false)
+
+// высота блока = от его верха до низа экрана: карта целиком помещается на первом экране, а не обрезается снизу
+const rootEl = ref<HTMLElement>()
+const blockH = ref<number>()
+function measure() {
+  if (!rootEl.value) return
+  const top = rootEl.value.getBoundingClientRect().top + window.scrollY
+  blockH.value = Math.round(window.innerHeight - top - 16)
+}
+let ro: ResizeObserver | undefined
+onMounted(() => {
+  measure()
+  ro = new ResizeObserver(measure)
+  ro.observe(document.documentElement)
+  window.addEventListener('resize', measure)
+})
+onBeforeUnmount(() => {
+  ro?.disconnect()
+  window.removeEventListener('resize', measure)
+})
 </script>
 
 <template>
-  <div class="msr">
+  <div ref="rootEl" class="msr" :style="blockH ? { height: `${blockH}px` } : undefined">
     <aside class="msr__side" :aria-label="tr('Объявления на карте')">
       <p class="msr__count" aria-live="polite">
         <template v-if="status === 'loading' && !points.length">{{ tr('Загрузка...') }}</template>
@@ -93,7 +113,7 @@ const sheet = ref(false)
       <p v-else-if="status === 'success' && !visible.length" class="msr__note">{{ tr('В этой области ничего нет. Отдалите карту или измените фильтры.') }}</p>
       <ul ref="listEl" class="msr__list">
         <li v-for="p in shown" :key="p.id" :data-id="p.id" :class="{ 'msr__item--on': highlight === p.id }" @mouseenter="hover(p)" @mouseleave="hover(null)" @focusin="hover(p)">
-          <KAdCard :title="p.title" :price="formatPrice(p.price)" :location="p.location" :image="p.image" :to="`/ad/${p.id}`" :favorite="p.isFavorite" @toggle-favorite="toggleFavorite(p.id)" />
+          <KAdCard compact :title="p.title" :price="formatPrice(p.price)" :location="p.location" :image="p.image" :to="`/ad/${p.id}`" :favorite="p.isFavorite" @toggle-favorite="toggleFavorite(p.id)" />
         </li>
       </ul>
       <KButton v-if="visible.length > shown.length" variant="outline" block @click="limit += LIMIT_STEP">{{ tr('Показать ещё') }}</KButton>
@@ -154,10 +174,10 @@ const sheet = ref(false)
 
 /* desktop: список слева, карта справа; плавающих карточки и кнопок нет */
 @media (min-width: 1380px) {
-  .msr { gap: 20px; height: calc(100dvh - var(--header-h) - 48px); min-height: 560px; margin-inline: 0; }
-  .msr__side { display: flex; flex: 0 0 440px; flex-direction: column; gap: 12px; padding-inline-end: 4px; overflow-y: auto; }
-  .msr__list { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px 12px; margin: 0; padding: 0; list-style: none; }
-  .msr__list > li { border-radius: var(--radius-md); outline: 2px solid transparent; outline-offset: 4px; transition: outline-color 0.15s ease-out; }
+  .msr { gap: 20px; height: calc(100dvh - var(--header-h) - 48px); min-height: 520px; margin-inline: 0; }
+  .msr__side { display: flex; flex: 0 0 400px; flex-direction: column; gap: 12px; padding: 4px; overflow-y: auto; scrollbar-width: thin; }
+  .msr__list { display: flex; flex-direction: column; gap: 10px; margin: 0; padding: 0; list-style: none; }
+  .msr__list > li { border-radius: var(--radius-md); outline: 2px solid transparent; outline-offset: 0; transition: outline-color 0.15s ease-out; }
   .msr__list > .msr__item--on { outline-color: var(--color-stroke-primary); }
   .msr__map { border-radius: var(--radius-md); }
   .msr__float { display: none; }
