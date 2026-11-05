@@ -33,7 +33,7 @@ const preview = computed(() => props.ticket.lastMessage?.text ?? '')
 @media (hover: hover) {
   .trow:hover { background: var(--color-fill-gray-4); }
 }
-.trow__main { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
+.trow__main { display: flex; flex: 1; flex-direction: column; gap: 4px; min-width: 0; }
 .trow__top { display: flex; align-items: center; gap: 8px; color: var(--color-label-secondary); font-size: var(--text-13-16); line-height: 16px; }
 .trow__time { margin-inline-start: auto; }
 .trow__subject { overflow: hidden; font-size: var(--text-16-20); line-height: var(--leading-16-20); font-weight: var(--font-weight-medium); text-overflow: ellipsis; white-space: nowrap; }
@@ -41,7 +41,7 @@ const preview = computed(() => props.ticket.lastMessage?.text ?? '')
 .trow__side { display: flex; flex: none; flex-direction: column; align-items: flex-end; gap: 8px; }
 .trow__dot { width: 10px; height: 10px; border-radius: 50%; background: var(--color-fill-primary); }
 @media (max-width: 479px) {
-  .trow { flex-direction: column; }
+  .trow { flex-direction: column; align-items: stretch; }
   .trow__side { flex-direction: row-reverse; align-items: center; }
 }
 </style>

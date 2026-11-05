@@ -14,11 +14,12 @@ const loading = computed(() => support.listStatus === 'loading' && !support.tick
 
 <template>
   <section class="stk" :aria-label="tr('Обращения в поддержку')">
-    <CabinetPageHead :title="tr('Поддержка')">
-      <KButton to="/profile/support/new" size="sm">{{ tr('Новое обращение') }}</KButton>
-    </CabinetPageHead>
+    <CabinetPageHead :title="tr('Поддержка')" />
 
-    <KSegmentControl v-model="filter" class="stk__filter" :options="FILTERS.map(f => ({ ...f, label: tr(f.label) }))" :label="tr('Показать')" />
+    <div class="stk__bar">
+      <KSegmentControl v-model="filter" class="stk__filter" :options="FILTERS.map(f => ({ ...f, label: tr(f.label) }))" :label="tr('Показать')" />
+      <KButton to="/profile/support/new" class="stk__new">{{ tr('Новое обращение') }}</KButton>
+    </div>
 
     <p v-if="loading" class="stk__note" role="status">{{ tr('Загрузка...') }}</p>
     <p v-else-if="support.listStatus === 'error'" class="stk__note" role="alert">
@@ -40,7 +41,9 @@ const loading = computed(() => support.listStatus === 'loading' && !support.tick
 
 <style scoped>
 .stk { display: flex; flex-direction: column; gap: 16px; max-width: 760px; }
-.stk__filter { max-width: 280px; }
+.stk__bar { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; }
+.stk__filter { flex: 1 1 200px; max-width: 280px; }
+.stk__new { flex: 0 0 auto; margin-inline-start: auto; }
 .stk__list { display: flex; flex-direction: column; gap: 10px; margin: 0; padding: 0; list-style: none; }
 .stk__empty { display: flex; flex-direction: column; align-items: flex-start; gap: 12px; }
 .stk__note { margin: 0; color: var(--color-label-secondary); font-size: var(--text-14-16); line-height: 20px; }
