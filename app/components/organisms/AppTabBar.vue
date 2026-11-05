@@ -1,5 +1,6 @@
 <script setup lang="ts">
 const auth = useAuthStore()
+const chat = useChatStore()
 const route = useRoute()
 
 const current = computed(() => {
@@ -15,7 +16,7 @@ const current = computed(() => {
 
 <template>
   <div class="app-tabbar">
-    <KTabBar :authorized="auth.isAuthed" :current="current" />
+    <KTabBar :authorized="auth.isAuthed" :current="current" :badges="{ messages: chat.unreadTotal }" />
   </div>
 </template>
 

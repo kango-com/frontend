@@ -51,3 +51,39 @@ export function formatDateRu(iso: string): string {
   const [y, m, d] = iso.split('-').map(Number)
   return y && m && d ? `${d} ${tr(MONTHS[m - 1]!)} ${y}` : iso
 }
+
+/** ISO-дата и время → «15 окт» (текущий год) или «15 окт 2025» */
+export function formatDay(iso: string, now: Date = new Date()): string {
+  const d = new Date(iso)
+  const base = `${d.getDate()} ${tr(MONTHS[d.getMonth()]!)}`
+  return d.getFullYear() === now.getFullYear() ? base : `${base} ${d.getFullYear()}`
+}
+
+const startOfDay = (x: Date) => new Date(x.getFullYear(), x.getMonth(), x.getDate()).getTime()
+const daysAgo = (iso: string, now: Date) => Math.round((startOfDay(now) - startOfDay(new Date(iso))) / 86_400_000)
+
+/** Время в списке диалогов: сегодня «10:38», вчера «Вчера», раньше «12 окт» */
+export function formatChatTime(iso: string, now: Date = new Date()): string {
+  const days = daysAgo(iso, now)
+  if (days <= 0) return time(new Date(iso))
+  if (days === 1) return tr('Вчера')
+  return formatDay(iso, now)
+}
+
+/** Разделитель дней в ленте сообщений: «Сегодня», «Вчера», «12 окт» */
+export function formatChatDay(iso: string, now: Date = new Date()): string {
+  const days = daysAgo(iso, now)
+  if (days <= 0) return tr('Сегодня')
+  if (days === 1) return tr('Вчера')
+  return formatDay(iso, now)
+}
+
+/** Время сообщения: «10:38» */
+export const formatClock = (iso: string): string => time(new Date(iso))
+
+/** Короткая цена для метки на карте: «5 500 ₪», «245 тыс. ₪», «2,45 млн ₪» */
+export function formatPriceShort(amount: number): string {
+  if (amount >= 1_000_000) return `${String(+(amount / 1_000_000).toFixed(2)).replace('.', ',')}${nbsp}${tr('млн')}${nbsp}₪`
+  if (amount >= 100_000) return `${Math.round(amount / 1000)}${nbsp}${tr('тыс.')}${nbsp}₪`
+  return `${formatNumber(amount)}${nbsp}₪`
+}

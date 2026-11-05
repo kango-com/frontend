@@ -9,7 +9,12 @@ export const demoUser: UserRecord = {
   name: 'Иван Петров',
   email: 'demo@kango.com',
   password: 'Passw0rd!',
-  createdAt: '2026-01-31T09:00:00.000Z'
+  createdAt: '2026-01-31T09:00:00.000Z',
+  phone: '+972 50 700 12 34',
+  whatsapp: true,
+  telegram: '@ivan_petrov',
+  language: 'ru',
+  notifications: { email: true, push: false, messages: true, moderation: true, support: true, promo: false }
 }
 
 export const authors: (AdAuthor & { phone: string, telegram?: string })[] = [

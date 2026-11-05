@@ -1,12 +1,14 @@
 import { http } from 'msw'
 import { adsHandlers } from './ads'
 import { authHandlers } from './auth'
+import { chatHandlers } from './chat'
 import { contentHandlers } from './content'
 import { filtersHandlers } from './filters'
 import { geoHandlers } from './geo'
 import { meHandlers } from './me'
 import { paymentsHandlers } from './payments'
 import { searchHandlers } from './search'
+import { supportHandlers } from './support'
 import { fail } from '../utils'
 
 export function createHandlers(base: string) {
@@ -17,6 +19,8 @@ export function createHandlers(base: string) {
     ...searchHandlers(base),
     ...filtersHandlers(base),
     ...meHandlers(base),
+    ...chatHandlers(base),
+    ...supportHandlers(base),
     ...paymentsHandlers(base),
     ...contentHandlers(base),
     // страховка: незнакомый запрос к API получает JSON-ответ 404 в формате контракта, а не HTML-страницу dev-сервера

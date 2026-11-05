@@ -1,10 +1,10 @@
 import { http } from 'msw'
 import { nameVariants } from '../names'
 import type { SectionInfo } from '~/types'
-import { allAds } from '../db'
-import { cities, districts, streetsOf } from '../fixtures/geo'
+import { publicAds } from '../db'
+import { cities, districts, pointInCity, streetsOf } from '../fixtures/geo'
 import { filterAds } from '../filtering'
-import { json, list, simulate } from '../utils'
+import { fail, json, list, simulate } from '../utils'
 
 const SECTION_TITLES: Record<string, string> = { work: 'Работа', realty: 'Недвижимость', goods: 'Товары', services: 'Услуги' }
 
@@ -42,10 +42,23 @@ export const geoHandlers = (base: string) => [
     return json(result.filter(s => s.title.toLowerCase().includes(q)))
   }),
 
+  // Мок геокодера: устойчивая точка в городе по тексту адреса (настоящий - Nominatim или свой сервис). exact=false - найден только город
+  http.get(`${base}/geo/geocode`, async ({ request }) => {
+    const err = await simulate(); if (err) return err
+    const url = new URL(request.url)
+    const name = (url.searchParams.get('city') ?? '').trim()
+    const address = (url.searchParams.get('address') ?? '').trim().toLowerCase()
+    const city = cities.find(c => c.name === name || c.id === name)
+    if (!city?.coordinates) return fail(404, 'not_found', 'Адрес не найден')
+    if (!address) return json({ point: city.coordinates, exact: false })
+    const h = [...address].reduce((n, ch) => (n * 31 + ch.charCodeAt(0)) >>> 0, 7)
+    return json({ point: pointInCity(city.id, h % 7, (h % 1000) / 1000, ((h >> 10) % 1000) / 1000)!, exact: true })
+  }),
+
   http.get(`${base}/sections`, async ({ request }) => {
     const err = await simulate(); if (err) return err
     const cityIds = list(new URL(request.url), 'city')
-    const ads = allAds()
+    const ads = publicAds()
     const sections: SectionInfo[] = (['work', 'realty', 'goods', 'services'] as const).map(id => ({
       id,
       title: SECTION_TITLES[id]!,

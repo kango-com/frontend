@@ -3,9 +3,11 @@ import { contentApi, isApiError, toApiError } from '~/api'
 import type { AttachedFile } from '~/components/molecules/KAttachFile.vue'
 import { isEmail } from '~/utils/password'
 
-/** Форма «Напишите нам»: имя, e-mail, сообщение, файл. Успех и ошибки показываются на месте. */
-const name = ref('')
-const email = ref('')
+/** Форма «Напишите нам»: имя, e-mail, сообщение, файл. Успех и ошибки показываются на месте.
+ *  В кабинете имя и e-mail подставляются из профиля, заголовок формы скрыт (он у страницы) */
+const props = defineProps<{ name?: string, email?: string, hideTitle?: boolean }>()
+const name = ref(props.name ?? '')
+const email = ref(props.email ?? '')
 const phone = ref('')
 const agree = ref(false)
 const message = ref('')
@@ -59,7 +61,7 @@ async function submit() {
 
 <template>
   <section class="fbk" aria-labelledby="fbk-title">
-    <h2 id="fbk-title" class="fbk__title">{{ tr('Напишите нам') }}</h2>
+    <h2 id="fbk-title" class="fbk__title" :class="{ 'fbk__title--hidden': hideTitle }">{{ tr('Напишите нам') }}</h2>
 
     <div v-if="status === 'sent'" class="fbk__done" role="status">
       <p>{{ tr('Спасибо! Сообщение отправлено, мы ответим на указанную почту.') }}</p>
@@ -89,6 +91,7 @@ async function submit() {
 
 <style scoped>
 .fbk { display: flex; flex-direction: column; gap: 16px; }
+.fbk__title--hidden { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
 .fbk__title { margin: 0; font-size: var(--text-20-20); line-height: var(--leading-20-20); font-weight: var(--font-weight-medium); }
 .fbk__form { display: flex; flex-direction: column; gap: 12px; }
 .fbk__msg { display: flex; flex-direction: column; gap: 6px; }

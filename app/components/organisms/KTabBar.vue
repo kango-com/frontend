@@ -11,6 +11,8 @@ const props = withDefaults(defineProps<{
   current?: string
   authorized?: boolean
   items?: TabBarItem[]
+  /** Счётчики на иконках по ключу пункта (например непрочитанные сообщения) */
+  badges?: Record<string, number>
 }>(), { current: '' })
 
 const { t } = useI18n()
@@ -30,7 +32,12 @@ const list = computed(() => props.items ?? defaults.value)
 <template>
   <nav class="ktbar" :aria-label="t('nav.main')">
     <KTab v-for="i in list" :key="i.key" class="ktbar__item" :to="i.to" :selected="i.key === current">
-      <template #icon><Icon :name="`kango:${i.icon}`" size="24" /></template>
+      <template #icon>
+        <span class="ktbar__icon">
+          <Icon :name="`kango:${i.icon}`" size="24" />
+          <KBadge v-if="badges?.[i.key]" :count="badges[i.key]!" :label="tr('непрочитанных')" class="ktbar__badge" />
+        </span>
+      </template>
       {{ i.label }}
     </KTab>
   </nav>
@@ -49,4 +56,6 @@ const list = computed(() => props.items ?? defaults.value)
   box-shadow: 0 -2px 12px color-mix(in srgb, var(--color-label-primary) 8%, transparent);
 }
 .ktbar .ktbar__item { flex: 1; min-width: 0; padding: 0 4px; }
+.ktbar__icon { position: relative; display: inline-flex; }
+.ktbar .ktbar__badge { position: absolute; top: -6px; inset-inline-start: 14px; min-width: 18px; height: 18px; border: 2px solid var(--color-background); font-size: 10px; }
 </style>

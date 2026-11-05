@@ -1,9 +1,10 @@
 import { http } from 'msw'
 import type { AdDraft, FilterState, SortKey } from '~/types'
-import { allAds, findAd, save, state, toCard } from '../db'
+import { findAd, publicAds, save, settleModeration, state, statusOf, toCard, toMyAd } from '../db'
 import type { AdRecord } from '../fixtures/ads'
 import { cities, districtsOf } from '../fixtures/geo'
 import { filterAds, sortAds } from '../filtering'
+import { approximateCenter, inPolygon } from '~/utils/geo'
 import { currentUser, fail, json, list, noContent, notFound, paginate, simulate, unauthorized } from '../utils'
 
 const favoritesOf = (request: Request) => {
@@ -28,12 +29,43 @@ export function describe(section: string, data: Record<string, unknown>): string
   return `${title}. ${extras[section] ?? extras.goods}`
 }
 
+/** Точка для показа: при скрытом адресе - сдвинутый центр приблизительной области, точная точка наружу не уходит */
+const publicPoint = (a: AdRecord) => (a.coordinates && a.hideExactLocation ? approximateCenter(a.coordinates, a.id) : a.coordinates)
+
+/** Объявление текущего пользователя или готовый ответ с ошибкой */
+function own(request: Request, id: string): AdRecord | Response {
+  const user = currentUser(request)
+  if (!user) return unauthorized()
+  const ad = state.created.find(a => a.id === id)
+  if (!ad || statusOf(ad) === 'deleted') return notFound('Объявление')
+  if (ad.authorId !== user.id) return fail(403, 'forbidden', 'Это чужое объявление')
+  return ad
+}
+
 export const adsHandlers = (base: string) => [
+  // Точки для карты (Договор, Прил. 1, п. 9): те же фильтры, что у списка, без пагинации; area - нарисованная граница «lng,lat;lng,lat;...»
+  http.get(`${base}/ads/map`, async ({ request }) => {
+    const err = await simulate(); if (err) return err
+    const url = new URL(request.url)
+    const filter = parseFilter(url)
+    const area = (url.searchParams.get('area') ?? '').split(';').map((s) => {
+      const [lng, lat] = s.split(',').map(Number)
+      return { lat: lat!, lng: lng! }
+    }).filter(p => Number.isFinite(p.lat) && Number.isFinite(p.lng))
+    const found = sortAds(filterAds(publicAds(), { section: url.searchParams.get('section') ?? undefined, q: url.searchParams.get('q') ?? undefined, cityIds: list(url, 'city'), filter }), 'default')
+    const favorites = favoritesOf(request)
+    const points = found
+      .filter(a => a.coordinates)
+      .map(a => ({ ...toCard(a, favorites), coordinates: publicPoint(a)!, approximate: a.hideExactLocation || undefined }))
+      .filter(p => area.length < 3 || inPolygon(p.coordinates, area))
+    return json(points.slice(0, 2000))
+  }),
+
   http.get(`${base}/ads/recommendations`, async ({ request }) => {
     const err = await simulate(); if (err) return err
     const url = new URL(request.url)
     const cityIds = list(url, 'city')
-    const found = sortAds(filterAds(allAds(), { cityIds }), 'default')
+    const found = sortAds(filterAds(publicAds(), { cityIds }), 'default')
     const favorites = favoritesOf(request)
     const page = paginate(found, url)
     return json({ ...page, items: page.items.map(a => toCard(a, favorites)) })
@@ -44,7 +76,7 @@ export const adsHandlers = (base: string) => [
     const url = new URL(request.url)
     const filter = parseFilter(url)
     const found = sortAds(
-      filterAds(allAds(), { section: url.searchParams.get('section') ?? undefined, q: url.searchParams.get('q') ?? undefined, cityIds: list(url, 'city'), filter }),
+      filterAds(publicAds(), { section: url.searchParams.get('section') ?? undefined, q: url.searchParams.get('q') ?? undefined, cityIds: list(url, 'city'), filter }),
       (url.searchParams.get('sort') ?? filter?.sort ?? 'default') as SortKey
     )
     const favorites = favoritesOf(request)
@@ -56,7 +88,27 @@ export const adsHandlers = (base: string) => [
     const err = await simulate(); if (err) return err
     const user = currentUser(request)
     if (!user) return unauthorized()
-    return json(state.created.filter(a => a.authorId === user.id).map(a => toCard(a)))
+    settleModeration()
+    return json(state.created.filter(a => a.authorId === user.id && statusOf(a) !== 'deleted').map(toMyAd))
+  }),
+
+  http.post(`${base}/ads/:id/hide`, async ({ request, params }) => {
+    const err = await simulate(); if (err) return err
+    const found = own(request, String(params.id)); if (found instanceof Response) return found
+    if (statusOf(found) !== 'active') return fail(409, 'conflict', 'Снять можно только активное объявление')
+    found.status = 'hidden'
+    save()
+    return json(toMyAd(found))
+  }),
+
+  http.post(`${base}/ads/:id/republish`, async ({ request, params }) => {
+    const err = await simulate(); if (err) return err
+    const found = own(request, String(params.id)); if (found instanceof Response) return found
+    if (statusOf(found) !== 'hidden') return fail(409, 'conflict', 'Опубликовать снова можно только снятое объявление')
+    found.status = 'active'
+    found.expiresAt = new Date(Date.now() + 30 * 86_400_000).toISOString()
+    save()
+    return json(toMyAd(found))
   }),
 
   http.post(`${base}/ads/describe`, async ({ request }) => {
@@ -65,13 +117,17 @@ export const adsHandlers = (base: string) => [
     return json({ description: describe(section, data ?? {}) })
   }),
 
-  http.get(`${base}/ads/:id`, async ({ params }) => {
+  http.get(`${base}/ads/:id`, async ({ params, request }) => {
     const err = await simulate(); if (err) return err
+    settleModeration()
     const ad = findAd(String(params.id))
-    if (!ad) return notFound('Объявление')
+    // неактивное объявление видит только автор (предпросмотр и редактирование из кабинета)
+    if (!ad || statusOf(ad) === 'deleted' || (statusOf(ad) !== 'active' && currentUser(request)?.id !== ad.authorId)) return notFound('Объявление')
     // служебные поля мока наружу не отдаём
-    const { cityId: _c, districtId: _d, authorId: _a, distance: _dist, ...pub } = ad
-    return json(pub)
+    const { cityId: _c, districtId: _d, authorId: _a, distance: _dist, moderationSince: _m, holdModeration: _h, ...pub } = ad
+    // скрытый адрес: точную точку видит только автор (для правки), остальные - центр приблизительной области
+    const isAuthor = currentUser(request)?.id === ad.authorId
+    return json(ad.hideExactLocation && !isAuthor ? { ...pub, coordinates: publicPoint(ad) } : pub)
   }),
 
   http.post(`${base}/ads`, async ({ request }) => {
@@ -98,7 +154,11 @@ export const adsHandlers = (base: string) => [
       cityId: city.id,
       districtId: district?.id,
       authorId: user.id,
-      distance: 10
+      distance: 10,
+      // режим проверки «до публикации»: новое объявление ждёт модерации (в моке одобряется автоматически)
+      status: 'moderation',
+      moderationSince: Date.now(),
+      views: 0
     } as AdRecord
     state.created.unshift(record)
     save()
@@ -107,24 +167,28 @@ export const adsHandlers = (base: string) => [
 
   http.patch(`${base}/ads/:id`, async ({ request, params }) => {
     const err = await simulate(); if (err) return err
-    const user = currentUser(request)
-    if (!user) return unauthorized()
-    const ad = state.created.find(a => a.id === params.id)
-    if (!ad) return notFound('Объявление')
-    if (ad.authorId !== user.id) return fail(403, 'forbidden', 'Это чужое объявление')
-    Object.assign(ad, await request.json())
+    const ad = own(request, String(params.id)); if (ad instanceof Response) return ad
+    const patch = (await request.json()) as Partial<AdDraft>
+    if (patch.title !== undefined && !patch.title.trim()) return fail(422, 'validation', 'Проверьте поля формы', { title: 'Назовите объявление' })
+    // служебные поля правкой не меняются
+    const { id: _i, status: _s, authorId: _a, ...rest } = patch as Record<string, unknown>
+    Object.assign(ad, rest, { image: patch.images?.[0] ?? ad.image })
+    // после правки активное и отклонённое объявление снова проходит модерацию
+    if (statusOf(ad) === 'active' || statusOf(ad) === 'rejected') {
+      ad.status = 'moderation'
+      ad.rejectReason = undefined
+      ad.holdModeration = false
+      ad.moderationSince = Date.now()
+    }
     save()
-    return json(ad)
+    return json(toMyAd(ad))
   }),
 
   http.delete(`${base}/ads/:id`, async ({ request, params }) => {
     const err = await simulate(); if (err) return err
-    const user = currentUser(request)
-    if (!user) return unauthorized()
-    const i = state.created.findIndex(a => a.id === params.id)
-    if (i < 0) return notFound('Объявление')
-    if (state.created[i]!.authorId !== user.id) return fail(403, 'forbidden', 'Это чужое объявление')
-    state.created.splice(i, 1)
+    const ad = own(request, String(params.id)); if (ad instanceof Response) return ad
+    // мягкое удаление: запись остаётся, из выдачи и кабинета исчезает
+    ad.status = 'deleted'
     save()
     return noContent()
   }),

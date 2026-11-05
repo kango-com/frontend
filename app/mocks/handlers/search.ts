@@ -1,6 +1,6 @@
 import { http } from 'msw'
 import { nameVariants } from '../names'
-import { allAds, save, state } from '../db'
+import { publicAds, save, state } from '../db'
 import { searchVocabulary } from '../fixtures/content'
 import { currentUser, fail, json, makeId, noContent, simulate } from '../utils'
 
@@ -16,7 +16,7 @@ export const searchHandlers = (base: string) => [
       .filter(v => nameVariants(v.text).some(n => n.includes(q)))
       .sort((a, b) => Number(nameVariants(b.text).some(n => n.startsWith(q))) - Number(nameVariants(a.text).some(n => n.startsWith(q))))
       .map((v, i) => ({ id: `v${i}`, text: v.text, categoryTitle: v.categoryTitle, section: v.section }))
-    const fromAds = allAds()
+    const fromAds = publicAds()
       .filter(a => a.title.toLowerCase().includes(q))
       .slice(0, 4)
       .map(a => ({ id: `a-${a.id}`, text: a.title, categoryTitle: SECTION_TITLES[a.section], section: a.section }))

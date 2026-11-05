@@ -30,6 +30,22 @@ export interface AdCard {
   highlighted?: boolean
 }
 
+/** Статус объявления (ТЗ п. 5); `deleted` - мягкое удаление, автору не показывается */
+export type AdStatus = 'moderation' | 'active' | 'rejected' | 'hidden' | 'deleted'
+
+/** Объявление в кабинете автора: карточка плюс статус, просмотры и сроки */
+export interface MyAd extends AdCard {
+  status: AdStatus
+  /** Причина отклонения или скрытия администратором */
+  rejectReason?: string
+  views: number
+  /** ISO-дата окончания текущего срока публикации (продлевается автоматически) */
+  expiresAt?: string
+  /** ISO-даты окончания платных опций */
+  promotedUntil?: string
+  highlightedUntil?: string
+}
+
 export interface Contacts {
   phone?: string
   whatsapp?: string
@@ -119,6 +135,8 @@ interface AdBase extends AdCard {
   district?: string
   address?: string
   coordinates?: Coordinates
+  /** Автор скрыл точное положение: на карте показывается приблизительная область (Договор, Прил. 1, п. 4.2, 9) */
+  hideExactLocation?: boolean
 }
 
 export interface WorkAd extends AdBase { section: 'work', params: WorkParams }
@@ -140,4 +158,11 @@ export type ReportReason = 'spam' | 'fraud' | 'wrong-section' | 'prohibited' | '
 export interface ReportPayload {
   reason: ReportReason
   comment?: string
+}
+
+/** Объявление на карте: карточка плюс точка (Договор, Прил. 1, п. 9 «Карта в выдаче») */
+export interface MapAd extends AdCard {
+  coordinates: Coordinates
+  /** Автор скрыл точный адрес: точка - центр приблизительной области */
+  approximate?: boolean
 }

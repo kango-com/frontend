@@ -5,6 +5,8 @@ const props = withDefaults(defineProps<{
   withSearch?: boolean
   search?: string
   loggedIn?: boolean
+  /** Непрочитанные сообщения: счётчик на иконке «Сообщения» */
+  unread?: number
   /** Показать красную точку на кнопке фильтра */
   filterDot?: boolean
   /** Раскрытый поиск (desktop): поле на всю ширину, «Найти» внутри, подсказки под ним */
@@ -81,7 +83,7 @@ const query = computed({
       </KButton>
       <nav class="khd__tools" :aria-label="t('nav.service')">
         <NuxtLink to="/favorites" class="khd__tool" :aria-label="t('tabs.favorites')"><Icon name="kango:heart-24" size="24" /></NuxtLink>
-        <NuxtLink v-if="loggedIn" to="/messages" class="khd__tool" :aria-label="t('tabs.messages')"><Icon name="kango:message-24" size="24" /></NuxtLink>
+        <NuxtLink v-if="loggedIn" to="/messages" class="khd__tool khd__tool--msg" :aria-label="t('tabs.messages')"><Icon name="kango:message-24" size="24" /><KBadge v-if="unread" :count="unread" :label="tr('непрочитанных')" class="khd__badge" /></NuxtLink>
         <NuxtLink :to="loggedIn ? '/profile' : '/login'" class="khd__tool khd__tool--user" :aria-label="loggedIn ? t('nav.profile') : t('nav.login')"><Icon name="kango:user-24" size="24" /></NuxtLink>
       </nav>
       <nav class="khd__links" :aria-label="t('nav.service')">
@@ -221,6 +223,8 @@ const query = computed({
   .khd .khd__tool,
   .khd .khd__lang--m :deep(.lang__btn) { display: inline-flex; align-items: center; justify-content: center; height: 44px; border-radius: 22px; background: color-mix(in srgb, var(--color-background) 85%, transparent); color: var(--color-label-primary); text-decoration: none; transition: color 0.15s ease-out, background-color 0.15s ease-out; }
   .khd .khd__tool { width: 44px; }
+  .khd .khd__tool--msg { position: relative; }
+  .khd .khd__badge { position: absolute; top: 2px; inset-inline-end: 0; min-width: 18px; height: 18px; border: 2px solid var(--color-background); font-size: 10px; }
   .khd .khd__lang--m :deep(.lang__btn) { padding-inline: 12px; }
   .khd .khd__tool:focus-visible { outline: var(--border-width-strong) solid var(--color-stroke-primary); outline-offset: 2px; }
   .khd .khd__searchbtn, .khd .khd__links { display: none; }

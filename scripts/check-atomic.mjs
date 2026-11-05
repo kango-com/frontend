@@ -2,8 +2,10 @@
 // Уровни: atoms (0) < molecules (1) < organisms (2) < templates (3). Запуск: bun run check:atomic
 import { readdirSync, readFileSync, statSync } from 'node:fs'
 import { join, basename } from 'node:path'
+import { fileURLToPath } from 'node:url'
 
-const root = new URL('../app/components/', import.meta.url).pathname
+// fileURLToPath, а не .pathname: на Windows pathname даёт «/D:/...», и обход папок молча находит 0 файлов
+const root = fileURLToPath(new URL('../app/components/', import.meta.url))
 const levels = ['atoms', 'molecules', 'organisms', 'templates']
 
 function walk(dir) {

@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia'
-import { authApi, isApiError, useAuthToken } from '~/api'
-import type { ApiError, LoadStatus, LoginPayload, RegisterPayload, SocialProvider, User } from '~/types'
+import { authApi, isApiError, profileApi, useAuthToken } from '~/api'
+import type { ApiError, ChangePasswordPayload, LoadStatus, LoginPayload, ProfilePatch, RegisterPayload, SocialProvider, User } from '~/types'
 
 export const useAuthStore = defineStore('auth', () => {
   const token = useAuthToken()
@@ -47,6 +47,9 @@ export const useAuthStore = defineStore('auth', () => {
   const forgot = (email: string) => run(() => authApi.forgot(email))
   const validateResetToken = (value: string) => run(() => authApi.validateResetToken(value))
   const reset = (value: string, password: string) => run(() => authApi.reset(value, password))
+  /** Кабинет: правка профиля (ответ сервера заменяет пользователя) и смена пароля */
+  const updateProfile = (patch: ProfilePatch) => run(async () => { user.value = await profileApi.update(patch) })
+  const changePassword = (payload: ChangePasswordPayload) => run(() => profileApi.changePassword(payload))
 
   async function logout() {
     try { await authApi.logout() } catch { /* токен всё равно сбрасываем */ }
@@ -57,5 +60,5 @@ export const useAuthStore = defineStore('auth', () => {
 
   function clearError() { error.value = null }
 
-  return { user, status, error, fieldErrors, isAuthed, fetchMe, login, register, social, forgot, validateResetToken, reset, logout, clearError }
+  return { user, status, error, fieldErrors, isAuthed, fetchMe, login, register, social, forgot, validateResetToken, reset, updateProfile, changePassword, logout, clearError }
 })

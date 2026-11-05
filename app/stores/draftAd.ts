@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia'
 import { adsApi, contentApi, isApiError, paymentsApi } from '~/api'
-import type { AdDraft, ApiError, LoadStatus, PromoPackage, PromoPackageId, Section } from '~/types'
+import type { Ad, AdDraft, ApiError, LoadStatus, PromoPackage, PromoPackageId, Section } from '~/types'
 import { type DraftData, validateDraft } from '~/utils/draft'
 import { defaultParams, PRICE_PERIODS } from '~/utils/publish-schema'
 
@@ -16,9 +16,41 @@ export const useDraftAdStore = defineStore('draftAd', () => {
   const createdId = ref<string | null>(null)
   const packages = ref<PromoPackage[]>([])
   const selectedPackage = ref<PromoPackageId | null>(null)
+  /** Режим редактирования существующего объявления (из кабинета): черновик подачи не трогаем */
+  const editingId = ref<string | null>(null)
 
   const persist = () => {
+    if (editingId.value) return
     if (import.meta.client) try { localStorage.setItem(KEY, JSON.stringify({ draft: draft.value, step: step.value, createdId: createdId.value })) } catch { /* ignore */ }
+  }
+
+  /** Контакты из профиля подставляются в новое объявление (ТЗ п. 4.1: контакты по умолчанию) */
+  function defaultContacts() {
+    const u = useAuthStore().user
+    if (!u?.phone) return {}
+    return { phone: u.phone, whatsapp: u.whatsapp ? u.phone : undefined, telegram: u.telegram }
+  }
+
+  /** Загрузить своё объявление в форму для правки; возвращает, удалось ли */
+  async function startEdit(id: string): Promise<boolean> {
+    status.value = 'loading'
+    error.value = null
+    errors.value = {}
+    try {
+      const ad = await adsApi.byId(id)
+      // в форму идут только поля черновика: служебные (номер, автор, даты) не отправляются обратно
+      const { id: _id, number: _n, createdAt: _c, author: _a, isFavorite: _f, promoted: _p, highlighted: _h, ...rest } = ad as Ad & Record<string, unknown>
+      for (const k of ['status', 'rejectReason', 'views', 'expiresAt', 'promotedUntil', 'highlightedUntil']) delete (rest as Record<string, unknown>)[k]
+      editingId.value = id
+      draft.value = rest as unknown as DraftData
+      step.value = 'form'
+      status.value = 'idle'
+      return true
+    } catch (e) {
+      status.value = 'error'
+      error.value = isApiError(e) ? e : { status: 0, code: 'unknown', message: tr('Что-то пошло не так') }
+      return false
+    }
   }
 
   /** Восстановить черновик, если пользователь не завершил подачу */
@@ -37,7 +69,7 @@ export const useDraftAdStore = defineStore('draftAd', () => {
         title: '',
         description: '',
         images: [],
-        contacts: {},
+        contacts: defaultContacts(),
         city: useCityStore().current.name,
         params: defaultParams(section),
         price: { amount: 0, currency: 'ILS', period: PRICE_PERIODS[section]?.[0]?.value }
@@ -77,6 +109,11 @@ export const useDraftAdStore = defineStore('draftAd', () => {
     status.value = 'loading'
     error.value = null
     try {
+      if (editingId.value) {
+        await adsApi.update(editingId.value, draft.value as AdDraft)
+        status.value = 'success'
+        return true
+      }
       const result = await adsApi.create(draft.value as AdDraft)
       createdId.value = result.id
       status.value = 'success'
@@ -121,6 +158,8 @@ export const useDraftAdStore = defineStore('draftAd', () => {
   }
 
   function reset() {
+    // выход из правки не стирает сохранённый черновик новой подачи
+    const wasEditing = !!editingId.value
     draft.value = {}
     step.value = 'section'
     errors.value = {}
@@ -128,8 +167,9 @@ export const useDraftAdStore = defineStore('draftAd', () => {
     error.value = null
     createdId.value = null
     selectedPackage.value = null
-    if (import.meta.client) localStorage.removeItem(KEY)
+    editingId.value = null
+    if (import.meta.client && !wasEditing) localStorage.removeItem(KEY)
   }
 
-  return { draft, step, errors, status, error, createdId, packages, selectedPackage, restore, chooseSection, patch, setParam, validate, setStep, loadPackages, publish, generateDescription, uploadImage, pay, reset }
+  return { draft, step, errors, status, error, createdId, packages, selectedPackage, editingId, startEdit, restore, chooseSection, patch, setParam, validate, setStep, loadPackages, publish, generateDescription, uploadImage, pay, reset }
 })

@@ -22,3 +22,7 @@ logs
 .env
 .env.*
 !.env.example
+
+# Карта: файл тайлов выгружается scripts/fetch-map.sh, воркер MapLibre и RTL-плагин копируются при сборке (docs/map.md)
+public/maps/*.pmtiles
+public/maplibre/

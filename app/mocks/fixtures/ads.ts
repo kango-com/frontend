@@ -1,5 +1,5 @@
-import type { Ad, Hebrew } from '~/types'
-import { cities, districtsOf } from './geo'
+import type { Ad, AdStatus, Hebrew } from '~/types'
+import { cities, districtsOf, pointInCity } from './geo'
 import { authors } from './users'
 import workImage from '~/assets/img/categories/work.webp'
 import realtyImage from '~/assets/img/categories/real-estate.webp'
@@ -15,6 +15,16 @@ export type AdRecord = Ad & {
   cityId: string
   districtId?: string
   authorId: string
+  /** Кабинет автора: статус (по умолчанию active), причина отклонения, просмотры, сроки */
+  status?: AdStatus
+  rejectReason?: string
+  views?: number
+  expiresAt?: string
+  promotedUntil?: string
+  highlightedUntil?: string
+  /** Начало текущей модерации; без него (или при holdModeration) мок не одобряет автоматически */
+  moderationSince?: number
+  holdModeration?: boolean
   /** Условная удалённость в км (для сортировки «По удалённости») */
   distance: number
 }
@@ -30,6 +40,8 @@ function rng(seed: number) {
 }
 
 const rnd = rng(20261013)
+// координаты - отдельным генератором, чтобы не сдвигать остальные случайные значения фикстуры
+const geoRnd = rng(32_0853)
 const pick = <T>(arr: T[]): T => arr[Math.floor(rnd() * arr.length)]!
 const int = (a: number, b: number) => a + Math.floor(rnd() * (b - a + 1))
 const some = <T>(arr: T[], max = arr.length): T[] => arr.filter(() => rnd() < 0.4).slice(0, max)
@@ -63,6 +75,7 @@ function base(section: Ad['section'], image: string) {
     cityId: city.id,
     district: district.name,
     districtId: district.id,
+    coordinates: pointInCity(city.id, dists.indexOf(district), geoRnd(), geoRnd()),
     address: `${city.name}, ${street}`,
     location: `${city.name}, ${district.name}`,
     authorId: author.id,
@@ -121,7 +134,7 @@ const features = ['Балкон', 'Лифт', 'Парковка', 'Кондиц�
 
 function makeRealty(): AdRecord {
   const photo = pick([apartment1, apartment2, realtyImage])
-  const b = base('realty', photo)
+  const b = { ...base('realty', photo), hideExactLocation: geoRnd() < 0.2 }
   const deal: 'rent' | 'sale' = rnd() < 0.62 ? 'rent' : 'sale'
   const house = rnd() < 0.2
   const rooms = int(1, 5)

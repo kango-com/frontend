@@ -40,6 +40,7 @@ const s2 = ref(true)
       <ShowItem label="False"><KSwitch v-model="s1" label="Уведомления" /></ShowItem>
       <ShowItem label="True"><KSwitch v-model="s2" label="Уведомления" /></ShowItem>
       <ShowItem label="С подписью"><KSwitch v-model="s2">Показывать телефон</KSwitch></ShowItem>
+      <ShowItem label="Строка настроек"><div style="width: 360px"><KSwitch v-model="s2" row description="Пояснение под текстом">Новые сообщения</KSwitch></div></ShowItem>
       <ShowItem label="Disabled"><KSwitch :model-value="false" disabled label="Недоступно" /></ShowItem>
     </ShowSection>
   </ShowPage>

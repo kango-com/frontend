@@ -6,6 +6,7 @@ withDefaults(defineProps<{
 
 const city = useCityStore()
 const auth = useAuthStore()
+const chat = useChatStore()
 const ui = useUiStore()
 const router = useRouter()
 
@@ -71,6 +72,7 @@ function onFocusOut(e: FocusEvent) {
       v-model:search="search"
       :city="city.current.name"
       :logged-in="auth.isAuthed"
+      :unread="chat.unreadTotal"
       :with-search="withSearch"
       :searching="suggestOpen"
       @city="ui.open('city')"

@@ -53,6 +53,7 @@ const location = computed(() => [props.ad.city, props.ad.district, props.ad.addr
             </div>
           </dl>
         </section>
+        <AdLocationMap v-if="ad.section === 'realty' && ad.coordinates" :deal="ad.params.deal" :ad-id="ad.id" :title="ad.title" :point="ad.coordinates" :approximate="ad.hideExactLocation" :address="ad.hideExactLocation ? undefined : location" />
       </div>
 
       <aside class="ad__side" :aria-label="tr('Контакты и автор')">

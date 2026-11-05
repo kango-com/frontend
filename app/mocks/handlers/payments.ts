@@ -1,5 +1,5 @@
 import { http } from 'msw'
-import { findAd, save, state } from '../db'
+import { applyPackage, findAd, save, state } from '../db'
 import { promoPackages } from '../fixtures/content'
 import { currentUser, fail, json, makeId, notFound, simulate, unauthorized } from '../utils'
 
@@ -34,7 +34,10 @@ export const paymentsHandlers = (base: string) => [
     if (!p) return notFound('Платёж')
     const { result } = (await request.json()) as { result: 'paid' | 'failed' | 'cancelled' }
     p.status = result
-    if (result === 'paid') state.promoted[p.adId] = p.packageId
+    const user = currentUser(request)
+    // в историю попадают и оплаченные, и неуспешные операции; сроки опций ставятся только при оплате
+    if (user) applyPackage(user.id, p.adId, p.packageId, result)
+    else if (result === 'paid') state.promoted[p.adId] = p.packageId
     save()
     return json({ id: p.id, status: p.status, adId: p.adId })
   })

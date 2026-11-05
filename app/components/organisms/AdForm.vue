@@ -14,6 +14,7 @@ const section = computed(() => draft.value.section!)
 const params = computed(() => (draft.value.params ?? {}) as Record<string, unknown>)
 const errors = computed(() => draftStore.errors)
 const busy = computed(() => draftStore.status === 'loading')
+const editing = computed(() => !!draftStore.editingId)
 const generating = ref(false)
 const uploading = ref(false)
 
@@ -71,6 +72,7 @@ const setContact = (key: 'phone' | 'whatsapp' | 'telegram', v: string) =>
 
 function back() {
   const filled = !!(draft.value.title || draft.value.description || draft.value.images?.length)
+  if (editing.value) { emit('back'); return }
   if (!filled || window.confirm(tr('Введённые данные будут потеряны. Вернуться к выбору раздела?'))) emit('back')
 }
 
@@ -82,9 +84,10 @@ async function submit() {
 <template>
   <form class="adf" novalidate @submit.prevent="submit">
     <header class="adf__head">
-      <KIconButton type="arrow-left" :label="tr('Назад к выбору раздела')" @click="back" />
-      <h1 class="adf__title">{{ tr('Новое объявление') }}</h1>
+      <KIconButton type="arrow-left" :label="editing ? tr('Назад к моим объявлениям') : tr('Назад к выбору раздела')" @click="back" />
+      <h1 class="adf__title">{{ editing ? tr('Редактирование объявления') : tr('Новое объявление') }}</h1>
     </header>
+    <p v-if="editing" class="adf__note">{{ tr('Активное или отклонённое объявление после сохранения снова пройдёт проверку модератора.') }}</p>
 
     <FormSection v-for="b in blocks" :key="b.title" :title="b.title">
       <template v-for="f in b.fields" :key="f.key">
@@ -105,6 +108,12 @@ async function submit() {
       <KSelect :model-value="draft.city ?? ''" :options="cityOptions" :placeholder="tr('Город')" :label="tr('Город')" :error="!!errors.city" @update:model-value="draftStore.patch({ city: $event, address: '' })" />
       <p v-if="errors.city" class="adf__error" role="alert">{{ errors.city }}</p>
       <AddressField :model-value="draft.address ?? ''" :suggestions="streets" @update:model-value="draftStore.patch({ address: $event })" />
+      <template v-if="section === 'realty'">
+        <LocationPicker :model-value="draft.coordinates" :city="draft.city" :address="draft.address" @update:model-value="draftStore.patch({ coordinates: $event })" />
+        <KCheckbox :model-value="!!draft.hideExactLocation" @update:model-value="draftStore.patch({ hideExactLocation: !!$event })">
+          <span class="adf__check">{{ tr('Скрыть точный адрес') }}<span class="adf__check-hint">{{ tr('На карте покажем район в радиусе около 400 м, номер дома не будет виден') }}</span></span>
+        </KCheckbox>
+      </template>
     </FormSection>
 
     <FormSection :title="tr('Фото')">
@@ -120,7 +129,7 @@ async function submit() {
 
     <p v-if="draftStore.error && !Object.keys(errors).length" class="adf__error" role="alert">{{ draftStore.error.message }}</p>
     <p v-if="Object.keys(errors).length" class="adf__error" role="alert">{{ tr('Проверьте поля формы:') }} {{ Object.keys(errors).length }} {{ tr('требуют внимания.') }}</p>
-    <KButton block type="submit" :disabled="busy || uploading">{{ busy ? tr('Публикуем...') : tr('Опубликовать') }}</KButton>
+    <KButton block type="submit" :disabled="busy || uploading">{{ busy ? (editing ? tr('Сохраняем...') : tr('Публикуем...')) : (editing ? tr('Сохранить изменения') : tr('Опубликовать')) }}</KButton>
   </form>
 </template>
 
@@ -129,5 +138,8 @@ async function submit() {
 .adf__head { display: flex; align-items: center; gap: 12px; }
 .adf__title { margin: 0; font-size: var(--text-22-24); line-height: var(--leading-22-24); font-weight: var(--font-weight-medium); }
 .adf__price { display: flex; flex-direction: column; gap: 8px; }
+.adf__note { margin: -12px 0 0; color: var(--color-label-secondary); font-size: var(--text-14-16); line-height: var(--leading-14-16); }
+.adf__check { display: flex; flex-direction: column; gap: 2px; font-size: var(--text-15-16); line-height: 20px; }
+.adf__check-hint { color: var(--color-label-secondary); font-size: var(--text-13-16); line-height: var(--leading-13-16); }
 .adf__error { margin: 0; color: var(--color-fill-error); font-size: var(--text-14-16); line-height: var(--leading-14-16); }
 </style>

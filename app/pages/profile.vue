@@ -1,8 +1,10 @@
 <script setup lang="ts">
+// Родительский маршрут кабинета: общая оболочка (боковое меню на 1380+), страницы - в app/pages/profile/
 definePageMeta({ layout: 'default', middleware: 'auth' })
-useHead({ title: () => tr('Профиль - Kango') })
 </script>
 
 <template>
-  <ProfileView />
+  <CabinetShell>
+    <NuxtPage />
+  </CabinetShell>
 </template>

@@ -1,6 +1,6 @@
 import { http } from 'msw'
 import type { FilterState } from '~/types'
-import { allAds } from '../db'
+import { publicAds } from '../db'
 import { byParent, goodsBrands, goodsCategories, goodsModels, goodsSubcategories, realtyCategories, realtyDevelopers, realtyProjects, realtySubtypes, realtyTypes, servicesCategories, servicesSubcategories, workCategories, workPositions } from '../fixtures/references'
 import { filterAds } from '../filtering'
 import { json, list, simulate } from '../utils'
@@ -17,7 +17,7 @@ export const filtersHandlers = (base: string) => [
     const url = new URL(request.url)
     let filter: Partial<FilterState> | undefined
     try { filter = JSON.parse(url.searchParams.get('f') ?? 'null') ?? undefined } catch { /* ignore */ }
-    const count = filterAds(allAds(), {
+    const count = filterAds(publicAds(), {
       section: url.searchParams.get('section') ?? undefined,
       q: url.searchParams.get('q') ?? undefined,
       cityIds: filter?.cityIds ?? [],

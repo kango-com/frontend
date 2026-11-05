@@ -93,6 +93,11 @@ const workOptions = [{ value: 'seek-job', label: 'Ищу работу' }, { valu
 const kindOptions = computed(() => [{ value: 'apartment', label: deal.value === 'sale' ? 'Новостройки и вторичка' : 'Квартиры' }, { value: 'room', label: 'Комнаты' }])
 
 const layout = computed(() => (props.section === 'work' || props.section === 'services' ? 'list' : 'grid'))
+
+// Недвижимость: список или карта (Договор, Прил. 1, п. 9), вид хранится в адресе - ссылку на карту можно отправить
+const mapView = computed(() => props.section === 'realty' && route.query.view === 'map')
+const VIEW_OPTIONS = [{ value: 'list', label: 'Список' }, { value: 'map', label: 'Карта' }]
+const setView = (v: string) => setQuery({ view: v === 'map' ? 'map' : undefined })
 const emptyText = computed(() => (filterCount.value || q.value ? tr('Ничего не найдено. Измените запрос или сбросьте фильтры.') : tr('Пока нет объявлений. Попробуйте выбрать другой город.')))
 </script>
 
@@ -142,7 +147,11 @@ const emptyText = computed(() => (filterCount.value || q.value ? tr('Ничег�
       @filters="ui.open('filters')"
     />
 
+    <KSegmentControl v-if="section === 'realty'" class="lp__view" :model-value="mapView ? 'map' : 'list'" :options="VIEW_OPTIONS" :label="tr('Вид')" @update:model-value="setView" />
+
+    <MapSearch v-if="mapView" :query="query" :focus-id="typeof route.query.focus === 'string' ? route.query.focus : undefined" @list="setView('list')" />
     <AdsFeed
+      v-else
       :items="feed.items"
       :status="feed.status"
       :has-more="feed.hasMore"
@@ -170,6 +179,7 @@ const emptyText = computed(() => (filterCount.value || q.value ? tr('Ничег�
   .lp { gap: 20px; padding-block: 32px 64px; }
   .lp__title { font-size: 28px; line-height: 32px; }
   .lp__seg, .lp__search { max-width: 480px; }
+  .lp__view { max-width: 240px; }
 }
 /* поиск на мобильном: верхняя панель вместо заголовка, заголовок остаётся для скринридера */
 .lp__nav { margin-inline: -16px; }

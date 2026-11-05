@@ -13,12 +13,16 @@
     "postinstall": "nuxt prepare"
   },
   "dependencies": {
+    "@mapbox/mapbox-gl-rtl-text": "0.3.0",
     "@nuxt/fonts": "^1.0.1",
     "@nuxt/icon": "^2.5.1",
     "@nuxtjs/i18n": "^10.6.0",
     "@pinia/nuxt": "^1.0.2",
+    "@protomaps/basemaps": "^5.7.2",
+    "maplibre-gl": "^6.16.0",
     "nuxt": "^4.6.1",
     "pinia": "^4.0.3",
+    "pmtiles": "^4.5.0",
     "vue": "^3.5.43",
     "vue-router": "^5.4.0"
   },
