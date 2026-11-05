@@ -10,6 +10,7 @@ const mine = useMyAdsStore()
 const favorites = useFavoritesStore()
 const purchases = usePurchasesStore()
 const chat = useChatStore()
+const support = useSupportStore()
 const router = useRouter()
 
 const tiles = computed<{ tab: MyAdsTab, label: string, tone?: 'error' }[]>(() => [
@@ -19,7 +20,7 @@ const tiles = computed<{ tab: MyAdsTab, label: string, tone?: 'error' }[]>(() =>
   { tab: 'hidden', label: 'Снятые' }
 ])
 
-const counts = computed(() => ({ ads: mine.items.length, favorites: favorites.items.length, services: purchases.active.length, messages: chat.unreadTotal }))
+const counts = computed(() => ({ ads: mine.items.length, favorites: favorites.items.length, services: purchases.active.length, messages: chat.unreadTotal, support: support.unreadTotal }))
 const nextExpiry = computed(() => purchases.active.map(p => p.activeUntil!).sort()[0])
 
 async function logout() {

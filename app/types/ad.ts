@@ -130,6 +130,10 @@ interface AdBase extends AdCard {
   description: string
   images: string[]
   contacts: Contacts
+  /** Гость: контакты не отправляются (ТЗ п. 6, 12 №5); показываются кнопки, ведущие на вход */
+  contactsHidden?: boolean
+  /** Какие способы связи указал автор (для гостя, пока сами контакты скрыты) */
+  contactKinds?: (keyof Contacts)[]
   author: AdAuthor
   city: string
   district?: string

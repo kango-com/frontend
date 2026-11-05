@@ -9,6 +9,7 @@ const mine = useMyAdsStore()
 const favorites = useFavoritesStore()
 const purchases = usePurchasesStore()
 const chat = useChatStore()
+const support = useSupportStore()
 const router = useRouter()
 
 if (props.enabled) provideInCabinet()
@@ -24,7 +25,8 @@ const counts = computed(() => ({
   ads: mine.items.length,
   favorites: favorites.items.length,
   services: purchases.active.length,
-  messages: chat.unreadTotal
+  messages: chat.unreadTotal,
+  support: support.unreadTotal
 }))
 
 async function logout() {

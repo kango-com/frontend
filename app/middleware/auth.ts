@@ -3,5 +3,7 @@
 export default defineNuxtRouteMiddleware((to, from) => {
   if (useAuthStore().isAuthed) return
   useUiStore().openLogin(to.fullPath)
-  return from.matched.length ? abortNavigation() : navigateTo('/')
+  // первая загрузка страницы (прямая ссылка): отмена перехода показала бы 404, поэтому ведём на главную
+  const first = import.meta.client && useNuxtApp().isHydrating
+  return first || !from.matched.length ? navigateTo('/', { replace: true }) : abortNavigation()
 })

@@ -40,6 +40,12 @@ const REASON = 'В описании указан номер телефона. У
       <ShowItem label="ChatListItem">
         <div class="w"><ChatListItem to="/messages/1" name="Мария Коган" online ad-title="2-к. квартира, Хайфа" preview="Да, в 12:00 удобно?" time="14:05" :unread="2" /></div>
       </ShowItem>
+      <ShowItem label="TicketStatusBadge">
+        <div class="w col"><TicketStatusBadge status="new" /><TicketStatusBadge status="in_progress" /><TicketStatusBadge status="waiting" /><TicketStatusBadge status="resolved" /><TicketStatusBadge status="closed" /></div>
+      </ShowItem>
+      <ShowItem label="TicketRow">
+        <div class="w"><TicketRow :ticket="{ id: 'demo', number: 10231, subject: 'Не подключилось поднятие объявления', category: 'payment', status: 'waiting', createdAt: '2026-11-01T10:00:00Z', updatedAt: '2026-11-04T10:00:00Z', unread: 1, lastMessage: { id: 'm', ticketId: 'demo', from: 'support', authorName: 'Поддержка Kango', text: 'Платёж прошёл с задержкой банка, опцию подключили вручную.', attachments: [], createdAt: '2026-11-04T10:00:00Z' } }" /></div>
+      </ShowItem>
       <ShowItem label="ChatBubble">
         <div class="w col">
           <ChatBubble text="Здравствуйте! Квартира ещё сдаётся?" time="10:38" mine read />

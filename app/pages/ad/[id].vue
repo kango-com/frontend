@@ -13,6 +13,10 @@ watch(id, async (value) => {
   if (loaded) viewed.add(loaded)
 }, { immediate: true })
 
+// после входа на этой же странице контакты приходят заново (гость их не получал)
+const auth = useAuthStore()
+watch(() => auth.isAuthed, () => ads.loadDetails(id.value))
+
 const notFound = computed(() => ads.detailStatus === 'error' && ads.detailError?.status === 404)
 useHead({
   title: computed(() => (ad.value ? `${ad.value.title} - Kango` : tr('Объявление - Kango'))),

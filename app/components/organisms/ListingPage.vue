@@ -102,7 +102,7 @@ const emptyText = computed(() => (filterCount.value || q.value ? tr('Ничег�
 </script>
 
 <template>
-  <KContainer as="section" class="lp" :aria-labelledby="titleId">
+  <KContainer as="section" class="lp" :class="{ 'lp--map': mapView }" :aria-labelledby="titleId">
     <!-- результаты поиска на мобильном: назад, строка поиска, фильтр (как в макете) -->
     <KNavBar
       v-if="!section"
@@ -120,34 +120,36 @@ const emptyText = computed(() => (filterCount.value || q.value ? tr('Ничег�
       <p v-if="subtitle" class="lp__count" aria-live="polite">{{ subtitle }}</p>
     </header>
 
-    <KSegmentControl v-if="section === 'work'" v-model="workMode" class="lp__seg" :options="workOptions" :label="tr('Режим')" />
-    <template v-if="section === 'realty'">
-      <KSegmentControl v-model="deal" class="lp__seg" :options="dealOptions" :label="tr('Тип сделки')" />
-      <KSegmentControl v-model="kind" class="lp__seg" :options="kindOptions" :label="tr('Вид жилья')" />
-    </template>
+    <div class="lp__controls" :class="{ 'lp__controls--map': mapView }">
+      <KSegmentControl v-if="section === 'work'" v-model="workMode" class="lp__seg" :options="workOptions" :label="tr('Режим')" />
+      <template v-if="section === 'realty'">
+        <KSegmentControl v-model="deal" class="lp__seg" :options="dealOptions" :label="tr('Тип сделки')" />
+        <KSegmentControl v-model="kind" class="lp__seg" :options="kindOptions" :label="tr('Вид жилья')" />
+      </template>
 
-    <KSearchField
-      v-if="section"
-      v-model="search"
-      class="lp__search"
-      :placeholder="tr(SEARCH_HINTS[section])"
-      :label="tr(SEARCH_HINTS[section])"
-      @submit="setQuery({ q: $event.trim() || undefined })"
-    />
+      <KSearchField
+        v-if="section"
+        v-model="search"
+        class="lp__search"
+        :placeholder="tr(SEARCH_HINTS[section])"
+        :label="tr(SEARCH_HINTS[section])"
+        @submit="setQuery({ q: $event.trim() || undefined })"
+      />
 
-    <ListingToolbar
-      :cities="city.chips"
-      :active-city-id="city.current.id"
-      :sort-label="sortStore.label"
-      :sort-active="sort !== 'default'"
-      :filters-count="filterCount"
-      :search="!section"
-      @city="selectCity"
-      @sort="ui.open('sort')"
-      @filters="ui.open('filters')"
-    />
+      <ListingToolbar
+        :cities="city.chips"
+        :active-city-id="city.current.id"
+        :sort-label="sortStore.label"
+        :sort-active="sort !== 'default'"
+        :filters-count="filterCount"
+        :search="!section"
+        @city="selectCity"
+        @sort="ui.open('sort')"
+        @filters="ui.open('filters')"
+      />
 
-    <KSegmentControl v-if="section === 'realty'" class="lp__view" :model-value="mapView ? 'map' : 'list'" :options="VIEW_OPTIONS" :label="tr('Вид')" @update:model-value="setView" />
+      <KSegmentControl v-if="section === 'realty'" class="lp__view" :model-value="mapView ? 'map' : 'list'" :options="VIEW_OPTIONS" :label="tr('Вид')" @update:model-value="setView" />
+    </div>
 
     <MapSearch v-if="mapView" :query="query" :focus-id="typeof route.query.focus === 'string' ? route.query.focus : undefined" @list="setView('list')" />
     <AdsFeed
@@ -180,6 +182,19 @@ const emptyText = computed(() => (filterCount.value || q.value ? tr('Ничег�
   .lp__title { font-size: 28px; line-height: 32px; }
   .lp__seg, .lp__search { max-width: 480px; }
   .lp__view { max-width: 240px; }
+}
+/* Элементы управления без своей коробки: колонкой, как раньше. В режиме карты на планшете и desktop - одной компактной строкой, чтобы карта попала на первый экран */
+.lp__controls { display: contents; }
+@media (min-width: 768px) {
+  .lp__controls--map { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 16px; }
+  .lp__controls--map .lp__seg { flex: 0 0 240px; max-width: 240px; }
+  .lp__controls--map .lp__search { flex: 1 1 240px; max-width: 320px; }
+  .lp__controls--map .lp__view { flex: 0 0 200px; max-width: 200px; margin-inline-start: auto; }
+}
+/* Режим карты на планшете и desktop: заголовок и счётчик в одну строку, меньше воздуха - карта выше */
+@media (min-width: 768px) {
+  .lp--map { gap: 12px; padding-block: 16px 24px; }
+  .lp--map .lp__head { flex-direction: row; align-items: baseline; gap: 12px; }
 }
 /* поиск на мобильном: верхняя панель вместо заголовка, заголовок остаётся для скринридера */
 .lp__nav { margin-inline: -16px; }

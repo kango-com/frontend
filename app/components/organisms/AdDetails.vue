@@ -59,7 +59,7 @@ const location = computed(() => [props.ad.city, props.ad.district, props.ad.addr
       <aside class="ad__side" :aria-label="tr('Контакты и автор')">
         <section class="ad__block ad__contacts" aria-labelledby="ad-contacts">
           <h2 id="ad-contacts" class="ad__h2">{{ tr('Контакты') }}</h2>
-          <ContactBar :phone="ad.contacts.phone" :telegram="ad.contacts.telegram" :whatsapp="ad.contacts.whatsapp" :ad-id="ad.id" />
+          <ContactBar :phone="ad.contacts.phone" :telegram="ad.contacts.telegram" :whatsapp="ad.contacts.whatsapp" :ad-id="ad.id" :hidden="ad.contactsHidden" :kinds="ad.contactKinds" />
         </section>
 
         <section class="ad__block" aria-labelledby="ad-author">

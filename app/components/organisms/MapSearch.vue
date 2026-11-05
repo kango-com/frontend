@@ -82,14 +82,27 @@ const sheet = ref(false)
 // высота блока = от его верха до низа экрана: карта целиком помещается на первом экране, а не обрезается снизу
 const rootEl = ref<HTMLElement>()
 const blockH = ref<number>()
+const safeBottom = () => {
+  const probe = document.createElement('div')
+  probe.style.cssText = 'position:fixed;bottom:0;height:env(safe-area-inset-bottom,0px);visibility:hidden'
+  document.body.append(probe)
+  const h = probe.getBoundingClientRect().height
+  probe.remove()
+  return h
+}
 function measure() {
   if (!rootEl.value) return
   const top = rootEl.value.getBoundingClientRect().top + window.scrollY
-  blockH.value = Math.round(window.innerHeight - top - 16)
+  // ниже 1380 внизу окна фиксирована нижняя панель навигации (56px + безопасная зона): карта не должна уходить под неё
+  const tabbar = window.innerWidth < 1380 ? 56 + safeBottom() : 0
+  // телефон: карта занимает весь экран между шапкой (50px) и нижней панелью, фильтры остаются выше - к ним прокручивают
+  blockH.value = Math.round(window.innerWidth < 768 ? window.innerHeight - 50 - 8 - tabbar : window.innerHeight - top - 16 - tabbar)
 }
 let ro: ResizeObserver | undefined
 onMounted(() => {
   measure()
+  // телефон: при открытии карты прокручиваем страницу так, чтобы карта встала под шапку
+  if (window.innerWidth < 768) nextTick(() => rootEl.value?.scrollIntoView({ block: 'start' }))
   ro = new ResizeObserver(measure)
   ro.observe(document.documentElement)
   window.addEventListener('resize', measure)
@@ -156,7 +169,7 @@ onBeforeUnmount(() => {
 </template>
 
 <style scoped>
-.msr { position: relative; display: flex; height: calc(100dvh - var(--header-h) - 56px - 210px); min-height: 420px; margin-inline: -16px; }
+.msr { position: relative; scroll-margin-top: 58px; display: flex; height: calc(100dvh - var(--header-h) - 56px - 210px); min-height: 360px; margin-inline: -16px; }
 .msr__side { display: none; }
 .msr__map { flex: 1; min-width: 0; }
 .msr__float { position: absolute; inset: auto 12px 12px; z-index: 5; display: flex; flex-direction: column; gap: 8px; pointer-events: none; }
@@ -174,7 +187,7 @@ onBeforeUnmount(() => {
 
 /* desktop: список слева, карта справа; плавающих карточки и кнопок нет */
 @media (min-width: 1380px) {
-  .msr { gap: 20px; height: calc(100dvh - var(--header-h) - 48px); min-height: 520px; margin-inline: 0; }
+  .msr { gap: 20px; height: calc(100dvh - var(--header-h) - 48px); min-height: 440px; margin-inline: 0; }
   .msr__side { display: flex; flex: 0 0 400px; flex-direction: column; gap: 12px; padding: 4px; overflow-y: auto; scrollbar-width: thin; }
   .msr__list { display: flex; flex-direction: column; gap: 10px; margin: 0; padding: 0; list-style: none; }
   .msr__list > li { border-radius: var(--radius-md); outline: 2px solid transparent; outline-offset: 0; transition: outline-color 0.15s ease-out; }

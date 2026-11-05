@@ -126,8 +126,15 @@ export const adsHandlers = (base: string) => [
     // служебные поля мока наружу не отдаём
     const { cityId: _c, districtId: _d, authorId: _a, distance: _dist, moderationSince: _m, holdModeration: _h, ...pub } = ad
     // скрытый адрес: точную точку видит только автор (для правки), остальные - центр приблизительной области
-    const isAuthor = currentUser(request)?.id === ad.authorId
-    return json(ad.hideExactLocation && !isAuthor ? { ...pub, coordinates: publicPoint(ad) } : pub)
+    const viewer = currentUser(request)
+    const isAuthor = viewer?.id === ad.authorId
+    const shown = ad.hideExactLocation && !isAuthor ? { ...pub, coordinates: publicPoint(ad) } : pub
+    // гость контактов не получает вообще (не только скрывает в интерфейсе): сервер отдаёт только перечень способов связи
+    if (!viewer) {
+      const kinds = (['phone', 'telegram', 'whatsapp'] as const).filter(k => !!pub.contacts?.[k])
+      return json({ ...shown, contacts: {}, contactsHidden: true, contactKinds: kinds })
+    }
+    return json(shown)
   }),
 
   http.post(`${base}/ads`, async ({ request }) => {

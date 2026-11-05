@@ -3,7 +3,7 @@ export interface CabinetLink {
   to: string
   label: string
   /** Ключ счётчика, который подставляет страница (непрочитанные, объявления и т.п.) */
-  count?: 'ads' | 'favorites' | 'services' | 'messages'
+  count?: 'ads' | 'favorites' | 'services' | 'messages' | 'support'
 }
 
 export const CABINET_LINKS: CabinetLink[] = [
@@ -12,7 +12,7 @@ export const CABINET_LINKS: CabinetLink[] = [
   { to: '/favorites', label: 'Избранное', count: 'favorites' },
   { to: '/viewed', label: 'История просмотров' },
   { to: '/profile/services', label: 'Платные услуги', count: 'services' },
-  { to: '/profile/support', label: 'Поддержка' },
+  { to: '/profile/support', label: 'Поддержка', count: 'support' },
   { to: '/profile/edit', label: 'Мой профиль' },
   { to: '/profile/settings', label: 'Настройки' }
 ]

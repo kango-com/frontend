@@ -7,9 +7,17 @@ const props = defineProps<{
   whatsapp?: string
   /** Объявление, по которому открывается чат: показывает кнопку «Написать в чат» */
   adId?: string
+  /** Гость: сами контакты не получены, кнопки ведут на вход (ТЗ п. 6, 12 №5) */
+  hidden?: boolean
+  kinds?: ('phone' | 'telegram' | 'whatsapp')[]
 }>()
 
-const links = computed(() => contactLinks(props))
+const ui = useUiStore()
+const route = useRoute()
+const links = computed(() => (props.hidden
+  ? (props.kinds ?? []).map(kind => ({ kind, label: kind === 'phone' ? tr('Позвонить') : kind === 'telegram' ? 'Telegram' : 'WhatsApp', href: '' }))
+  : contactLinks(props)))
+const toLogin = () => ui.openLogin(route.fullPath)
 </script>
 
 <template>
@@ -19,9 +27,10 @@ const links = computed(() => contactLinks(props))
       :key="l.kind"
       class="cbar__btn"
       :variant="l.kind === 'phone' ? 'primary' : 'outline'"
-      :href="l.href"
-      :target="l.kind === 'phone' ? undefined : '_blank'"
-      rel="noopener"
+      :href="hidden ? undefined : l.href"
+      :target="hidden || l.kind === 'phone' ? undefined : '_blank'"
+      :rel="hidden ? undefined : 'noopener'"
+      @click="hidden ? toLogin() : undefined"
     >{{ tr(l.label) }}</KButton>
     <!-- внутренний чат: ведёт в раздел «Сообщения» (для гостя откроется окно входа) -->
     <KButton v-if="adId" class="cbar__btn cbar__chat" variant="outline" :to="`/messages?ad=${adId}`">
