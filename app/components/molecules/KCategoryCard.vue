@@ -56,7 +56,7 @@ const attrs = computed(() => (props.to ? { to: props.to } : {}))
   padding: 8px;
   overflow: hidden;
   border-radius: var(--radius-md);
-  --kcat-base: #f9eadd;
+  --kcat-base: #ffebdf;
   background-color: var(--kcat-base);
   background-position: center bottom;
   background-repeat: no-repeat;
@@ -66,9 +66,9 @@ const attrs = computed(() => (props.to ? { to: props.to } : {}))
 }
 /* Подложки совпадают с фоном иллюстраций */
 .kcat--work { --kcat-accent: var(--color-fill-primary); }
-.kcat--real-estate { --kcat-base: var(--color-fill-tint); --kcat-accent: var(--color-fill-color-3); }
-.kcat--goods { --kcat-base: #e7f1f0; --kcat-accent: #5b4bd6; }
-.kcat--services { --kcat-base: #eeecf7; --kcat-accent: var(--color-fill-color-3); }
+.kcat--real-estate { --kcat-base: #ddf2ed; --kcat-accent: var(--color-fill-color-3); }
+.kcat--goods { --kcat-base: #f1f3f5; --kcat-accent: var(--color-fill-color-3); }
+.kcat--services { --kcat-base: #fff3e4; --kcat-accent: var(--color-fill-primary); }
 .kcat__text { display: flex; flex-direction: column; gap: 4px; min-width: 0; padding: 4px 0 0 4px; }
 .kcat__title {
   font-size: var(--text-17-20);

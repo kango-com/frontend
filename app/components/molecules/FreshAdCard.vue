@@ -61,7 +61,7 @@ const priceParts = computed(() => {
 }
 .fad--services { --fad-bg: #dff2ee; }
 .fad--work { --fad-bg: #fdeee2; }
-.fad--goods { --fad-bg: #ece9f8; }
+.fad--goods { --fad-bg: #f1f3f5; }
 .fad__media { position: relative; aspect-ratio: 1.12 / 1; overflow: hidden; border-radius: 24px 24px 0 0; background: var(--color-fill-gray-3); }
 .fad__img { display: block; width: 100%; height: 100%; object-fit: cover; }
 .fad__img--empty { object-fit: contain; background: #fdf9f6; }

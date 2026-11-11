@@ -31,6 +31,6 @@ defineProps<{
 .pchips__icon { flex: none; color: var(--color-fill-primary); }
 .pchips__item--1 { background: #dff2ee; }
 .pchips__item--1 .pchips__icon { color: var(--color-fill-color-3); }
-.pchips__item--2 { background: #ece9f8; }
-.pchips__item--2 .pchips__icon { color: #5b4bd6; }
+.pchips__item--2 { background: #f1f3f5; }
+.pchips__item--2 .pchips__icon { color: var(--color-label-primary); }
 </style>
