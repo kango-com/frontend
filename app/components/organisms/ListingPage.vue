@@ -92,7 +92,8 @@ const dealOptions = [{ value: 'rent', label: 'Снять' }, { value: 'sale', la
 const workOptions = [{ value: 'seek-job', label: 'Ищу работу' }, { value: 'seek-employee', label: 'Ищу сотрудника' }]
 const kindOptions = computed(() => [{ value: 'apartment', label: deal.value === 'sale' ? 'Новостройки и вторичка' : 'Квартиры' }, { value: 'room', label: 'Комнаты' }])
 
-const layout = computed(() => (props.section === 'work' || props.section === 'services' ? 'list' : 'grid'))
+// Во всех разделах карточки с фото: у работы и услуг фото тоже есть (в детальной странице они показываются)
+const layout = computed(() => 'grid' as const)
 
 // Недвижимость: список или карта (Договор, Прил. 1, п. 9), вид хранится в адресе - ссылку на карту можно отправить
 const mapView = computed(() => props.section === 'realty' && route.query.view === 'map')

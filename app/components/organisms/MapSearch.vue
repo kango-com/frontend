@@ -126,7 +126,7 @@ onBeforeUnmount(() => {
       <p v-else-if="status === 'success' && !visible.length" class="msr__note">{{ tr('В этой области ничего нет. Отдалите карту или измените фильтры.') }}</p>
       <ul ref="listEl" class="msr__list">
         <li v-for="p in shown" :key="p.id" :data-id="p.id" :class="{ 'msr__item--on': highlight === p.id }" @mouseenter="hover(p)" @mouseleave="hover(null)" @focusin="hover(p)">
-          <KAdCard compact :title="p.title" :price="formatPrice(p.price)" :location="p.location" :image="p.image" :to="`/ad/${p.id}`" :favorite="p.isFavorite" @toggle-favorite="toggleFavorite(p.id)" />
+          <KAdCard compact :title="p.title" :price="formatPrice(p.price)" :variable="!!(p.price.from || (p.price.period && p.price.period !== 'total'))" :location="p.location" :image="p.image" :to="`/ad/${p.id}`" :favorite="p.isFavorite" @toggle-favorite="toggleFavorite(p.id)" />
         </li>
       </ul>
       <KButton v-if="visible.length > shown.length" variant="outline" block @click="limit += LIMIT_STEP">{{ tr('Показать ещё') }}</KButton>
@@ -147,7 +147,7 @@ onBeforeUnmount(() => {
       <!-- телефон и планшет: карточка выбранного объявления и кнопка списка поверх карты -->
       <div class="msr__float">
         <div v-if="selected" class="msr__card">
-          <KAdCard :title="selected.title" :price="formatPrice(selected.price)" :location="selected.location" :image="selected.image" :to="`/ad/${selected.id}`" :favorite="selected.isFavorite" @toggle-favorite="toggleFavorite(selected.id)" />
+          <KAdCard :title="selected.title" :price="formatPrice(selected.price)" :variable="!!(selected.price.from || (selected.price.period && selected.price.period !== 'total'))" :location="selected.location" :image="selected.image" :to="`/ad/${selected.id}`" :favorite="selected.isFavorite" @toggle-favorite="toggleFavorite(selected.id)" />
           <KIconButton class="msr__close" type="close" :label="tr('Закрыть')" @click="selectedId = null" />
         </div>
         <div class="msr__bar">
@@ -160,7 +160,7 @@ onBeforeUnmount(() => {
     <KModalSheet v-model="sheet" :title="countText">
       <ul class="msr__sheet">
         <li v-for="p in shown" :key="p.id">
-          <KAdCard :title="p.title" :price="formatPrice(p.price)" :location="p.location" :image="p.image" :to="`/ad/${p.id}`" :favorite="p.isFavorite" @toggle-favorite="toggleFavorite(p.id)" />
+          <KAdCard :title="p.title" :price="formatPrice(p.price)" :variable="!!(p.price.from || (p.price.period && p.price.period !== 'total'))" :location="p.location" :image="p.image" :to="`/ad/${p.id}`" :favorite="p.isFavorite" @toggle-favorite="toggleFavorite(p.id)" />
         </li>
       </ul>
       <KButton v-if="visible.length > shown.length" variant="outline" block @click="limit += LIMIT_STEP">{{ tr('Показать ещё') }}</KButton>

@@ -135,10 +135,10 @@ function addLayers() {
   // невидимый слой: без слоя MapLibre не грузит источник и querySourceFeatures пуст
   map.addLayer({ id: 'ads-probe', type: 'circle', source: SOURCE, paint: { 'circle-radius': 1, 'circle-opacity': 0 } })
   map.addSource('area', { type: 'geojson', data: areaGeo(props.area) })
-  map.addLayer({ id: 'area-fill', type: 'fill', source: 'area', paint: { 'fill-color': '#fd4a00', 'fill-opacity': 0.08 } })
-  map.addLayer({ id: 'area-line', type: 'line', source: 'area', paint: { 'line-color': '#fd4a00', 'line-width': 2 } })
+  map.addLayer({ id: 'area-fill', type: 'fill', source: 'area', paint: { 'fill-color': '#ff571f', 'fill-opacity': 0.08 } })
+  map.addLayer({ id: 'area-line', type: 'line', source: 'area', paint: { 'line-color': '#ff571f', 'line-width': 2 } })
   map.addSource('draw', { type: 'geojson', data: { type: 'FeatureCollection', features: [] } })
-  map.addLayer({ id: 'draw-line', type: 'line', source: 'draw', paint: { 'line-color': '#fd4a00', 'line-width': 3, 'line-dasharray': [2, 1] } })
+  map.addLayer({ id: 'draw-line', type: 'line', source: 'draw', paint: { 'line-color': '#ff571f', 'line-width': 3, 'line-dasharray': [2, 1] } })
   clearMarkers()
 }
 

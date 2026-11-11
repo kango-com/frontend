@@ -42,7 +42,7 @@ const isEmpty = computed(() => props.status === 'success' && !props.items.length
         <AdRowCard
           v-if="layout === 'list'"
           :title="card.title"
-          :price="formatPrice(card.price)"
+          :price="formatPrice(card.price)" :variable="!!(card.price.from || (card.price.period && card.price.period !== 'total'))"
           :tags="card.tags"
           :note="card.employer"
           :location="card.location"
@@ -51,11 +51,13 @@ const isEmpty = computed(() => props.status === 'success' && !props.items.length
           :action="card.section === 'work' ? tr('Откликнуться') : tr('Связаться')"
           @click="viewed.add(card)"
         />
-        <KAdCard
+        <FreshAdCard
           v-else
+          :section="card.section"
           :title="card.title"
-          :price="formatPrice(card.price)"
+          :price="formatPrice(card.price)" :variable="!!(card.price.from || (card.price.period && card.price.period !== 'total'))"
           :location="card.location"
+          :published="formatPublished(card.createdAt)"
           :image="card.image"
           :favorite="card.isFavorite"
           :to="`/ad/${card.id}`"
@@ -96,7 +98,7 @@ const isEmpty = computed(() => props.status === 'success' && !props.items.length
 .feed__grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 8px 7px;
+  gap: 12px;
   margin: 0;
   padding: 0;
   list-style: none;
@@ -109,7 +111,7 @@ const isEmpty = computed(() => props.status === 'success' && !props.items.length
 .feed__empty { display: flex; flex-direction: column; align-items: center; gap: 4px; padding-bottom: 16px; }
 .feed__error { display: flex; flex-direction: column; align-items: center; gap: 12px; padding: 24px 0; color: var(--color-label-secondary); text-align: center; }
 .feed__error p { margin: 0; }
-.feed__more { display: flex; justify-content: center; margin-top: 20px; }
+.feed__more { display: flex; justify-content: center; margin-top: 32px; }
 .feed__more .kbtn { min-width: 240px; }
 
 @media (min-width: 768px) {
@@ -117,10 +119,11 @@ const isEmpty = computed(() => props.status === 'success' && !props.items.length
   .feed__grid--list { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
 @media (min-width: 1380px) {
-  .feed__title { margin-bottom: 40px; font-size: 28px; line-height: 32px; }
-  .feed__grid { grid-template-columns: repeat(5, minmax(0, 1fr)); }
+  .feed__title { margin-bottom: 20px; font-size: 36px; line-height: 40px; font-weight: 700; letter-spacing: -0.02em; }
+  .feed__grid { grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 20px; }
   .feed__grid--list { grid-template-columns: repeat(3, minmax(0, 1fr)); }
-  .feed__skeleton { height: 354px; }
+  .feed__skeleton { height: 440px; border-radius: 24px; }
+  .feed__more { margin-top: 48px; }
   .feed__grid--list .feed__skeleton { height: 140px; }
 }
 </style>

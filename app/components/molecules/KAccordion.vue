@@ -3,6 +3,8 @@ const open = defineModel<boolean>({ default: false })
 
 defineProps<{
   title: string
+  /** Картинка-иконка слева от заголовка */
+  icon?: string
 }>()
 
 const id = useId()
@@ -18,7 +20,7 @@ const id = useId()
       :aria-controls="`${id}-panel`"
       @click="open = !open"
     >
-      <span class="kacc__title">{{ title }}</span>
+      <span class="kacc__title"><img v-if="icon" :src="icon" class="kacc__pic" alt="" width="32" height="32">{{ title }}</span>
       <Icon name="kango:plus-24" size="24" class="kacc__icon" />
     </button>
     <div v-show="open" :id="`${id}-panel`" class="kacc__panel" role="region" :aria-labelledby="`${id}-head`">
@@ -47,6 +49,8 @@ const id = useId()
   cursor: pointer;
 }
 .kacc__head:focus-visible { outline: var(--border-width-strong) solid var(--color-stroke-primary); outline-offset: 2px; border-radius: var(--radius-sm); }
+.kacc__title { display: inline-flex; align-items: center; gap: 12px; }
+.kacc__pic { flex: none; width: 32px; height: 32px; margin-top: 3px; object-fit: contain; }
 .kacc__icon { flex: none; color: var(--color-fill-gray); transition: transform 0.3s ease-out; }
 .kacc--open .kacc__icon { transform: rotate(45deg); }
 .kacc__panel {

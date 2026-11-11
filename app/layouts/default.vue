@@ -3,7 +3,7 @@ const route = useRoute()
 </script>
 
 <template>
-  <div class="shell">
+  <div class="shell" :class="{ 'shell--home': route.path === '/' || route.path.startsWith('/ad/') }">
     <a class="shell__skip" href="#main">{{ tr('К содержимому') }}</a>
     <AppHeader :class="{ 'shell__header--no-mobile': !!route.meta.hideHeaderMobile }" />
     <main id="main" class="shell__main" tabindex="-1">
@@ -38,8 +38,8 @@ const route = useRoute()
 @media (min-width: 1380px) {
   .shell { --header-h: 128px; padding-bottom: 0; }
 }
-@media (min-width: 1920px) {
-  .shell { --header-h: 128px; }
+@media (min-width: 1380px) {
+  .shell--home { --header-h: 76px; }
 }
 @media (max-width: 767px) {
   .shell__header--no-mobile { display: none; }

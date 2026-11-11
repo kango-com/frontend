@@ -6,11 +6,11 @@ const { t, locale } = useI18n()
 const sections = useSectionsStore()
 const auth = useAuthStore()
 
-const cards: { id: Section, category: 'work' | 'real-estate' | 'goods' | 'services' }[] = [
-  { id: 'work', category: 'work' },
-  { id: 'realty', category: 'real-estate' },
-  { id: 'goods', category: 'goods' },
-  { id: 'services', category: 'services' }
+const cards: { id: Section, category: 'work' | 'real-estate' | 'goods' | 'services', hint: string, icon: string }[] = [
+  { id: 'work', category: 'work', hint: 'Вакансии и резюме', icon: 'kango:briefcase-24' },
+  { id: 'realty', category: 'real-estate', hint: 'Аренда, покупка, продажа', icon: 'kango:home-24' },
+  { id: 'goods', category: 'goods', hint: 'Товары и техника', icon: 'kango:bag-24' },
+  { id: 'services', category: 'services', hint: 'Ремонт, красота, обучение', icon: 'kango:wrench-24' }
 ]
 
 const caption = (id: Section) => {
@@ -22,14 +22,14 @@ const caption = (id: Section) => {
 <template>
   <ul class="sections">
     <li v-for="c in cards" :key="c.id">
-      <KCategoryCard :category="c.category" :title="t(`sections.${c.id}`)" :caption="caption(c.id)" :to="`/${c.id}`" />
+      <KCategoryCard :category="c.category" :title="t(`sections.${c.id}`)" :caption="caption(c.id)" :hint="tr(c.hint)" :to="`/${c.id}`" />
     </li>
     <li class="sections__account"><AccountCard :logged-in="auth.isAuthed" /></li>
   </ul>
 </template>
 
 <style scoped>
-/* 375: 2x2 (168x150, gap 7-8), 768: 4 в ряд (175x154, gap 12), 1380+: 5 в ряд (246x200, gap 12), пятая карточка про аккаунт */
+/* 375: 2x2 (168x150, gap 7-8), 768: 4 в ряд (175x154, gap 12), 1380+: 4 в ряд (высота 136, gap 20) */
 .sections {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -46,15 +46,10 @@ const caption = (id: Section) => {
 /* карточка аккаунта только на desktop */
 .sections__account { display: none; }
 @media (min-width: 1380px) {
-  .sections { grid-template-columns: repeat(5, minmax(0, 1fr)); }
-  .sections__account { display: block; }
-  .sections :deep(.kcat) { aspect-ratio: auto; height: 200px; }
-}
-
-/* Wide 1920: четыре раздела 194x170, карточки аккаунта нет */
-@media (min-width: 1920px) {
-  .sections { grid-template-columns: repeat(4, 194px); }
-  .sections__account { display: none; }
-  .sections :deep(.kcat) { aspect-ratio: 194 / 170; height: auto; }
+  .sections { gap: 20px; grid-template-columns: repeat(4, minmax(0, 1fr)); }
+  .sections :deep(.kcat) { aspect-ratio: auto; height: 150px; padding: 18px; border-radius: 20px; }
+  .sections :deep(.kcat__title) { font-size: 20px; line-height: 24px; font-weight: var(--font-weight-semibold); }
+  .sections :deep(.kcat__hint) { display: block; }
+  .sections :deep(.kcat__arrow) { color: var(--color-fill-color-3); }
 }
 </style>

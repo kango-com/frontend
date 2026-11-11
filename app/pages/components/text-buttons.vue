@@ -6,7 +6,7 @@ useHead({ title: 'Текстовые кнопки и ссылки - Kango' })
 const placeholder = (c: string) => `data:image/svg+xml;utf8,${encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" width="72" height="72"><rect width="72" height="72" fill="${c}"/></svg>`)}`
 const files = ref([
   { id: '1', url: placeholder('#d2d2d2'), name: 'photo-1' },
-  { id: '2', url: placeholder('#ebf4fb'), name: 'photo-2' }
+  { id: '2', url: placeholder('#ddf2ed'), name: 'photo-2' }
 ])
 function remove(id: string) { files.value = files.value.filter(f => f.id !== id) }
 function add(picked: File[]) {

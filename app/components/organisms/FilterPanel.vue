@@ -126,6 +126,12 @@ async function openSelect(f: SelectField) {
   view.value = { kind: 'select', field: f }
   await store.loadRef(src.key, src.load)
 }
+/** Иконки у строк выбора категорий (поле categoryId / category) */
+const selectIcons = computed<Record<string, string | undefined>>(() => {
+  const key = view.value?.kind === 'select' ? view.value.field.key : ''
+  if (key !== 'categoryId' && key !== 'category') return {}
+  return Object.fromEntries(selectItems.value.map(i => [i.id, categoryIcon(section.value, i.id)]))
+})
 const selectItems = computed<RefItem[]>(() => {
   const v = view.value
   if (v?.kind !== 'select') return []
@@ -234,6 +240,7 @@ function fieldKey(f: FieldDef) {
       <PickerView
         :key="view.field.key"
         :items="selectItems"
+        :icons="selectIcons"
         @keydown.esc.stop="backFromView"
         :model-value="pending"
         :multiple="view.field.multiple"

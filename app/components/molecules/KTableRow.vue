@@ -37,6 +37,7 @@ const interactiveAttrs = computed(() => {
     :model-value="!!modelValue"
     @update:model-value="emit('update:modelValue', $event as boolean)"
   >
+    <span v-if="$slots.icon" class="ktr__icon"><slot name="icon" /></span>
     <span class="ktr__text">
       <span class="ktr__label">{{ tr(label) }}</span>
       <span v-if="description" class="ktr__desc">{{ tr(description) }}</span>
@@ -83,7 +84,7 @@ const interactiveAttrs = computed(() => {
 }
 .ktr--row:is(button, a) { cursor: pointer; }
 .ktr--row:focus-visible { outline: var(--border-width-strong) solid var(--color-stroke-primary); outline-offset: 2px; border-radius: var(--radius-sm); }
-.ktr__icon { display: inline-flex; flex: none; color: var(--color-fill-gray); }
+.ktr__icon { display: inline-flex; flex: none; align-items: center; justify-content: center; width: 32px; height: 32px; margin-inline-end: 4px; color: var(--color-fill-gray); }
 .ktr__text { display: flex; flex: 1; flex-direction: column; gap: 2px; min-width: 0; }
 .ktr__label { color: var(--color-label-primary); font-size: var(--text-15-16); line-height: var(--leading-15-16); }
 .ktr__desc { color: var(--color-label-secondary); font-size: var(--text-10-12); line-height: var(--leading-10-12); }

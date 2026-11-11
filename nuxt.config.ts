@@ -50,9 +50,8 @@ export default defineNuxtConfig({
   components: [{ path: '~/components', pathPrefix: false }],
   fonts: {
     families: [
-      { name: 'Inter', weights: [400, 500, 600], styles: ['normal'], subsets: ['latin', 'cyrillic'] },
-      { name: 'Inter Tight', weights: [400, 500], styles: ['normal'], subsets: ['latin', 'cyrillic'] },
-      { name: 'Heebo', weights: [400, 500], styles: ['normal'], subsets: ['hebrew', 'latin'] }
+      { name: 'Onest', weights: [400, 500, 600, 700], styles: ['normal'], subsets: ['latin', 'cyrillic'] },
+      { name: 'Heebo', weights: [400, 500, 600, 700], styles: ['normal'], subsets: ['hebrew', 'latin'] }
     ]
   },
   icon: {

@@ -19,8 +19,9 @@ const props = withDefaults(defineProps<{
 const footerLinks = computed<FooterLink[]>(() => props.links ?? [
   { label: t('footer.about'), to: '/about' },
   { label: t('footer.support'), to: '/support' },
-  { label: t('footer.documents'), group: 'documents' },
-  { label: t('footer.details'), group: 'details' }
+  { label: tr('Контакты'), to: '/support' },
+  { label: t('footer.details'), group: 'details' },
+  { label: t('footer.documents'), group: 'documents' }
 ])
 const copyrightText = computed(() => props.copyright ?? t('footer.copyright'))
 
@@ -38,7 +39,10 @@ const itemsOf = (group: 'documents' | 'details') => (group === 'documents' ? doc
 <template>
   <footer class="kft-footer">
     <div class="kft-footer__inner">
-      <KLogo class="kft-footer__logo" to="/" :height="42" />
+      <div class="kft-footer__brand">
+        <KLogo class="kft-footer__logo" to="/" :height="42" />
+        <p class="kft-footer__copy">{{ copyrightText }}</p>
+      </div>
       <ul class="kft-footer__links">
         <li v-for="l in footerLinks" :key="l.label">
           <NuxtLink v-if="l.to" :to="l.to" class="kft-footer__link">
@@ -71,13 +75,12 @@ const itemsOf = (group: 'documents' | 'details') => (group === 'documents' ? doc
           </template>
         </li>
       </ul>
-      <p class="kft-footer__copy">{{ copyrightText }}</p>
     </div>
   </footer>
 </template>
 
 <style scoped>
-.kft-footer { background: var(--color-fill-gray-3); }
+.kft-footer { background: var(--color-surface); }
 .kft-footer__inner {
   display: flex;
   flex-direction: column;
@@ -112,33 +115,46 @@ const itemsOf = (group: 'documents' | 'details') => (group === 'documents' ? doc
   color: var(--color-label-secondary);
   font-size: var(--text-12-12);
   line-height: var(--leading-12-12);
-  text-align: center;
 }
 
+/* 768+: слева логотип с копирайтом под ним, справа пункты меню в строку; списки документов и реквизитов раскрываются вверх */
+.kft-footer__brand { display: flex; flex-direction: column; gap: 12px; }
 @media (min-width: 768px) {
   .kft-footer__inner {
-    display: grid;
-    grid-template-columns: 124px 1fr;
-    column-gap: 40px;
-    row-gap: 24px;
-    padding: 32px 16px 40px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    gap: 32px;
+    padding: 32px 16px 36px;
   }
-  .kft-footer__logo { grid-row: 1 / span 2; }
-  .kft-footer__links { grid-column: 2; }
-  .kft-footer__copy { grid-column: 2; }
+  .kft-footer__brand { gap: 14px; }
+  .kft-footer__copy { text-align: left; }
+  .kft-footer__links { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 8px 28px; }
+  .kft-footer__links > li { position: relative; }
+  .kft-footer__link { min-height: 40px; gap: 6px; border-bottom: 0; font-size: var(--text-15-16); line-height: var(--leading-15-16); white-space: nowrap; }
+  .kft-footer__link :deep(svg) { width: 16px; height: 16px; }
+  .kft-footer__link--btn { width: auto; }
+  .kft-footer__sub {
+    position: absolute;
+    right: 0;
+    bottom: calc(100% + 8px);
+    z-index: 5;
+    width: 320px;
+    max-height: 60vh;
+    overflow-y: auto;
+    padding: 12px 16px;
+    border: 1px solid color-mix(in srgb, var(--color-label-primary) 8%, transparent);
+    border-radius: 20px;
+    background: var(--color-fill-white);
+    box-shadow: 0 12px 32px color-mix(in srgb, var(--color-label-primary) 14%, transparent);
+  }
 }
 
-/* Desktop: большой логотип слева, список на 505px, копирайт справа сверху */
 @media (min-width: 1380px) {
-  .kft-footer__inner {
-    grid-template-columns: 208px 505px minmax(0, 1fr);
-    column-gap: 50px;
-    padding: 40px 50px 40px;
-    align-items: center;
-  }
-  .kft-footer__logo { grid-row: 1; align-self: center; }
-  .kft-footer__logo :deep(img) { width: auto; height: 56px; }
-  .kft-footer__links { grid-column: 2; grid-row: 1; }
-  .kft-footer__copy { grid-column: 3; grid-row: 1; align-self: start; text-align: right; }
+  .kft-footer__inner { max-width: 1540px; padding: 40px 50px 44px; }
+  .kft-footer__logo :deep(img) { width: auto; height: 48px; }
+  .kft-footer__links { gap: 8px 36px; }
+  .kft-footer__link { font-size: var(--text-16-20); }
 }
 </style>

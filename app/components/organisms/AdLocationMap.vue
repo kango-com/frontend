@@ -37,8 +37,8 @@ async function init() {
     if (!map || map.getSource('place')) return
     if (props.approximate) {
       map.addSource('place', { type: 'geojson', data: { type: 'Feature', properties: {}, geometry: { type: 'Polygon', coordinates: [circlePolygon(props.point, APPROX_RADIUS)] } } })
-      map.addLayer({ id: 'place-fill', type: 'fill', source: 'place', paint: { 'fill-color': '#fd4a00', 'fill-opacity': 0.12 } })
-      map.addLayer({ id: 'place-line', type: 'line', source: 'place', paint: { 'line-color': '#fd4a00', 'line-width': 2, 'line-dasharray': [2, 1.5] } })
+      map.addLayer({ id: 'place-fill', type: 'fill', source: 'place', paint: { 'fill-color': '#ff571f', 'fill-opacity': 0.12 } })
+      map.addLayer({ id: 'place-line', type: 'line', source: 'place', paint: { 'line-color': '#ff571f', 'line-width': 2, 'line-dasharray': [2, 1.5] } })
     }
   }
   map.on('style.load', addShape)

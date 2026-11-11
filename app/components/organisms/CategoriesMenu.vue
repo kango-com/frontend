@@ -51,11 +51,13 @@ watch(() => route.fullPath, () => { open.value = false })
   <KModalSheet v-model="open" fullscreen :title="tr('Все категории')">
     <ul class="cmenu">
       <li v-for="e in ENTRIES" :key="e.id">
-        <KAccordion :model-value="!!expanded[e.id]" :title="tr(e.title)" @update:model-value="toggle(e, $event)">
+        <KAccordion :model-value="!!expanded[e.id]" :title="tr(e.title)" :icon="sectionIcon(e.id)" @update:model-value="toggle(e, $event)">
           <ul class="cmenu__list">
             <li><KTableRow type="chevron" :label="tr('Все в разделе «{title}»', { title: tr(e.title) })" :description="count(e.id)" :to="`/${e.id}`" /></li>
             <li v-for="c in items(e)" :key="c.id">
-              <KTableRow type="chevron" :label="tr(c.title)" :to="`/${e.id}?${e.param}=${encodeURIComponent(c.id)}`" />
+              <KTableRow type="chevron" :label="tr(c.title)" :to="`/${e.id}?${e.param}=${encodeURIComponent(c.id)}`">
+                <template v-if="categoryIcon(e.id, c.id)" #icon><img :src="categoryIcon(e.id, c.id)" class="cmenu__pic" alt="" width="28" height="28"></template>
+              </KTableRow>
             </li>
             <li v-if="status(e) === 'loading' && !items(e).length" class="cmenu__note" aria-busy="true">{{ tr('Загрузка...') }}</li>
             <li v-else-if="status(e) === 'error'" class="cmenu__note" role="alert">
@@ -71,5 +73,6 @@ watch(() => route.fullPath, () => { open.value = false })
 <style scoped>
 .cmenu { margin: 0; padding: 0; list-style: none; }
 .cmenu__list { margin: 0; padding: 0 0 8px; list-style: none; }
+.cmenu__pic { display: block; width: 28px; height: 28px; margin-top: 3px; object-fit: contain; }
 .cmenu__note { padding: 12px 0; color: var(--color-label-secondary); font-size: var(--text-14-16); }
 </style>

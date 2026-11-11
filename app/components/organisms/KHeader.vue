@@ -11,6 +11,8 @@ const props = withDefaults(defineProps<{
   filterDot?: boolean
   /** Раскрытый поиск (desktop): поле на всю ширину, «Найти» внутри, подсказки под ним */
   searching?: boolean
+  /** Шапка главной на desktop: одна строка с вкладками, без поиска и «Все категории» (поиск в обложке) */
+  home?: boolean
 }>(), { city: 'Тель-Авив', search: '' })
 
 const emit = defineEmits<{
@@ -46,7 +48,7 @@ const query = computed({
 </script>
 
 <template>
-  <header ref="root" class="khd" :class="{ 'khd--search': withSearch, 'khd--searching': searching }">
+  <header ref="root" class="khd" :class="{ 'khd--search': withSearch, 'khd--searching': searching, 'khd--home': home }">
     <nav class="khd__top" :aria-label="t('nav.service')">
       <div class="khd__tl">
         <KTextButton to="/about" size="sm">{{ t('nav.about') }}</KTextButton>
@@ -63,6 +65,11 @@ const query = computed({
 
     <div class="khd__main">
       <KLogo class="khd__logo" to="/" :height="32" />
+      <nav class="khd__tabs" :aria-label="t('nav.main')">
+        <NuxtLink to="/" class="khd__tab khd__tab--active">{{ tr('Объявления') }}</NuxtLink>
+        <NuxtLink to="/about" class="khd__tab">{{ t('nav.about') }}</NuxtLink>
+        <NuxtLink to="/support" class="khd__tab">{{ t('nav.support') }}</NuxtLink>
+      </nav>
       <KButton class="khd__cats" variant="secondary" @click="emit('categories')">
         <template #icon-left><Icon name="kango:menu-24" size="24" /></template>
         {{ t('nav.categories') }}
@@ -86,6 +93,10 @@ const query = computed({
         <NuxtLink v-if="loggedIn" to="/messages" class="khd__tool khd__tool--msg" :aria-label="t('tabs.messages')"><Icon name="kango:message-24" size="24" /><KBadge v-if="unread" :count="unread" :label="tr('непрочитанных')" class="khd__badge" /></NuxtLink>
         <NuxtLink :to="loggedIn ? '/profile' : '/login'" class="khd__tool khd__tool--user" :aria-label="loggedIn ? t('nav.profile') : t('nav.login')"><Icon name="kango:user-24" size="24" /></NuxtLink>
       </nav>
+      <KButton class="khd__post" to="/new" size="sm">
+        <template #icon-left><Icon name="kango:plus-24" size="20" /></template>
+        {{ t('nav.post') }}
+      </KButton>
       <nav class="khd__links" :aria-label="t('nav.service')">
         <KTextButton :to="loggedIn ? '/profile' : '/login'" size="sm">
           <template #icon-left><Icon name="kango:user-16" size="16" /></template>
@@ -157,7 +168,7 @@ const query = computed({
 /* Desktop 1380+ (композиция как у крупных досок объявлений): две строки.
    Верхняя: слева «О нас» и «Поддержка», справа «Разместить объявление».
    Основная: логотип, синяя «Все категории», поле поиска с городом внутри, язык, справа избранное, сообщения и профиль. */
-.khd__links, .khd__tools { display: none; }
+.khd__links, .khd__tools, .khd__tabs, .khd__post { display: none; }
 @media (min-width: 1380px) {
   .khd .khd__lang--top { display: none; }
   .khd__top {
@@ -231,5 +242,36 @@ const query = computed({
 }
 @media (min-width: 1380px) and (hover: hover) {
   .khd .khd__tool:hover { color: var(--color-fill-color-4); background: var(--color-fill-tint); }
+}
+
+/* Шапка главной (desktop): одна строка. Логотип, вкладки, затем язык, город, избранное, сообщения, профиль и оранжевая кнопка */
+@media (min-width: 1380px) {
+  .khd.khd--home .khd__top, .khd.khd--home .khd__cats, .khd.khd--home .khd__search { display: none; }
+  .khd.khd--home .khd__main {
+    max-width: 1540px;
+    grid-template-columns: auto auto minmax(0, 1fr) auto auto auto auto;
+    gap: 12px;
+    padding: 14px 50px 14px;
+  }
+  .khd.khd--home .khd__logo { grid-column: 1; margin-right: 32px; }
+  .khd.khd--home .khd__tabs { display: flex; grid-column: 2; grid-row: 1; align-items: center; gap: 32px; }
+  .khd.khd--home .khd__tab {
+    position: relative;
+    padding: 12px 0;
+    color: var(--color-label-primary);
+    font-size: var(--text-16-20);
+    line-height: var(--leading-16-20);
+    font-weight: var(--font-weight-medium);
+    text-decoration: none;
+  }
+  .khd.khd--home .khd__tab--active { color: var(--color-fill-primary); }
+  .khd.khd--home .khd__tab--active::after { content: ''; position: absolute; inset: auto 0 2px; height: 2px; border-radius: 1px; background: var(--color-fill-primary); }
+  .khd.khd--home .khd__lang--m { grid-column: 4; grid-row: 1; }
+  .khd.khd--home .khd__city { grid-column: 5; grid-row: 1; justify-self: auto; margin: 0; height: 44px; padding: 0 14px; border-radius: 22px; background: color-mix(in srgb, var(--color-background) 85%, transparent); font-size: var(--text-15-16); font-weight: var(--font-weight-medium); }
+  .khd.khd--home .khd__city :deep(.kbtn__icon) { color: var(--color-fill-color-3); }
+  .khd.khd--home .khd__chev { display: inline-block; }
+  .khd.khd--home .khd__tools { grid-column: 6; }
+  .khd.khd--home .khd__post { display: inline-flex; grid-column: 7; grid-row: 1; height: 44px; padding-inline: 18px; border-radius: 22px; font-size: var(--text-15-16); white-space: nowrap; }
+  .khd.khd--home .khd__lang--m :deep(.lang__btn) { font-weight: var(--font-weight-medium); }
 }
 </style>

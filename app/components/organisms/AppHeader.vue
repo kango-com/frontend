@@ -74,6 +74,7 @@ function onFocusOut(e: FocusEvent) {
       :logged-in="auth.isAuthed"
       :unread="chat.unreadTotal"
       :with-search="withSearch"
+      :home="route.path === '/' || route.path.startsWith('/ad/')"
       :searching="suggestOpen"
       @city="ui.open('city')"
       @filter="ui.open('filters')"

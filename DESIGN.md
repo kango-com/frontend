@@ -3,27 +3,29 @@ version: alpha
 name: Kango
 description: Дизайн-система Kango, доски объявлений для русскоязычных жителей Израиля. Источник - файл Figma "UX/UI Доска объявлений" (переменные коллекции Kango, страницы "Финализация 1 и 2", "Дизайн система").
 colors:
-  fill-primary: "#FD4A00"
-  stroke-primary: "#FD4A00"
-  fill-color-4: "#C73A00"
-  fill-color: "#3E8EFA"
-  fill-color-3: "#005CFE"
-  stroke-color: "#005CFE"
-  label-primary: "#0E0F11"
+  fill-primary: "#FF571F"
+  stroke-primary: "#FF571F"
+  fill-color-4: "#D94512"
+  fill-color: "#2F9A96"
+  fill-color-3: "#087E79"
+  stroke-color: "#087E79"
+  label-primary: "#24252C"
   label-secondary: "#686868"
   label-gray: "#ACACAC"
   label-white: "#FFFFFF"
   background: "#FFFFFF"
+  page: "#FFFFFF"
+  surface: "#F7F8F9"
   fill-white: "#FFFFFF"
-  fill-disabled: "#FFC9B3"
+  fill-disabled: "#FFCDB8"
   fill-error: "#FF2A2A"
-  label-disabled: "#FF966C"
-  fill-color-disabled: "#D7E6F5"
-  label-color-disabled: "#8AC4FF"
+  label-disabled: "#FF9A73"
+  fill-color-disabled: "#DDF2ED"
+  label-color-disabled: "#8CC5C2"
   fill-gray-4: "#F9F9F9"
   label-gray-2: "#ABABAC"
   label-hint: "#737373"
-  fill-tint: "#EBF4FB"
+  fill-tint: "#DDF2ED"
   fill-gray: "#6C6C6C"
   fill-gray-2: "#D2D2D2"
   fill-gray-3: "#F2F2F2"
@@ -32,55 +34,55 @@ colors:
   separator-gray: "#D2D2D2"
 typography:
   sans:
-    fontFamily: Inter
+    fontFamily: Onest
   sans-tight:
-    fontFamily: Inter Tight
+    fontFamily: Onest
   28-28:
-    fontFamily: Inter
+    fontFamily: Onest
     fontSize: 28px
     lineHeight: 28px
   22-24:
-    fontFamily: Inter
+    fontFamily: Onest
     fontSize: 22px
     lineHeight: 24px
   20-20:
-    fontFamily: Inter
+    fontFamily: Onest
     fontSize: 20px
     lineHeight: 20px
   17-20:
-    fontFamily: Inter
+    fontFamily: Onest
     fontSize: 17px
     lineHeight: 20px
   16-20:
-    fontFamily: Inter
+    fontFamily: Onest
     fontSize: 16px
     lineHeight: 20px
   16-16:
-    fontFamily: Inter
+    fontFamily: Onest
     fontSize: 16px
     lineHeight: 16px
   15-16:
-    fontFamily: Inter
+    fontFamily: Onest
     fontSize: 15px
     lineHeight: 16px
   14-16:
-    fontFamily: Inter
+    fontFamily: Onest
     fontSize: 14px
     lineHeight: 16px
   13-16:
-    fontFamily: Inter
+    fontFamily: Onest
     fontSize: 13px
     lineHeight: 16px
   12-16:
-    fontFamily: Inter
+    fontFamily: Onest
     fontSize: 12px
     lineHeight: 16px
   12-12:
-    fontFamily: Inter
+    fontFamily: Onest
     fontSize: 12px
     lineHeight: 12px
   10-12:
-    fontFamily: Inter
+    fontFamily: Onest
     fontSize: 10px
     lineHeight: 12px
 rounded:
@@ -117,25 +119,25 @@ components:
 
 Kango - веб-платформа объявлений (работа, жильё, мастера) для русскоязычных жителей Израиля. Принципы дизайн-системы: минимализм в деталях, удобство взаимодействия, привычные паттерны, эстетичный дизайн. Интерфейс простой и узнаваемый, пользователь не должен искать меню или базовые функции.
 
-Стиль задают контурные поля и кнопки, минималистичные контурные иконки, шрифт Inter, строгая палитра из чёрного, белого, серого и одного фирменного акцента. Маскот-кенгуру - символ бренда.
+Стиль задают контурные поля и кнопки, минималистичные контурные иконки, шрифт Onest, строгая палитра из чёрного, белого, серого и одного фирменного акцента. Маскот-кенгуру - символ бренда.
 
 ## Colors
 
-Фирменный и единственный акцентный цвет - оранжевый `fill-primary` (он же `stroke-primary` для активной обводки). Остальная палитра нейтральная: текст `label-primary`, второстепенный текст `label-secondary`, неактивный и подсказки `label-gray`, фон страниц `background`, подложки полей и блоков `fill-gray-3`, обводки и разделители серые (`stroke-gray`, `separator-gray`).
+Главный акцентный цвет - оранжевый `fill-primary` (он же `stroke-primary` для активной обводки). Остальная палитра тёплая нейтральная: текст `label-primary`, второстепенный текст `label-secondary`, неактивный и подсказки `label-gray`, фон страниц `background`, подложки полей и блоков `fill-gray-3`, обводки и разделители серые (`stroke-gray`, `separator-gray`).
 
-`fill-disabled` - светлый оранжевый для отключённых элементов (Primary button, Switch, трек Slider). `label-disabled` - текст на отключённой Primary button. `fill-color-disabled` и `label-color-disabled` - отключённые Secondary и Outline (заливка/обводка и текст/иконка). `fill-gray-4` и `label-gray-2` - отключённая Neutral button. `label-hint` - подпись под полем ввода (12/12, Inter Tight). `fill-tint` - светлая подложка слота картинки в Filter Tab.
+`fill-disabled` - светлый оранжевый для отключённых элементов (Primary button, Switch, трек Slider). `label-disabled` - текст на отключённой Primary button. `fill-color-disabled` и `label-color-disabled` - отключённые Secondary и Outline (заливка/обводка и текст/иконка). `fill-gray-4` и `label-gray-2` - отключённая Neutral button. `label-hint` - подпись под полем ввода (12/12). `fill-tint` - светлая подложка слота картинки в Filter Tab.
 
 `fill-error` - красный, в макетах используется в иконках и состояниях ошибки, роль предположительная (в Figma имя переменной не подтверждено).
 
-`fill-color-4` - более тёмный оранжевый, используется для акцентного текста и активного состояния вкладок. Синие `fill-color`, `fill-color-3` и `stroke-color` - вторичные, не заменяют оранжевый как акцент.
+`fill-color-4` - более тёмный оранжевый, используется для акцентного текста и активного состояния вкладок. Бирюзовые `fill-color`, `fill-color-3` (#087E79) и `stroke-color` - второй фирменный цвет для навигации, фильтров, ссылок и второстепенных кнопок, не заменяют оранжевый как акцент. `fill-tint` и `fill-color-disabled` - мятный #DDF2ED. `page` (#FFFFFF) - фон страниц, белый как и `background`. `surface` (#F7F8F9) - фон второстепенных секций и футера. Объявления остаются главным содержимым, маскот и декор не должны отвлекать от поиска.
 
 Тёмной темы в коллекции переменных Kango нет, она не спроектирована. Переменные тёмной темы в файле принадлежат шаблонной системе и в Kango не используются. Синий `#0071DA` из PDF-гайда шаблонный, брендовым не является.
 
 ## Typography
 
-Шрифт Inter, начертания Regular и Medium, Semi Bold только для точечного выделения (например, текст в карточке объявления, подзаголовки). Размеры и межстрочный интервал берутся только из шкалы `typography`, где имя масштаба - размер и межстрочный интервал в px. Основной текст интерфейса - `16-16` и `17-20`, подписи и метки - `12-12`, `12-16` и `10-12`.
+Шрифт Onest (кириллица и латиница) и Heebo для иврита, начертания Regular и Medium, Semi Bold и Bold для заголовков и выделения (например, текст в карточке объявления, подзаголовки). Размеры и межстрочный интервал берутся только из шкалы `typography`, где имя масштаба - размер и межстрочный интервал в px. Основной текст интерфейса - `16-16` и `17-20`, подписи и метки - `12-12`, `12-16` и `10-12`.
 
-Вторичный шрифт Inter Tight (`sans-tight`) используется в стилях диапазона 375-768px (Title 1 34/36, Title 2 24/24 и др.) и в мелком тексте макетов (11/12, 12/12, 16/16). Для остального везде Inter.
+Токен `sans-tight` теперь тоже Onest: отдельного узкого шрифта нет. Иврит автоматически берёт Heebo, потому что в Onest нет еврейских букв.
 
 В Figma есть именованные текстовые стили (56 штук, страница "Дизайн система"), например `375px (Mobile)/Body 1/Medium` = Inter Medium 17/20, `1380px (Desktop)/Title 5 - Medium` = Inter Medium 16/16. Шкала `typography` собрана из них и из фактического использования в макетах "Финализация". Размеры `28-28` (Medium), `22-24` (Medium) и `20-20` (Regular и Semi Bold) в страницу "Дизайн система" не входят, они найдены только в "Финализации". Размер 15px используется в кнопках Secondary и Outline, 17/20 - в Primary button.
 
@@ -149,7 +151,7 @@ Kango - веб-платформа объявлений (работа, жильё
 
 ## Shapes
 
-Радиус `md` (12px) у карточек, полей ввода, кнопок и кнопок-иконок, `tab` (8px) у вкладок и favicon, `sm` (4px) у чекбокса и мелких элементов, `pill` у чипов городов. Основная обводка 1px серая `stroke-gray`, обводка иконок и контуров полей 1.5px `fill-gray`. Активная обводка оранжевая (1px у карточек и чипов, 1.5px у полей и Icon button). Обводка Plain-кнопок, чипов и Ad Card в Figma синяя `fill-color` 1px.
+Радиус `md` (12px) у карточек, полей ввода, кнопок и кнопок-иконок, `tab` (8px) у вкладок и favicon, `sm` (4px) у чекбокса и мелких элементов, `pill` у чипов городов. Основная обводка 1px серая `stroke-gray`, обводка иконок и контуров полей 1.5px `fill-gray`. Активная обводка оранжевая (1px у карточек и чипов, 1.5px у полей и Icon button). Обводка Plain-кнопок, чипов и Ad Card в Figma бирюзовая `fill-color` 1px.
 
 ## Components
 

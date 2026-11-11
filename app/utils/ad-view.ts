@@ -75,6 +75,7 @@ export function adView(ad: Ad): AdView {
         termsTitle: tr('Условия работы'),
         terms: [
           ...(ad.employer ? [{ label: tr('Работодатель'), value: ad.employer }] : []),
+          ...(HEBREW[p.hebrew] ? [{ label: tr('Иврит'), value: tr(HEBREW[p.hebrew]!) }] : []),
           ...(p.conditions.length ? [{ label: tr('Условия'), value: p.conditions.join(', ') }] : []),
           ...(p.ageLimit ? [{ label: tr('Возраст'), value: tr('до {n} лет', { n: p.ageLimit }) }] : [])
         ],

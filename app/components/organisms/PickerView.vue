@@ -17,6 +17,8 @@ const props = defineProps<{
   status?: LoadStatus
   /** Поиск выполняет родитель (сервер): список не фильтруется локально */
   remote?: boolean
+  /** Картинки-иконки строк: id -> адрес (категории) */
+  icons?: Record<string, string | undefined>
 }>()
 
 const emit = defineEmits<{ 'update:modelValue': [ids: string[]], 'search': [query: string] }>()
@@ -53,7 +55,9 @@ const chooseAny = () => emit('update:modelValue', [])
         :selected="picked.includes(i.id)"
         @update:model-value="toggle(i.id)"
         @click="toggle(i.id)"
-      />
+      >
+        <template v-if="icons?.[i.id]" #icon><img :src="icons[i.id]" class="pick__pic" alt="" width="28" height="28"></template>
+      </KTableRow>
       <p v-if="status === 'loading' && !items.length" class="pick__note">{{ tr('Загрузка...') }}</p>
       <p v-else-if="status === 'error'" class="pick__note" role="alert">{{ tr('Не удалось загрузить список.') }}</p>
       <p v-else-if="!shown.length" class="pick__note">{{ tr('Ничего не найдено. Проверьте запрос.') }}</p>
@@ -64,5 +68,6 @@ const chooseAny = () => emit('update:modelValue', [])
 <style scoped>
 .pick { display: flex; flex-direction: column; gap: 12px; }
 .pick__list { display: flex; flex-direction: column; }
+.pick__pic { display: block; width: 28px; height: 28px; margin-top: 3px; object-fit: contain; }
 .pick__note { margin: 0; padding: 24px 0; color: var(--color-label-secondary); font-size: var(--text-16-20); line-height: var(--leading-16-20); text-align: center; }
 </style>

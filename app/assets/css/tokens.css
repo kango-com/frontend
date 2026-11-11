@@ -11,27 +11,29 @@
  */
 :root {
   /* Colors */
-  --color-fill-primary: #fd4a00;
-  --color-stroke-primary: #fd4a00;
-  --color-fill-color-4: #c73a00;
-  --color-fill-color: #3e8efa;
-  --color-fill-color-3: #005cfe;
-  --color-stroke-color: #005cfe;
-  --color-label-primary: #0e0f11;
+  --color-fill-primary: #ff571f;
+  --color-stroke-primary: #ff571f;
+  --color-fill-color-4: #d94512;
+  --color-fill-color: #2f9a96;
+  --color-fill-color-3: #087e79;
+  --color-stroke-color: #087e79;
+  --color-label-primary: #24252c;
   --color-label-secondary: #686868;
   --color-label-gray: #acacac;
   --color-label-white: #ffffff;
   --color-background: #ffffff;
+  --color-page: #ffffff;
+  --color-surface: #f7f8f9;
   --color-fill-white: #ffffff;
-  --color-fill-disabled: #ffc9b3;
+  --color-fill-disabled: #ffcdb8;
   --color-fill-error: #ff2a2a;
-  --color-label-disabled: #ff966c;
-  --color-fill-color-disabled: #d7e6f5;
-  --color-label-color-disabled: #8ac4ff;
+  --color-label-disabled: #ff9a73;
+  --color-fill-color-disabled: #ddf2ed;
+  --color-label-color-disabled: #8cc5c2;
   --color-fill-gray-4: #f9f9f9;
   --color-label-gray-2: #ababac;
   --color-label-hint: #737373;
-  --color-fill-tint: #ebf4fb;
+  --color-fill-tint: #ddf2ed;
   --color-fill-gray: #6c6c6c;
   --color-fill-gray-2: #d2d2d2;
   --color-fill-gray-3: #f2f2f2;
@@ -40,8 +42,8 @@
   --color-separator-gray: #d2d2d2;
 
   /* Typography */
-  --font-sans: 'Inter', 'Heebo', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
-  --font-sans-tight: 'Inter Tight', 'Inter', 'Heebo', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --font-sans: 'Onest', 'Heebo', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --font-sans-tight: 'Onest', 'Heebo', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
   --text-28-28: 28px;  --leading-28-28: 28px;
   --text-22-24: 22px;  --leading-22-24: 24px;
   --text-20-20: 20px;  --leading-20-20: 20px;

@@ -1,7 +1,6 @@
 import type { Ad, AdStatus, Hebrew } from '~/types'
 import { cities, districtsOf, pointInCity } from './geo'
 import { authors } from './users'
-import workImage from '~/assets/img/categories/work.webp'
 import realtyImage from '~/assets/img/categories/real-estate.webp'
 import goodsImage from '~/assets/img/categories/goods.webp'
 import servicesImage from '~/assets/img/categories/services.webp'
@@ -10,6 +9,31 @@ import apartment2 from '~/assets/img/mock/apartment-2.webp'
 import phone1 from '~/assets/img/mock/phone-1.webp'
 import phone2 from '~/assets/img/mock/phone-2.webp'
 import sofa from '~/assets/img/mock/sofa.webp'
+import cookPhoto from '~/assets/img/mock/cook.webp'
+import waiterPhoto from '~/assets/img/mock/waiter.webp'
+import tutorPhoto from '~/assets/img/mock/tutor.webp'
+import applianceRepairPhoto from '~/assets/img/mock/appliance-repair.webp'
+import banquetPhoto from '~/assets/img/mock/banquet.webp'
+import paintingPhoto from '~/assets/img/mock/painting.webp'
+import electricsPhoto from '~/assets/img/mock/electrics.webp'
+import plumberPhoto from '~/assets/img/mock/plumber.webp'
+import washerPhoto from '~/assets/img/mock/washer.webp'
+import tvPhoto from '~/assets/img/mock/tv.webp'
+
+/** Реальные фото по названию объявления; для остальных остаётся картинка раздела */
+const photosByTitle: Record<string, string> = {
+  'Повар в ресторан': cookPhoto,
+  'Официант на полную ставку': waiterPhoto,
+  'Репетитор по математике, 5-11 класс': tutorPhoto,
+  'Ремонт бытовой техники (стиральные, холодильники)': applianceRepairPhoto,
+  'Банкетный зал на 80 гостей, свадьбы и праздники': banquetPhoto,
+  'Малярные работы и поклейка обоев': paintingPhoto,
+  'Ремонт электропроводки, установка розеток': electricsPhoto,
+  'Услуги сантехника, замена труб, радиаторов': plumberPhoto,
+  'Стиральная машина Beko 8 кг': washerPhoto,
+  'Телевизор LG 55 дюймов': tvPhoto,
+  'Телевизор Smart tv Samsung': tvPhoto
+}
 
 export type AdRecord = Ad & {
   cityId: string
@@ -55,12 +79,15 @@ const hoursAgo = () => new Date(NOW - int(1, 24 * 14) * 3600_000).toISOString()
 const streets = ['Ибн Гвироль', 'Дизенгоф', 'Бен-Йехуда', 'Герцль', 'Жаботинский', 'Алленби', 'Рутшильд', 'Пальмовая', 'Лимонная', 'Солнечная', 'Зелёная', 'Давида']
 
 let counter = 1000
-function base(section: Ad['section'], image: string) {
+function base(section: Ad['section'], image?: string) {
   const city = pick(cityPool)
   const dists = districtsOf(city.id)
   const district = pick(dists)
   const author = pick(authors)
   const id = `a${++counter}`
+  // у части объявлений фото нет: проверяем заглушку
+  const randomNoPhoto = rnd() < 0.1
+  const noPhotoAd = !image || randomNoPhoto
   const street = `${pick(streets)}, ${int(1, 90)}`
   return {
     id,
@@ -69,8 +96,8 @@ function base(section: Ad['section'], image: string) {
     createdAt: hoursAgo(),
     promoted: rnd() < 0.08,
     highlighted: rnd() < 0.06,
-    images: [image, image, image].slice(0, int(1, 3)),
-    image,
+    images: noPhotoAd || !image ? [] : [image, image, image].slice(0, int(1, 3)),
+    image: noPhotoAd ? undefined : image,
     city: city.name,
     cityId: city.id,
     district: district.name,
@@ -86,7 +113,7 @@ function base(section: Ad['section'], image: string) {
 }
 
 // ---------- Работа ----------
-const workTemplates: { title: string, cat: string, pos: string, employer: string, wage: number, schedule: string[], hebrew: Hebrew, exp: 'none' | 'required' }[] = [
+const workTemplates: { title: string, cat: string, pos: string, employer: string, wage: number, schedule: string[], hebrew: Hebrew, exp: 'none' | 'required', period?: 'hour' | 'month' | 'day' | 'shift' }[] = [
   { title: 'Требуется уборщица / уборщик помещений', cat: 'office', pos: 'office-p4', employer: 'Золотое яблоко', wage: 45, schedule: ['Дневные смены'], hebrew: 'none', exp: 'none' },
   { title: 'Кассир в супермаркет', cat: 'sales', pos: 'sales-p4', employer: 'Супермаркет «Магнит»', wage: 38, schedule: ['Полная занятость'], hebrew: 'any', exp: 'none' },
   { title: 'Помощник официанта', cat: 'hospitality', pos: 'hospitality-p8', employer: 'Кафе «Луна»', wage: 42, schedule: ['Вечерние смены'], hebrew: 'none', exp: 'none' },
@@ -98,19 +125,62 @@ const workTemplates: { title: string, cat: string, pos: string, employer: string
   { title: 'Frontend-разработчик (Vue)', cat: 'it', pos: 'it-p1', employer: 'Studio Kango', wage: 140, schedule: ['Гибкий график'], hebrew: 'none', exp: 'required' },
   { title: 'Плиточник на объект', cat: 'construction', pos: 'construction-p2', employer: 'Бригада Леви', wage: 90, schedule: ['Дневные смены'], hebrew: 'none', exp: 'required' },
   { title: 'Мастер маникюра в салон', cat: 'beauty', pos: 'beauty-p1', employer: 'Салон «Лилия»', wage: 70, schedule: ['Сменный график'], hebrew: 'any', exp: 'required' },
-  { title: 'Продавец-консультант', cat: 'retail', pos: 'retail-p1', employer: 'Магазин «Эрмитаж»', wage: 40, schedule: ['Дневные смены'], hebrew: 'required', exp: 'none' }
+  { title: 'Продавец-консультант', cat: 'retail', pos: 'retail-p1', employer: 'Магазин «Эрмитаж»', wage: 40, schedule: ['Дневные смены'], hebrew: 'required', exp: 'none' },
+  { title: 'Backend-разработчик (Node.js)', cat: 'it', pos: 'it-p2', employer: 'Fintech Labs', wage: 32000, schedule: ['Гибкий график'], hebrew: 'any', exp: 'required', period: 'month' },
+  { title: 'QA-инженер (ручное и авто тестирование)', cat: 'it', pos: 'it-p3', employer: 'Studio Kango', wage: 24000, schedule: ['Дневные смены'], hebrew: 'any', exp: 'required', period: 'month' },
+  { title: 'DevOps-инженер', cat: 'it', pos: 'it-p4', employer: 'CloudNet', wage: 38000, schedule: ['Гибкий график'], hebrew: 'any', exp: 'required', period: 'month' },
+  { title: 'Менеджер проектов в IT', cat: 'it', pos: 'it-p5', employer: 'Vision Soft', wage: 30000, schedule: ['Дневные смены'], hebrew: 'required', exp: 'required', period: 'month' },
+  { title: 'Менеджер по продажам', cat: 'sales', pos: 'sales-p1', employer: 'Компания «Строй-Мир»', wage: 12000, schedule: ['Дневные смены'], hebrew: 'any', exp: 'required', period: 'month' },
+  { title: 'Консультант в салон связи', cat: 'sales', pos: 'sales-p2', employer: 'Салон «Мобил»', wage: 42, schedule: ['Дневные смены', 'Вечерние смены'], hebrew: 'required', exp: 'none' },
+  { title: 'Кассир в магазин у дома', cat: 'sales', pos: 'sales-p4', employer: 'Мини-маркет «Шуферсаль»', wage: 36, schedule: ['Вечерние смены'], hebrew: 'any', exp: 'none' },
+  { title: 'Разнорабочий на стройку', cat: 'construction', pos: 'construction-p1', employer: 'Бригада Леви', wage: 350, schedule: ['Дневные смены'], hebrew: 'none', exp: 'none', period: 'day' },
+  { title: 'Маляр-отделочник', cat: 'construction', pos: 'construction-p3', employer: 'ООО «РемСтрой»', wage: 95, schedule: ['Дневные смены'], hebrew: 'none', exp: 'required' },
+  { title: 'Электрик на объекты', cat: 'construction', pos: 'construction-p4', employer: 'Электро-Сервис', wage: 110, schedule: ['Дневные смены'], hebrew: 'any', exp: 'required' },
+  { title: 'Прораб, ремонт квартир', cat: 'construction', pos: 'construction-p5', employer: 'Дом-Мастер', wage: 17000, schedule: ['Дневные смены'], hebrew: 'any', exp: 'required', period: 'month' },
+  { title: 'Кладовщик на склад', cat: 'production', pos: 'production-p2', employer: 'Логистик-Центр', wage: 46, schedule: ['Дневные смены', 'Ночные смены'], hebrew: 'any', exp: 'none' },
+  { title: 'Оператор станка', cat: 'production', pos: 'production-p3', employer: 'Завод «Пласт»', wage: 14000, schedule: ['Дневные смены', 'Ночные смены'], hebrew: 'none', exp: 'required', period: 'month' },
+  { title: 'Упаковщик на производство', cat: 'production', pos: 'production-p4', employer: 'Фабрика «Сладости»', wage: 38, schedule: ['Дневные смены'], hebrew: 'none', exp: 'none' },
+  { title: 'Медсестра в частную клинику', cat: 'medicine', pos: 'medicine-p1', employer: 'Клиника «Здоровье»', wage: 16000, schedule: ['Дневные смены'], hebrew: 'required', exp: 'required', period: 'month' },
+  { title: 'Помощник по уходу за пожилыми', cat: 'medicine', pos: 'medicine-p2', employer: 'Центр «Забота»', wage: 52, schedule: ['Ночные смены', 'Дневные смены'], hebrew: 'none', exp: 'none' },
+  { title: 'Фармацевт в аптеку', cat: 'medicine', pos: 'medicine-p3', employer: 'Аптека «Фарм»', wage: 15500, schedule: ['Дневные смены'], hebrew: 'required', exp: 'required', period: 'month' },
+  { title: 'Шеф-повар в ресторан', cat: 'hospitality', pos: 'hospitality-p1', employer: 'Ресторан «Нептун»', wage: 22000, schedule: ['Дневные смены', 'Вечерние смены'], hebrew: 'any', exp: 'required', period: 'month' },
+  { title: 'Бармен в ночной клуб', cat: 'hospitality', pos: 'hospitality-p9', employer: 'Клуб «Эйфория»', wage: 60, schedule: ['Ночные смены'], hebrew: 'any', exp: 'required' },
+  { title: 'Стюард кухни', cat: 'hospitality', pos: 'hospitality-p4', employer: 'Отель «Ривьера»', wage: 38, schedule: ['Вечерние смены', 'Ночные смены'], hebrew: 'none', exp: 'none' },
+  { title: 'Репетитор по английскому', cat: 'education', pos: 'education-p1', employer: 'Школа «Лингва»', wage: 120, schedule: ['Вечерние смены'], hebrew: 'any', exp: 'required' },
+  { title: 'Воспитатель в детский сад', cat: 'education', pos: 'education-p2', employer: 'Детский сад «Радуга»', wage: 10500, schedule: ['Дневные смены'], hebrew: 'required', exp: 'required', period: 'month' },
+  { title: 'Преподаватель иврита (ульпан)', cat: 'education', pos: 'education-p3', employer: 'Ульпан «Алеф»', wage: 85, schedule: ['Вечерние смены'], hebrew: 'required', exp: 'required' },
+  { title: 'Бухгалтер, русскоязычный клиент', cat: 'finance', pos: 'finance-p1', employer: 'Бюро «Баланс»', wage: 13500, schedule: ['Дневные смены'], hebrew: 'any', exp: 'required', period: 'month' },
+  { title: 'Юрист по недвижимости', cat: 'finance', pos: 'finance-p2', employer: 'Адвокат Коэн и партнёры', wage: 18000, schedule: ['Дневные смены'], hebrew: 'required', exp: 'required', period: 'month' },
+  { title: 'Курьер на скутере', cat: 'drivers', pos: 'drivers-p1', employer: 'Служба доставки «Вольт»', wage: 45, schedule: ['Гибкий график'], hebrew: 'none', exp: 'none' },
+  { title: 'Водитель грузовика категории C', cat: 'drivers', pos: 'drivers-p3', employer: 'Транспорт-Юг', wage: 13000, schedule: ['Дневные смены'], hebrew: 'any', exp: 'required', period: 'month' },
+  { title: 'Водитель такси на своём авто', cat: 'drivers', pos: 'drivers-p4', employer: 'Gett Taxi', wage: 400, schedule: ['Гибкий график'], hebrew: 'any', exp: 'required', period: 'day' },
+  { title: 'Сельскохозяйственный рабочий в теплицу', cat: 'agriculture', pos: 'agriculture-p1', employer: 'Ферма «Эмек»', wage: 320, schedule: ['Дневные смены'], hebrew: 'none', exp: 'none', period: 'day' },
+  { title: 'Тракторист', cat: 'agriculture', pos: 'agriculture-p2', employer: 'Кибуц «Дорот»', wage: 11500, schedule: ['Дневные смены'], hebrew: 'any', exp: 'required', period: 'month' },
+  { title: 'Графический дизайнер', cat: 'design', pos: 'design-p1', employer: 'Агентство «Пиксель»', wage: 11000, schedule: ['Гибкий график'], hebrew: 'any', exp: 'required', period: 'month' },
+  { title: 'SMM-менеджер для магазина', cat: 'design', pos: 'design-p2', employer: 'Бутик «Лотос»', wage: 75, schedule: ['Гибкий график'], hebrew: 'none', exp: 'none' },
+  { title: 'Маркетолог (digital)', cat: 'design', pos: 'design-p3', employer: 'Группа «Реклама+»', wage: 14000, schedule: ['Дневные смены'], hebrew: 'any', exp: 'required', period: 'month' },
+  { title: 'Продавец в магазин одежды', cat: 'retail', pos: 'retail-p1', employer: 'Бутик «Лотос»', wage: 39, schedule: ['Дневные смены', 'Вечерние смены'], hebrew: 'required', exp: 'none' },
+  { title: 'Мерчендайзер', cat: 'retail', pos: 'retail-p2', employer: 'Сеть «Рами Леви»', wage: 41, schedule: ['Дневные смены'], hebrew: 'any', exp: 'none' },
+  { title: 'Администратор магазина', cat: 'retail', pos: 'retail-p3', employer: 'Магазин «Эрмитаж»', wage: 10500, schedule: ['Дневные смены'], hebrew: 'any', exp: 'required', period: 'month' },
+  { title: 'Парикмахер-стилист', cat: 'beauty', pos: 'beauty-p2', employer: 'Салон «Лилия»', wage: 80, schedule: ['Дневные смены', 'Вечерние смены'], hebrew: 'any', exp: 'required' },
+  { title: 'Косметолог', cat: 'beauty', pos: 'beauty-p3', employer: 'Центр «Эстетика»', wage: 12000, schedule: ['Дневные смены'], hebrew: 'any', exp: 'required', period: 'month' },
+  { title: 'Массажист', cat: 'beauty', pos: 'beauty-p4', employer: 'SPA «Релакс»', wage: 90, schedule: ['Вечерние смены'], hebrew: 'none', exp: 'required' },
+  { title: 'Секретарь в офис', cat: 'office', pos: 'office-p1', employer: 'Адвокатская контора', wage: 9800, schedule: ['Дневные смены'], hebrew: 'required', exp: 'none', period: 'month' },
+  { title: 'Офис-менеджер', cat: 'office', pos: 'office-p2', employer: 'Компания «Ойл-Тех»', wage: 11000, schedule: ['Дневные смены'], hebrew: 'required', exp: 'required', period: 'month' },
+  { title: 'Администратор на ресепшен', cat: 'office', pos: 'office-p3', employer: 'Бизнес-центр «Азриэли»', wage: 44, schedule: ['Дневные смены', 'Вечерние смены'], hebrew: 'any', exp: 'none' },
+  { title: 'Уборщик в офис, вечерние смены', cat: 'office', pos: 'office-p4', employer: 'Клининг «Чисто»', wage: 42, schedule: ['Вечерние смены'], hebrew: 'none', exp: 'none' }
 ]
 
 function makeWork(): AdRecord {
   const t = pick(workTemplates)
-  const b = base('work', workImage)
-  const wage = t.wage + int(-3, 6)
+  const b = base('work', photosByTitle[t.title])
+  const wage = t.period === 'month' ? Math.round((t.wage + int(-8, 12) * 100) / 100) * 100 : t.period === 'day' ? t.wage + int(-5, 6) * 10 : t.wage + int(-3, 6)
   const employment = pick([['Полная занятость'], ['Частичная занятость'], ['Подработка']])
   const tags = [...t.schedule.slice(0, 1), t.exp === 'none' ? 'Без опыта' : 'Нужен опыт']
   return {
     ...b,
     title: t.title,
-    price: { amount: wage, currency: 'ILS', period: 'hour' },
+    price: { amount: wage, currency: 'ILS', period: t.period ?? 'hour' },
     tags,
     employer: t.employer,
     description: `${t.employer} приглашает: ${t.title.toLowerCase()}. Работа в городе ${b.city}. Своевременная оплата, помощь с оформлением документов.`,
@@ -191,7 +261,7 @@ const goodsTemplates: { title: string, cat: string, sub: string, brand?: string,
 
 function makeGoods(): AdRecord {
   const t = pick(goodsTemplates)
-  const photo = t.sub === 'phones' ? pick([phone1, phone2]) : ['sofas', 'beds', 'tables', 'chairs', 'wardrobes'].includes(t.sub) ? sofa : goodsImage
+  const photo = photosByTitle[t.title] ?? (t.sub === 'phones' ? pick([phone1, phone2]) : ['sofas', 'beds', 'tables', 'chairs', 'wardrobes'].includes(t.sub) ? sofa : goodsImage)
   const b = base('goods', photo)
   const price = Math.round(t.price * (0.8 + rnd() * 0.4) / 10) * 10
   const condition: 'used' | 'new' = rnd() < 0.7 ? 'used' : 'new'
@@ -223,12 +293,13 @@ const servicesTemplates: { title: string, cat: string, sub: string, price: numbe
   { title: 'Малярные работы и поклейка обоев', cat: 'building', sub: 'painting', price: 90, note: 'Выезд на дом' },
   { title: 'Репетитор по математике, 5-11 класс', cat: 'tutoring', sub: 'math', price: 120, note: 'Онлайн' },
   { title: 'Грузчики и переезды по Израилю', cat: 'logistics', sub: 'movers', price: 200, note: 'Круглосуточно' },
-  { title: 'Маникюр и педикюр с выездом', cat: 'beauty-services', sub: 'nails', price: 130, note: 'Выезд на дом' }
+  { title: 'Маникюр и педикюр с выездом', cat: 'beauty-services', sub: 'nails', price: 130, note: 'Выезд на дом' },
+  { title: 'Банкетный зал на 80 гостей, свадьбы и праздники', cat: 'catering', sub: 'catering-events', price: 2500, note: 'Меню и декор' }
 ]
 
 function makeService(): AdRecord {
   const t = pick(servicesTemplates)
-  const b = base('services', servicesImage)
+  const b = base('services', photosByTitle[t.title] ?? servicesImage)
   const formats = some(['Выезд на дом', 'Онлайн', 'По адресу исполнителя']).concat(['Выезд на дом']).slice(0, 2)
   const round = t.note === 'Круглосуточно' || rnd() < 0.15
   return {
@@ -246,5 +317,7 @@ export function buildAds(): AdRecord[] {
   for (let i = 0; i < 150; i++) {
     out.push(makeWork(), makeRealty(), makeGoods(), makeService())
   }
+  // побольше вакансий: чтобы проверять фильтры по категориям, графику и зарплате
+  for (let i = 0; i < 250; i++) out.push(makeWork())
   return out
 }
