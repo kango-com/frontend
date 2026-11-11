@@ -30,8 +30,8 @@ defineProps<{
   transition: border-color 0.15s ease-out;
 }
 .kcc__icon { flex: none; color: var(--color-fill-color); transition: color 0.15s ease-out; }
-.kcc--active { border-color: var(--color-stroke-primary); }
-.kcc--active .kcc__icon { color: var(--color-fill-primary); }
+.kcc--active { border-color: transparent; background: var(--color-fill-tint); }
+.kcc--active .kcc__icon { color: var(--color-fill-color-3); }
 .kcc:focus-visible { outline: var(--border-width-strong) solid var(--color-stroke-primary); outline-offset: 2px; }
 @media (hover: hover) { .kcc:not(.kcc--active):hover { border-color: var(--color-fill-gray); } }
 </style>

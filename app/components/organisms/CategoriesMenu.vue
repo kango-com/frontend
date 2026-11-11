@@ -73,6 +73,6 @@ watch(() => route.fullPath, () => { open.value = false })
 <style scoped>
 .cmenu { margin: 0; padding: 0; list-style: none; }
 .cmenu__list { margin: 0; padding: 0 0 8px; list-style: none; }
-.cmenu__pic { display: block; width: 28px; height: 28px; margin-top: 3px; object-fit: contain; }
+.cmenu__pic { display: block; width: 28px; height: 28px; object-fit: contain; }
 .cmenu__note { padding: 12px 0; color: var(--color-label-secondary); font-size: var(--text-14-16); }
 </style>

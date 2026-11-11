@@ -106,7 +106,7 @@ async function logout() {
 .ch__menu { border-block: var(--border-width) solid var(--color-separator-gray); }
 .ch .ch__logout { align-self: flex-start; min-width: 160px; }
 @media (hover: hover) {
-  .ch .ch__tile:hover { background: var(--color-fill-gray-3); }
+  .ch .ch__tile:hover { background: color-mix(in srgb, var(--color-fill-tint) 70%, transparent); }
   .ch .ch__promo:hover { border-color: var(--color-stroke-primary); }
 }
 @media (min-width: 768px) {

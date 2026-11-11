@@ -68,6 +68,6 @@ const chooseAny = () => emit('update:modelValue', [])
 <style scoped>
 .pick { display: flex; flex-direction: column; gap: 12px; }
 .pick__list { display: flex; flex-direction: column; }
-.pick__pic { display: block; width: 28px; height: 28px; margin-top: 3px; object-fit: contain; }
+.pick__pic { display: block; width: 28px; height: 28px; object-fit: contain; }
 .pick__note { margin: 0; padding: 24px 0; color: var(--color-label-secondary); font-size: var(--text-16-20); line-height: var(--leading-16-20); text-align: center; }
 </style>

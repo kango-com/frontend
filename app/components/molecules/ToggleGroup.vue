@@ -61,7 +61,7 @@ function toggle(v: string) {
   line-height: var(--leading-15-16);
   cursor: pointer;
 }
-.tgl__item--on { border-color: var(--color-stroke-primary); background: var(--color-fill-tint); }
+.tgl__item--on { border-color: transparent; background: var(--color-fill-tint); }
 .tgl__item:focus-visible { outline: var(--border-width-strong) solid var(--color-stroke-primary); outline-offset: 2px; }
 @media (hover: hover) { .tgl__item:hover { border-color: var(--color-stroke-primary); } }
 </style>

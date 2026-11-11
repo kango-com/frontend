@@ -55,10 +55,10 @@ import kangaroo from '~/assets/img/hero/hero-kangaroo.webp'
     width: 1130px;
     max-width: 100%;
     height: 377px;
-    border-radius: 0 28px 0 0;
     background-position: right top;
-    -webkit-mask-image: linear-gradient(to right, transparent 0, transparent 8%, #000 46%), linear-gradient(to bottom, #000 58%, transparent 100%);
-    mask-image: linear-gradient(to right, transparent 0, transparent 8%, #000 46%), linear-gradient(to bottom, #000 58%, transparent 100%);
+    /* слева, справа и снизу фото растворяется в белый */
+    -webkit-mask-image: linear-gradient(to right, transparent 0, transparent 8%, #000 46%, #000 90%, transparent 100%), linear-gradient(to bottom, #000 58%, transparent 100%);
+    mask-image: linear-gradient(to right, transparent 0, transparent 8%, #000 46%, #000 90%, transparent 100%), linear-gradient(to bottom, #000 58%, transparent 100%);
   }
   /* мягкая дымка поверх левой половины фото, как в макете */
   .backdrop__photo::after { content: ''; position: absolute; inset: 0; background: linear-gradient(to right, color-mix(in srgb, var(--color-page) 70%, transparent) 10%, transparent 62%); }

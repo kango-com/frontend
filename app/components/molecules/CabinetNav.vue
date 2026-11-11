@@ -45,6 +45,6 @@ const isCurrent = (to: string) => route.path === to || route.path.startsWith(`${
 .cnav--sidebar .cnav__link[aria-current='page'] { background: color-mix(in srgb, var(--color-fill-primary) 6%, transparent); font-weight: var(--font-weight-medium); }
 .cnav--sidebar .cnav__link[aria-current='page']::before { content: ''; position: absolute; inset-block: 10px; inset-inline-start: 0; width: 3px; border-radius: 2px; background: var(--color-fill-primary); }
 @media (hover: hover) {
-  .cnav--sidebar .cnav__link:not([aria-current='page']):hover { background: var(--color-fill-gray-3); }
+  .cnav--sidebar .cnav__link:not([aria-current='page']):hover { background: color-mix(in srgb, var(--color-fill-tint) 70%, transparent); }
 }
 </style>

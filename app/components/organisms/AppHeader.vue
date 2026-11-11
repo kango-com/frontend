@@ -149,7 +149,7 @@ function onFocusOut(e: FocusEvent) {
 .app-header__drop :deep(.hrow__cat) { font-size: var(--text-12-16); line-height: var(--leading-12-16); }
 @media (hover: hover) {
   .app-header__drop :deep(.srow:hover),
-  .app-header__drop :deep(.hrow:hover) { background: var(--color-fill-gray-3); }
+  .app-header__drop :deep(.hrow:hover) { background: color-mix(in srgb, var(--color-fill-tint) 70%, transparent); }
   .app-header__drop :deep(.srow:hover .srow__title),
   .app-header__drop :deep(.hrow:hover .hrow__title) { color: inherit; }
 }

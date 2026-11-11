@@ -38,5 +38,5 @@ function onFocusOut(e: FocusEvent) {
 .lang__list { position: absolute; inset-inline-end: 0; top: calc(100% + 4px); z-index: 60; min-width: 140px; margin: 0; padding: 4px; list-style: none; border: var(--border-width) solid var(--color-stroke-gray); border-radius: var(--radius-md); background: var(--color-background); box-shadow: 0 8px 24px color-mix(in srgb, var(--color-label-primary) 12%, transparent); }
 .lang__item { width: 100%; padding: 10px 12px; border: 0; border-radius: var(--radius-sm); background: none; color: var(--color-label-primary); font-family: inherit; font-size: var(--text-15-16); text-align: start; cursor: pointer; }
 .lang__item--on { background: var(--color-fill-tint); font-weight: var(--font-weight-medium); }
-@media (hover: hover) { .lang__item:hover { background: var(--color-fill-gray-3); } }
+@media (hover: hover) { .lang__item:hover { background: color-mix(in srgb, var(--color-fill-tint) 70%, transparent); } }
 </style>

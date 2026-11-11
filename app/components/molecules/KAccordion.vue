@@ -50,7 +50,7 @@ const id = useId()
 }
 .kacc__head:focus-visible { outline: var(--border-width-strong) solid var(--color-stroke-primary); outline-offset: 2px; border-radius: var(--radius-sm); }
 .kacc__title { display: inline-flex; align-items: center; gap: 12px; }
-.kacc__pic { flex: none; width: 32px; height: 32px; margin-top: 3px; object-fit: contain; }
+.kacc__pic { flex: none; width: 32px; height: 32px; object-fit: contain; }
 .kacc__icon { flex: none; color: var(--color-fill-gray); transition: transform 0.3s ease-out; }
 .kacc--open .kacc__icon { transform: rotate(45deg); }
 .kacc__panel {

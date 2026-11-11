@@ -28,7 +28,7 @@ onMounted(() => { label.value = text.value?.textContent?.trim() ?? '' })
   height: 32px;
   padding: 0 8px;
   border-radius: var(--radius-md);
-  background: var(--color-fill-gray-3);
+  background: var(--color-fill-tint);
   color: var(--color-label-primary);
   font-size: var(--text-15-16);
   line-height: var(--leading-15-16);
